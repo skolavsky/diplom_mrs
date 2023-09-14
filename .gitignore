@@ -1,0 +1,50 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+
+# Python virtual environment
+venv/
+
+# IDE specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# Compiled source files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Temporary files
+*.swp
+*~
+*.bak
+
+# Log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Environment variables file (if used)
+.env
+
+# Mac OS X directory attributes
+.DS_Store
+
+# Node.js dependencies
+node_modules/
+
+# Compiled JavaScript
+*.js.map
+
+# Dependency directories
+# These are often dependencies that are managed by tools like npm, pip, or bower.
+# You should adjust this depending on your project's needs.
+bower_components/
+jspm_packages/
+node_modules/
