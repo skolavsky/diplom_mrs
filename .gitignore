@@ -4,6 +4,8 @@ __pycache__/
 
 # Python virtual environment
 venv/
+.venv/
+static/
 
 # IDE specific files
 .idea/
@@ -29,6 +31,7 @@ venv/
 *.log
 *.sql
 *.sqlite
+data.csv
 
 # Environment variables file (if used)
 .env
