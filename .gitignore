@@ -13,6 +13,7 @@ static/
 *.ipr
 *.iws
 .idea_modules/
+.vscode
 
 # Compiled source files
 *.com
