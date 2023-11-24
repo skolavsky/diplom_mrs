@@ -1,4 +1,3 @@
-# clients/forms.py
 from django import forms
 from .models import Client
 
@@ -6,11 +5,17 @@ from .models import Client
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = '__all__'
+        exclude = ['token']
         labels = {
             'first_name': 'Имя',
             'last_name': 'Фамилия',
+            'gender': 'Пол',
             'age': 'Возраст',
+            'patronymic': 'Отчество',
+            'result': 'Исход',
+            'admission_date': 'Дата поступления',
+            'SPO': 'SPO2',
+            'body_mass_index': 'ИМТ',
             # Add labels for other fields
         }
 

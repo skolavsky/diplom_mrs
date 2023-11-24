@@ -40,8 +40,7 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         # Combine all feature tensors into a single input tensor
         x = self.feature[idx, :]
-        #x = torch.stack([t[idx] for t in self.feature_tensors])
+        # x = torch.stack([t[idx] for t in self.feature_tensors])
         y = self.result[idx]
-        #print(f"f:{self.feature.shape}\nl:{self.result.shape}\nx:{x.shape}\ny:{y.shape}")
+        # print(f"f:{self.feature.shape}\nl:{self.result.shape}\nx:{x.shape}\ny:{y.shape}")
         return x, y
-    

@@ -28,9 +28,7 @@
     <table>
         <thead>
         <tr>
-            <th>Имя</th>
-            <th>Фамилия</th>
-            <th>Отчество</th>
+            <th>ФИО</th>
             <th>Возраст</th>
             <th>Индекс массы тела</th>
             <th>SPO2</th>
@@ -42,9 +40,7 @@
         <tbody>
         {% for client in clients %}
         <tr>
-            <td>{{ client.first_name }}</td>
-            <td>{{ client.last_name }}</td>
-            <td>{{ client.patronymic }}</td>
+    <td><a href="{% url 'client_detail_by_token' token=client.token %}">{{ client.last_name }} {{ client.first_name }} {{ client.patronymic }}</a></td>
             <td>{{ client.age }}</td>
             <td>{{ client.body_mass_index }}</td>
             <td>{{ client.SPO2 }}</td>
