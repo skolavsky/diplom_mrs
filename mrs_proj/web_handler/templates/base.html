@@ -1,0 +1,45 @@
+<!-- templates/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}Your Website{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyQP68D6p7LE2RFXJcZR6p8XQCMeJLb0" crossorigin="anonymous">
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{% static 'css/styles_base.css' %}">
+</head>
+<body>
+
+<!-- Page Header -->
+<header class="container-fluid bg-dark text-white p-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="{% url 'home' %}" class="text-white">Go to Main Page</a>
+        <h1 class="text-center m-0">{% block header %}Do Anything{% endblock %}</h1>
+        <div>{% block user_info %}{% endblock %}</div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container mt-4">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- Footer -->
+<footer class="container-fluid bg-dark text-white p-3 mt-4">
+    <div class="container text-center">
+        &copy; 2023 Your Website. All rights reserved.
+    </div>
+</footer>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js" integrity="sha384-bMmN2CyCABcLr7bJoM98itP9HhWEPVoxf7f+3pHyyDAiH3X3FqMOBd87qE9dLbGV" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyQP68D6p7LE2RFXJcZR6p8XQCMeJLb0" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список пациентов</title>
+    <link rel="stylesheet" href="{% static 'clients_styles.css' %}">
+</head>
+<body>
+
+<!-- Main Content -->
+<main>
+    <h2>Список пациентов</h2>
+
+    <!-- Add button to toggle the form -->
+    <button id="toggleFormBtn">Добавить пациента</button>
+
+    <!-- Form to add a new client -->
+    <form id="addClientForm" method="post" action="{% url 'client_list' %}">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <button type="submit">Сохранить</button>
+        <button type="button" onclick="cancelAddClient()">Отменить</button>
+    </form>
+
+    <!-- Existing client list -->
+    <table>
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Отчество</th>
+            <th>Возраст</th>
+            <th>Индекс массы тела</th>
+            <th>SPO2</th>
+            <th>Дата поступления</th>
+            <th>Результат</th>
+            <!-- Add more table headers for other client properties -->
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+        <tr>
+            <td>{{ client.first_name }}</td>
+            <td>{{ client.last_name }}</td>
+            <td>{{ client.patronymic }}</td>
+            <td>{{ client.age }}</td>
+            <td>{{ client.body_mass_index }}</td>
+            <td>{{ client.SPO2 }}</td>
+            <td>{{ client.admission_date }}</td>
+            <td>{{ client.result }}</td>
+            <!-- Add more table cells for other client properties -->
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>
+
+<script src="{% static 'clients_scripts.js' %}"></script>
+
+</body>
+</html>
