@@ -1,0 +1,45 @@
+/* static/css/styles.css */
+
+/* Body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0; /* Reset default margin */
+    min-height: 100vh; /* Ensure the body takes at least the full height of the viewport */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Page Header styles */
+header {
+    color: #ffffff;
+}
+
+/* Main Content styles */
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex-grow: 1; /* Allow the content to grow to fill the available space */
+}
+
+/* Footer styles */
+footer {
+    color: #ffffff;
+    background-color: #343a40;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto; /* Push the footer to the bottom of the container */
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+    header {
+        text-align: center;
+    }
+
+    footer {
+        font-size: 14px;
+    }
+}
