@@ -2,52 +2,65 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Client
 from .forms import ClientForm
-from django.contrib.auth.decorators import login_required
 import secrets
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.views import View
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-@login_required
-def client_list(request):
-    clients = Client.objects.all()
+class Client_list_view(LoginRequiredMixin, View):
+    login_url = '/login/'
 
-    if request.method == 'POST':
-        form = ClientForm(request.POST)
-        if form.is_valid():
-            # Create a new Client instance with the form data
-            new_client = form.save(commit=False)
-
-            # Set added_user to the currently logged-in user
-            new_client.added_user = request.user
-
-            # Set token to a new random value
-            new_client.token = secrets.token_urlsafe(32)
-
-            # Save the new client to the database
-            new_client.save()
-
-            # Redirect to the client list page
-            return redirect('client_list')
-    else:
+    def get(self, request):
+        clients = Client.objects.all()
         form = ClientForm()
+        context = {'clients': clients, 'form': form}
+        return render(request, 'client_list.html', context)
 
-    context = {'clients': clients, 'form': form}
-    return render(request, 'client_list.html', context)
+    def post(self, request):
+        action = request.POST.get('action', '')
+        print(request.POST)
+
+        if action == 'save':
+            form = ClientForm(request.POST)
+            if form.is_valid():
+                # Create a new Client instance with the form data
+                new_client = form.save(commit=False)
+
+                # Set added_user to the currently logged-in user
+                new_client.added_user = self.request.user  # Use self.request.user
+
+                # Set token to a new random value
+                new_client.token = secrets.token_urlsafe(32)
+
+                # Save the new client to the database
+                new_client.save()
+                # Redirect to the client list page
+                return redirect('client_list')
+        else:
+            HttpResponse(status=408)
+
+        return HttpResponse(status=400)
 
 
-@login_required
-def client_detail_by_token(request, token):
-    client = get_object_or_404(Client, token=token)
-    return render(request, 'client_detail.html', {'client': client})
+class Client_detail_view(LoginRequiredMixin, View):
+    login_url = '/login/'
 
+    def get(self, request, token):
+        client = get_object_or_404(Client, token=token)
+        return render(request, 'client_detail.html', context={'client': client})
 
-def delete_client(request, token):
-    client = get_object_or_404(Client, token=token)
+    def post(self, request, token):
+        action = request.POST.get('action', '')
 
-    if request.method == 'POST':
-        # Perform the delete operation
-        client.delete()
-        return JsonResponse({'message': 'Client deleted successfully'})
-    else:
-        return render(request, 'client_list.html', {'client': client, 'delete_confirmation': True})
+        print(request.POST)
+
+        if action == 'delete_client':
+            client = get_object_or_404(Client, token=token)
+            # Delete the client and redirect to the client list
+            client.delete()
+            return redirect('client_list')
+        else:
+            return HttpResponseBadRequest("Invalid action")
+
+        return HttpResponse(status=400)

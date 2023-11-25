@@ -9,13 +9,13 @@ class ClientForm(forms.ModelForm):
         labels = {
             'first_name': 'Имя',
             'last_name': 'Фамилия',
+            'patronymic': 'Отчество',
             'gender': 'Пол',
             'age': 'Возраст',
-            'patronymic': 'Отчество',
-            'result': 'Исход',
             'admission_date': 'Дата поступления',
             'SPO': 'SPO2',
             'body_mass_index': 'ИМТ',
+            'result': 'Исход',
             # Add labels for other fields
         }
 

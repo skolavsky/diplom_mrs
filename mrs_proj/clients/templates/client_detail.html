@@ -1,4 +1,4 @@
-<!-- clients/client_detail.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,17 +7,57 @@
     <title>{{ client.first_name }} {{ client.last_name }} Details</title>
 </head>
 <body>
-    <h2>Client Details</h2>
+<h2>Client Details</h2>
 
-  <p>Name: {{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</p>
-  <p>Age: {{ client.age }}</p>
-  <p>Body Mass Index: {{ client.body_mass_index }}</p>
-  <p>SPO2: {{ client.SPO2 }}</p>
-  <p>Admission Date: {{ client.admission_date }}</p>
-  <p>Result: {{ client.result }}</p>
+<p>Name: {{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</p>
+<p>Age: {{ client.age }}</p>
+<p>Body Mass Index: {{ client.body_mass_index }}</p>
+<p>SPO2: {{ client.SPO2 }}</p>
+<p>Admission Date: {{ client.admission_date }}</p>
+<p>Result: {{ client.result }}</p>
 
-    <!-- Add links or buttons for other actions if needed -->
+<!-- Add the "Delete" button -->
+<button type="submit" name="action" value="delete_client">Delete</button>
 
-    <a href="{% url 'client_list' %}">Back to Client List</a>
+<a href="{% url 'client_list' %}">Back to Client List</a>
+
+<!-- Confirmation dialog -->
+<button id="confirmDeletionBtn" style="display: none;" onclick="deleteClientConfirmed()">Confirm Deletion</button>
+
+{% if delete_confirmation %}
+<div id="delete-confirmation">
+    <p>Are you sure you want to delete {{ delete_client_name }}?</p>
+    <button onclick="deleteClient('{{ delete_client_token }}')">Yes, delete</button>
+    <button onclick="cancelDelete()">Cancel</button>
+</div>
+{% endif %}
+
+<script>
+    function confirmDelete(clientToken) {
+        // Set the values for deletion confirmation
+        delete_client_token = clientToken;
+        delete_client_name = "{{ client.first_name }} {{ client.last_name }}";
+
+        // Display the confirmation dialog
+        document.getElementById('confirmDeletionBtn').style.display = 'block';
+    }
+
+    function deleteClientConfirmed() {
+        // Hide the confirmation dialog
+        document.getElementById('confirmDeletionBtn').style.display = 'none';
+
+        // Trigger the actual deletion
+        deleteClient(delete_client_token);
+    }
+     function deleteClient(clientToken) {
+        // Your deleteClient implementation
+        // ...
+
+        // After deletion, redirect to the client_list page
+        window.location.href = "{% url 'client_list' %}";
+    }
+
+
+</script>
 </body>
 </html>

@@ -14,12 +14,13 @@
     <h2>Список пациентов</h2>
 
     <!-- Add button to toggle the form -->
-    <button id="toggleFormBtn">Добавить пациента</button>
+    <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
 
     <!-- Form to add a new client -->
-    <form id="addClientForm" method="post" action="{% url 'client_list' %}">
+    <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;">
         {% csrf_token %}
         {{ form.as_table }}
+        <input type="hidden" name="action" value="save">
         <button type="submit">Сохранить</button>
         <button type="button" onclick="cancelAddClient()">Отменить</button>
     </form>
@@ -30,43 +31,33 @@
         <tr>
             <th>ФИО</th>
             <th>Возраст</th>
-            <th>Индекс массы тела</th>
+            <th>ИМТ</th>
             <th>SPO2</th>
             <th>Дата поступления</th>
             <th>Результат</th>
-            <!-- Add more table headers for other client properties -->
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
         {% for client in clients %}
         <tr>
-            <td><a href="{% url 'client_detail_by_token' token=client.token %}">{{ client.last_name }}
-                {{client.first_name }} {{ client.patronymic }}</a></td>
+            <td>
+                <a href="{% url 'client_detail_by_token' token=client.token %}">{{ client.last_name }} {{client.first_name }} {{ client.patronymic }}</a>
+
+            </td>
             <td>{{ client.age }}</td>
             <td>{{ client.body_mass_index }}</td>
             <td>{{ client.SPO2 }}</td>
             <td>{{ client.admission_date }}</td>
             <td>{{ client.result }}</td>
             <td>
-            <td>
-                <button onclick="confirmDelete('{{ client.token }}')">Delete</button>
+                <a href="{% url 'client_detail_by_token' token=client.token %}">Delete</a>
             </td>
-            </td>
-
         </tr>
-
         {% endfor %}
-        {% if delete_confirmation %}
-        <div id="delete-confirmation">
-            <p>Are you sure you want to delete {{ client.first_name }} {{ client.last_name }}?</p>
-            <button onclick="deleteClient('{{ client.token }}')">Yes, delete</button>
-            <button onclick="cancelDelete()">Cancel</button>
-        </div>
-        {% endif %}
-        <button id="confirmDeletionBtn" style="display: none;" onclick="deleteClientConfirmed()">Confirm Deletion         </button>
-
         </tbody>
     </table>
+
 </main>
 
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
