@@ -1,10 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Вход в систему</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
@@ -13,26 +13,26 @@
 <div class="login-box">
     <h2>Login</h2>
     {% if error %}
-        <p style="color: red;">{{ error }}</p>
+    <p style="color: red;">{{ error }}</p>
     {% endif %}
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         <div class="form-group">
-            <label for="username">Username:</label>
+            <label for="username">Имя пользователя:</label>
             <div class="input-group">
                 <input type="text" class="form-control" id="username" name="username" required>
                 <div class="input-group-append hint-button">
                     <button type="button" class="btn btn-secondary"><i class="fas fa-question-circle"></i></button>
-                    <div class="hint-tooltip">You can get login credentials from the administrator.</div>
+                    <div class="hint-tooltip">Учетные данные для входа можно получить у администратора.</div>
                 </div>
             </div>
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
+            <label for="password">Пароль:</label>
             <div class="input-group">
                 <input type="password" class="form-control" id="password" name="password" required>
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-secondary" id="showPassword">Show</button>
+                    <button type="button" class="btn btn-secondary" id="showPassword">Показывать пароль</button>
                 </div>
             </div>
         </div>
@@ -40,27 +40,8 @@
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    // Wait for the DOM content to be fully loaded before executing the script
 
-    var showPasswordButton = document.getElementById('showPassword');
-    var passwordInput = document.getElementById('password');
+<script src="{% static 'scripts/login_scripts.js' %}"></script>
 
-    if (showPasswordButton && passwordInput) {
-        // Check if the elements are present on the page
-
-        showPasswordButton.addEventListener('click', function () {
-            // Toggle the type attribute of the password input
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
-            }
-        });
-    }
-});
-
-    </script>
 </body>
 </html>

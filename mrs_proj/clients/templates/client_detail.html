@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,48 +16,37 @@
 <p>Admission Date: {{ client.admission_date }}</p>
 <p>Result: {{ client.result }}</p>
 
-<!-- Add the "Delete" button -->
-<button type="submit" name="action" value="delete_client">Delete</button>
+<main>
 
-<a href="{% url 'client_list' %}">Back to Client List</a>
+    <h2>Действия</h2>
 
-<!-- Confirmation dialog -->
-<button id="confirmDeletionBtn" style="display: none;" onclick="deleteClientConfirmed()">Confirm Deletion</button>
+    <button id="delete" type="button" onclick="confirmDelete()">Удалить пациента</button>
 
-{% if delete_confirmation %}
-<div id="delete-confirmation">
-    <p>Are you sure you want to delete {{ delete_client_name }}?</p>
-    <button onclick="deleteClient('{{ delete_client_token }}')">Yes, delete</button>
-    <button onclick="cancelDelete()">Cancel</button>
-</div>
-{% endif %}
+    <form id="client_delete" method="post" action="{% url 'client_detail' token=client.token %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_client">
+        <div id="confirmDeletionDiv" style="display: none;">
+            <p>Вы уверены, что хотите удалить? {{ client.first_name }} {{ client.last_name }}?</p>
+            <button type="submit">Да, удалить</button>
+            <button type="button" onclick="cancelDelete()">Нет</button>
+        </div>
+    </form>
 
-<script>
-    function confirmDelete(clientToken) {
-        // Set the values for deletion confirmation
-        delete_client_token = clientToken;
-        delete_client_name = "{{ client.first_name }} {{ client.last_name }}";
+    <a href="{% url 'client_list' %}">Back to Client List</a>
 
-        // Display the confirmation dialog
-        document.getElementById('confirmDeletionBtn').style.display = 'block';
-    }
+    <br><br><br><br><br><br><br><br><br><br><br><br>
 
-    function deleteClientConfirmed() {
-        // Hide the confirmation dialog
-        document.getElementById('confirmDeletionBtn').style.display = 'none';
+    <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
+    <form id="editForm" method="post" action="{% url 'client_detail' token=client.token %}" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="edit_client">
+        {{ form.as_table }}
+        <button type="submit">Cохранить</button>
+        <button type="button" onclick="cancelEdit()">Отменить</button>
+    </form>
+</main>
 
-        // Trigger the actual deletion
-        deleteClient(delete_client_token);
-    }
-     function deleteClient(clientToken) {
-        // Your deleteClient implementation
-        // ...
+<script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
 
-        // After deletion, redirect to the client_list page
-        window.location.href = "{% url 'client_list' %}";
-    }
-
-
-</script>
 </body>
 </html>

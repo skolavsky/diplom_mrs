@@ -6,9 +6,10 @@ import secrets
 from django.views import View
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 
 
-class Client_list_view(LoginRequiredMixin, View):
+class ClientListView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
@@ -43,12 +44,14 @@ class Client_list_view(LoginRequiredMixin, View):
         return HttpResponse(status=400)
 
 
-class Client_detail_view(LoginRequiredMixin, View):
+class ClientDetailView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request, token):
         client = get_object_or_404(Client, token=token)
-        return render(request, 'client_detail.html', context={'client': client})
+        form = ClientForm(instance=client)
+        context = {'client': client, 'form': form}
+        return render(request, 'client_detail.html', context)
 
     def post(self, request, token):
         action = request.POST.get('action', '')
@@ -60,6 +63,14 @@ class Client_detail_view(LoginRequiredMixin, View):
             # Delete the client and redirect to the client list
             client.delete()
             return redirect('client_list')
+        elif action == 'edit_client':
+            client = get_object_or_404(Client, token=token)
+            form = ClientForm(request.POST, instance=client)  # Use ClientForm for editing
+            if form.is_valid():
+                form.save()
+                return redirect('client_detail', token=token)
+            else:
+                return HttpResponseBadRequest("Invalid form submission")
         else:
             return HttpResponseBadRequest("Invalid action")
 

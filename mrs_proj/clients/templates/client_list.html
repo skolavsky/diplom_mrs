@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,18 +12,6 @@
 <!-- Main Content -->
 <main>
     <h2>Список пациентов</h2>
-
-    <!-- Add button to toggle the form -->
-    <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
-
-    <!-- Form to add a new client -->
-    <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input type="hidden" name="action" value="save">
-        <button type="submit">Сохранить</button>
-        <button type="button" onclick="cancelAddClient()">Отменить</button>
-    </form>
 
     <!-- Existing client list -->
     <table>
@@ -42,7 +30,7 @@
         {% for client in clients %}
         <tr>
             <td>
-                <a href="{% url 'client_detail_by_token' token=client.token %}">{{ client.last_name }} {{client.first_name }} {{ client.patronymic }}</a>
+                <a href="{% url 'client_detail' token=client.token %}">{{ client.last_name }} {{client.first_name }} {{ client.patronymic }}</a>
 
             </td>
             <td>{{ client.age }}</td>
@@ -51,12 +39,24 @@
             <td>{{ client.admission_date }}</td>
             <td>{{ client.result }}</td>
             <td>
-                <a href="{% url 'client_detail_by_token' token=client.token %}">Delete</a>
+                <a href="{% url 'client_detail' token=client.token %}">Delete</a>
             </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <!-- Add button to toggle the form -->
+    <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
+
+    <!-- Form to add a new client -->
+    <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="hidden" name="action" value="save">
+        <button type="submit">Сохранить</button>
+        <button type="button" onclick="cancelAddClient()">Отменить</button>
+    </form>
 
 </main>
 

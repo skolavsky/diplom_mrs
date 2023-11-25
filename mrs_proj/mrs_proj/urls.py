@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path
 from web_handler.views import HomeView, DashboardView, ContactsView, LoginView
-from clients.views import Client_list_view, Client_detail_view  # Import the view from the clients app
+from clients.views import ClientListView, ClientDetailView  # Import the view from the clients app
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -10,8 +10,8 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name='login'),
     path('', HomeView.as_view(), name='home'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('client-detail/<str:token>/', Client_detail_view.as_view(), name='client_detail_by_token'),
+    path('client-detail/<str:token>/', ClientDetailView.as_view(), name='client_detail'),
 
     # Include the 'clients' app view
-    path('client-list/', Client_list_view.as_view(), name='client_list'),
+    path('client-list/', ClientListView.as_view(), name='client_list'),
 ]

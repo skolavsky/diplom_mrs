@@ -14,6 +14,14 @@ function cancelAddClient() {
     form.style.display = 'none';
 }
 
+function toggleForm() {
+    var form = document.getElementById('addClientForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
 
+function cancelAddClient() {
+    var form = document.getElementById('addClientForm');
+    form.style.display = 'none';
+}
 
 
