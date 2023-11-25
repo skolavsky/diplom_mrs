@@ -9,11 +9,16 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -71,6 +76,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Set session cookie age to 8 hours (in seconds)
 SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 hours * 60 minutes * 60 seconds
+LOGIN_URL = '/login/'
 
 WSGI_APPLICATION = 'mrs_proj.wsgi.application'
 

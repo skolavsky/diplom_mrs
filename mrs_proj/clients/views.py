@@ -4,6 +4,8 @@ from .models import Client
 from .forms import ClientForm
 from django.contrib.auth.decorators import login_required
 import secrets
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 @login_required
@@ -38,3 +40,14 @@ def client_list(request):
 def client_detail_by_token(request, token):
     client = get_object_or_404(Client, token=token)
     return render(request, 'client_detail.html', {'client': client})
+
+
+def delete_client(request, token):
+    client = get_object_or_404(Client, token=token)
+
+    if request.method == 'POST':
+        # Perform the delete operation
+        client.delete()
+        return JsonResponse({'message': 'Client deleted successfully'})
+    else:
+        return render(request, 'client_list.html', {'client': client, 'delete_confirmation': True})
