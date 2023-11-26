@@ -6,8 +6,8 @@ import secrets
 from django.views import View
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
+from django.db import models
 
 
 class ClientListView(LoginRequiredMixin, View):
@@ -18,7 +18,16 @@ class ClientListView(LoginRequiredMixin, View):
         sort_by = request.GET.get('sort', 'last_name')
         order = request.GET.get('order', 'asc')
 
+        search_query = request.GET.get('search', '')
         clients = Client.objects.all()
+
+        if search_query:
+            clients = clients.filter(
+                models.Q(first_name__icontains=search_query) |
+                models.Q(last_name__icontains=search_query) |
+                models.Q(patronymic__icontains=search_query)
+            )
+
         form = ClientForm()
 
         next_order = 'desc' if order == 'asc' else 'asc'
@@ -38,6 +47,8 @@ class ClientListView(LoginRequiredMixin, View):
             'order': order,
             'next_order': next_order,
             'form': form,
+            'search_query': search_query,
+
         }
 
         return render(request, 'client_list.html', context)

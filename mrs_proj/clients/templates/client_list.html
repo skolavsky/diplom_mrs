@@ -15,17 +15,22 @@
     <h2>Список пациентов</h2>
 
     <!-- Add button to toggle the form -->
+    <input type="text" id="searchInput" placeholder="Search by name">
+    <button type="button" id="searchButton">Search</button>
+<form method="get" action="{% url 'client_list' %}">
+    <button type="submit">Сброс соритировки</button>
+</form>
 
     <!-- Existing client list -->
     <table>
         <thead>
         <tr>
-<th {% if sort_by == 'last_name' %}class="active"{% endif %}><a href="?sort=last_name&order={{ next_order }}">ФИО</a></th>
-<th {% if sort_by == 'age' %}class="active"{% endif %}><a href="?sort=age&order={{ next_order }}">Возраст</a></th>
-<th {% if sort_by == 'body_mass_index' %}class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
-<th {% if sort_by == 'spo2' %}class="active"{% endif %}><a href="?sort=spo2&order={{ next_order }}">SPO2</a></th>
-<th {% if sort_by == 'admission_date' %}class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
-<th {% if sort_by == 'result' %}class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
+            <th {% if sort_by == 'last_name' %}class="active"{% endif %}><a href="?sort=last_name&order={{ next_order }}">ФИО</a></th>
+            <th {% if sort_by == 'age'%}class="active"{% endif %}><a href="?sort=age&order={{ next_order }}">Возраст</a></th>
+            <th {% if sort_by == 'body_mass_index'%}class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
+            <th {% if sort_by == 'spo2'%}class="active"{% endif %}><a href="?sort=spo2&order={{ next_order }}">SPO2</a></th>
+            <th {% if sort_by == 'admission_date'%}class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
+            <th {% if sort_by == 'result'%}class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -48,10 +53,11 @@
         </tbody>
     </table>
 
-      <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
+    <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
 
     <!-- Form to add a new client -->
-    <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;" onsubmit="return validateClientForm()">
+    <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;"
+          onsubmit="return validateClientForm()">
         {% csrf_token %}
         {{ form.as_table }}
         <input type="hidden" name="action" value="save">

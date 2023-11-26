@@ -75,3 +75,20 @@ function validateClientForm() {
     // If all validations pass, return true
     return true;
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
+
+        if (searchQuery !== '') {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('search', searchQuery);
+            window.location.href = currentUrl.toString();
+        }
+    });
+});
+
