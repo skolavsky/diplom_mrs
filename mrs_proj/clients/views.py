@@ -7,15 +7,39 @@ from django.views import View
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 class ClientListView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
+        clients_per_page = 10
+        sort_by = request.GET.get('sort', 'last_name')
+        order = request.GET.get('order', 'asc')
+
         clients = Client.objects.all()
         form = ClientForm()
-        context = {'clients': clients, 'form': form}
+
+        next_order = 'desc' if order == 'asc' else 'asc'
+
+        if order == 'asc':
+            clients = clients.order_by(sort_by)
+        else:
+            clients = clients.order_by(f'-{sort_by}')
+
+        paginator = Paginator(clients, clients_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+
+        context = {
+            'clients': page,
+            'sort_by': sort_by,
+            'order': order,
+            'next_order': next_order,
+            'form': form,
+        }
+
         return render(request, 'client_list.html', context)
 
     def post(self, request):
@@ -49,8 +73,10 @@ class ClientDetailView(LoginRequiredMixin, View):
 
     def get(self, request, token):
         client = get_object_or_404(Client, token=token)
+        history_entries = client.history.all()
+        print(history_entries)
         form = ClientForm(instance=client)
-        context = {'client': client, 'form': form}
+        context = {'client': client, 'history_entries': history_entries, 'form': form}
         return render(request, 'client_detail.html', context)
 
     def post(self, request, token):

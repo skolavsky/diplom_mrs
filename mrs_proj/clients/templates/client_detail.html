@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ client.first_name }} {{ client.last_name }} Details</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/clients_details_styles.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy6pZlF66gFZ2qfg0J8fELb3i5Ku6H+b1" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy6pZlF66gFZ2qfg0J8fELb3i5Ku6H+b1" crossorigin="anonymous">
+
+
 </head>
 <body>
 <h2>Client Details</h2>
@@ -34,7 +42,14 @@
 
     <a href="{% url 'client_list' %}">Back to Client List</a>
 
-    <br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br>
+
+
+<button id="loadDiagramButton" type="button">Load Diagram</button>
+
+
+
+    <br><br><br><br><br><br><br><br>
 
     <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
     <form id="editForm" method="post" action="{% url 'client_detail' token=client.token %}" style="display: none;">
@@ -44,7 +59,34 @@
         <button type="submit">Cохранить</button>
         <button type="button" onclick="cancelEdit()">Отменить</button>
     </form>
+
+
+    <br>
+    <br>
+    <br>
+
+    <div class="container">
+        <h1>{{ client.first_name }} {{ client.last_name }}</h1>
+
+        <h2>Change History</h2>
+        {% for version in history_entries %}
+        <p>
+            {{ version.history_date }} -
+            {{ version.history_user.username }} made the following changes:
+        <ul>
+            <li class="change-item" data-spo2="{{ version.spo2 }}" data-result="{{ version.result }}">
+                <span class="spo2">{{ version.spo2 }}</span> _ result:
+                <span class="result">{{ version.result }}</span>
+            </li>
+        </ul>
+        </p>
+        {% endfor %}
+    </div>
+
+
 </main>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
 

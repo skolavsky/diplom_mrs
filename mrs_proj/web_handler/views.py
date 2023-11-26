@@ -1,21 +1,30 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from clients.models import Client
+from datetime import timedelta
+from django.utils import timezone
 
 
 class HomeView(LoginRequiredMixin, View):
     login_url = '/login/'
 
     def get(self, request):
-        return render(request, 'home.html')
+        # Define your criteria (e.g., no results or no updates for 30 days)
+        no_results_patients = Client.objects.filter(result__isnull=True,
+                                                    admission_date__lt=timezone.now() - timedelta(days=3))
+        more_than_five = no_results_patients.count() > 5
 
 
-# @login_required
-# def home(request):
-#     return render(request, 'home.html')
+        context = {
+            'no_results_patients': no_results_patients,
+            'more_than_five': more_than_five,
+
+        }
+
+        return render(request, 'home.html', context)
 
 
 class DashboardView(LoginRequiredMixin, View):
@@ -25,10 +34,6 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, 'dashboard.html')
 
 
-# @login_required
-# def dashboard(request):
-#     return render(request, "dashboard.html")
-
 class ContactsView(LoginRequiredMixin, View):
     login_url = '/login/'
 
@@ -36,12 +41,7 @@ class ContactsView(LoginRequiredMixin, View):
         return render(request, 'contacts.html')
 
 
-# @login_required
-# def contacts(request):
-#     return render(request, "contacts.html")
-
-class LoginView(LoginRequiredMixin, View):
-    login_url = '/login/'
+class LoginView(View):
 
     def get(self, request):
         return render(request, 'login.html')
@@ -67,21 +67,3 @@ class LoginView(LoginRequiredMixin, View):
                 return render(request, 'login.html', {'error': 'Invalid login credentials'})
         else:
             return HttpResponse(status=400)
-
-# def custom_login(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username', '')
-#         password = request.POST.get('password', '')
-#
-#         # Use Django's built-in authenticate function to check credentials
-#         user = authenticate(request, username=username, password=password)
-#
-#         if user is not None:
-#             # Authentication successful, log in the user
-#             login(request, user)
-#             return redirect('home')  # Redirect to the home page
-#         else:
-#             # Authentication failed
-#             return render(request, 'login.html', {'error': 'Invalid login credentials'})
-#
-#     return render(request, 'login.html')
