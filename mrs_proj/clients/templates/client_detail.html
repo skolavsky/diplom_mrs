@@ -5,26 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ client.first_name }} {{ client.last_name }} Details</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/clients_details_styles.css' %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy6pZlF66gFZ2qfg0J8fELb3i5Ku6H+b1" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy6pZlF66gFZ2qfg0J8fELb3i5Ku6H+b1" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{% static 'css/clients_details_styles.css' %}">
 
 </head>
 <body>
-<h2>Client Details</h2>
+<h1>Подробные данные</h1>
 
-<p>Name: {{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</p>
-<p>Age: {{ client.age }}</p>
-<p>Body Mass Index: {{ client.body_mass_index }}</p>
-<p>SPO2: {{ client.SPO2 }}</p>
-<p>Admission Date: {{ client.admission_date }}</p>
-<p>Result: {{ client.result }}</p>
+ <div class="client-details-container">
+        <h2>Client Details</h2>
 
+        <table class="client-details-table">
+            <tr>
+                <td>ФИО:</td>
+                <td>{{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</td>
+            </tr>
+            <tr>
+                <td>Возраст:</td>
+                <td>{{ client.age }}</td>
+            </tr>
+            <tr>
+                <td>ИМТ:</td>
+                <td>{{ client.body_mass_index }}</td>
+            </tr>
+            <tr>
+                <td>SPO2:</td>
+                <td>{{ client.spo2 }}</td>
+            </tr>
+            <tr>
+                <td>Дата поступления:</td>
+                <td>{{ client.admission_date }}</td>
+            </tr>
+            <tr>
+                <td>Результат:</td>
+                <td>{{ client.result }}</td>
+            </tr>
+        </table>
+
+    </div>
 <main>
+    <a href="{% url 'client_list' %}">Назад к списку пациентов</a>
 
     <h2>Действия</h2>
 
@@ -40,16 +59,12 @@
         </div>
     </form>
 
-    <a href="{% url 'client_list' %}">Back to Client List</a>
 
-    <br><br><br><br>
+    <br>
+    <br>
 
+    <button id="loadDiagramButton" type="button">Load Diagram</button>
 
-<button id="loadDiagramButton" type="button">Load Diagram</button>
-
-
-
-    <br><br><br><br><br><br><br><br>
 
     <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
     <form id="editForm" method="post" action="{% url 'client_detail' token=client.token %}" style="display: none;">
@@ -85,8 +100,6 @@
 
 
 </main>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
 

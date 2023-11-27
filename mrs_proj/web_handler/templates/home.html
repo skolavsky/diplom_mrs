@@ -1,95 +1,22 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Your Website</title>
+{% block title %}Home{% endblock %}
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyQP68D6p7LE2RFXJcZR6p8XQCMeJLb0" crossorigin="anonymous">
+{% block content %}
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <h1 class="mt-4">Главная страница</h1>
 
-    <!-- Custom styles -->
-    <link rel="stylesheet" href="{% static 'css/styles_les.css' %}">
-</head>
-<body>
-
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Your Website</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}">Login</a>
-            </li>
-            <!-- Add more menu items as needed -->
+        <h2>Записи, без результатов</h2>
+        <ul>
+            {% for patient in no_results_patients %}
+            <li><a href="{% url 'client_detail' token=patient.token %}">{{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</a></li>
+            {% endfor %}
         </ul>
-    </div>
-</nav>
 
-<!-- Main Content with Sidebar -->
-<div class="container-fluid">
-    <div class="row">
-
-        <!-- Sidebar -->
-        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Reports
-                        </a>
-                    </li>
-                    <!-- Add more sidebar items as needed -->
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Main Content Area -->
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-            <h1 class="mt-4">Welcome to Your Website!</h1>
-            <p>This is a simple and beautiful starting point for your site with a sidebar menu.</p>
-
-            <h2>No Results Patients</h2>
-            <ul>
-                {% for patient in no_results_patients %}
-                <li><a href="{% url 'client_detail' token=patient.token %}">{{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</a></li>
-                {% endfor %}
-
-            </ul>
-            {% if more_than_five %}
-            <p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
-            {% endif %}
-        </main>
-    </div>
-</div>
-
-<!-- Bootstrap JS and dependencies -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"
-        integrity="sha384-bMmN2CyCABcLr7bJoM98itP9HhWEPVoxf7f+3pHyyDAiH3X3FqMOBd87qE9dLbGV"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyQP68D6p7LE2RFXJcZR6p8XQCMeJLb0"
-        crossorigin="anonymous"></script>
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        {% if more_than_five %}
+        <p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
+        {% endif %}
+    </main>
+{% endblock %}
 
 
-</body>
-</html>

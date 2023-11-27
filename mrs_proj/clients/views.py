@@ -17,6 +17,7 @@ class ClientListView(LoginRequiredMixin, View):
         clients_per_page = 10
         sort_by = request.GET.get('sort', 'last_name')
         order = request.GET.get('order', 'asc')
+        form = ClientForm()
 
         search_query = request.GET.get('search', '')
         clients = Client.objects.all()
@@ -28,7 +29,6 @@ class ClientListView(LoginRequiredMixin, View):
                 models.Q(patronymic__icontains=search_query)
             )
 
-        form = ClientForm()
 
         next_order = 'desc' if order == 'asc' else 'asc'
 
@@ -44,11 +44,9 @@ class ClientListView(LoginRequiredMixin, View):
         context = {
             'clients': page,
             'sort_by': sort_by,
-            'order': order,
             'next_order': next_order,
             'form': form,
             'search_query': search_query,
-
         }
 
         return render(request, 'client_list.html', context)

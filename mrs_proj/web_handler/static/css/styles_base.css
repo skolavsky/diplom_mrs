@@ -1,45 +1,110 @@
-/* static/css/styles.css */
-
-/* Body styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-    margin: 0; /* Reset default margin */
-    min-height: 100vh; /* Ensure the body takes at least the full height of the viewport */
-    display: flex;
-    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
 }
 
-/* Page Header styles */
 header {
-    color: #ffffff;
-}
-
-/* Main Content styles */
-.container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    flex-grow: 1; /* Allow the content to grow to fill the available space */
-}
-
-/* Footer styles */
-footer {
-    color: #ffffff;
-    background-color: #343a40;
+    background-color: #0056b3;
+    color: #fff;
+    padding: 15px;
     text-align: center;
-    padding: 10px 0;
-    margin-top: auto; /* Push the footer to the bottom of the container */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive styles */
-@media (max-width: 576px) {
-    header {
-        text-align: center;
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav {
+    background-color: #007BFF;
+    padding: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Additional styles for a cleaner look */
+main h1 {
+    color: #0056b3;
+}
+
+main p {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Adjustments for better readability on smaller screens */
+@media only screen and (max-width: 768px) {
+    header h1 {
+        font-size: 20px;
     }
 
-    footer {
+    nav a {
         font-size: 14px;
+        margin: 0 10px;
     }
+
+    footer p {
+        font-size: 12px;
+    }
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 10px;
+    border: 1px solid #ddd; /* Border color */
+    padding: 10px; /* Padding around each patient record */
+    border-radius: 5px; /* Rounded corners */
+}
+
+ul li a {
+    text-decoration: none;
+    color: #007BFF; /* Adjust the color as needed */
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+ul li a:hover {
+    color: #0056b3; /* Adjust the hover color as needed */
+}
+
+/* Add a separator between patient records */
+ul li:not(:last-child) {
+    border-bottom: 1px solid #ddd; /* Border color for the separator */
 }

@@ -8,6 +8,14 @@ from datetime import timedelta
 from django.utils import timezone
 
 
+class ContactsView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        # Define your criteria (e.g., no results or no updates for 30 days)
+        return render(request, 'contacts.html')
+
+
 class HomeView(LoginRequiredMixin, View):
     login_url = '/login/'
 
@@ -16,7 +24,6 @@ class HomeView(LoginRequiredMixin, View):
         no_results_patients = Client.objects.filter(result__isnull=True,
                                                     admission_date__lt=timezone.now() - timedelta(days=3))
         more_than_five = no_results_patients.count() > 5
-
 
         context = {
             'no_results_patients': no_results_patients,

@@ -1,5 +1,3 @@
-// JavaScript to toggle the visibility of the add client form
-
 document.getElementById('toggleFormBtn').addEventListener('click', function () {
     document.getElementById('addClientForm').style.display = 'block';
 });
@@ -23,8 +21,6 @@ function cancelAddClient() {
     var form = document.getElementById('addClientForm');
     form.style.display = 'none';
 }
-
-// File: static/scripts/client_validation.js
 
 // Function to validate the client form
 function validateClientForm() {
@@ -77,18 +73,5 @@ function validateClientForm() {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const searchButton = document.getElementById('searchButton');
 
-    searchButton.addEventListener('click', function() {
-        const searchInput = document.getElementById('searchInput');
-        const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
-
-        if (searchQuery !== '') {
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('search', searchQuery);
-            window.location.href = currentUrl.toString();
-        }
-    });
-});
 

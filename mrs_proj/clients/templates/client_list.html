@@ -4,24 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список пациентов</title>
-    <!-- Include your custom CSS file here -->
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/clients_styles.css' %}"> -->
+    <title>Общий список пациентов</title>
+<link rel="stylesheet" href="{% static 'css/clients_list_styles.css' %}">
+<link rel="icon" href="{% static 'icon.png' %}" type="image/x-icon">
+
 </head>
+
 <body>
 
-<!-- Main Content -->
+<header>
+        <h1>Your Site Name</h1>
+    </header>
+
+    <nav>
+        <a href="{% url 'home' %}">На главную</a>
+        <a href="{% url 'client_list' %}">Все записи</a>
+        <a href="{% url 'contacts' %}">Контакты</a>
+        <a href="{% url 'dashboard' %}">Обновления</a>
+        <!-- Add more links as needed -->
+    </nav>
+
 <main>
-    <h2>Список пациентов</h2>
 
-    <!-- Add button to toggle the form -->
-    <input type="text" id="searchInput" placeholder="Search by name">
+    <h2>Список записей</h2>
+
+    <input type="text" id="searchInput" placeholder="Поиск по ФИО">
     <button type="button" id="searchButton">Search</button>
-<form method="get" action="{% url 'client_list' %}">
-    <button type="submit">Сброс соритировки</button>
-</form>
 
-    <!-- Existing client list -->
+    <button type="submit" id="resetSortingButton">Сброс сортировки</button>
+
+
     <table>
         <thead>
         <tr>
@@ -55,7 +67,6 @@
 
     <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
 
-    <!-- Form to add a new client -->
     <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;"
           onsubmit="return validateClientForm()">
         {% csrf_token %}
@@ -65,7 +76,6 @@
         <button type="button" onclick="cancelAddClient()">Отменить</button>
     </form>
 
-    <!-- Pagination controls -->
     <div class="pagination">
         <span class="step-links">
             {% if clients.has_previous %}
@@ -83,13 +93,72 @@
             {% endif %}
         </span>
     </div>
+    <script src="{% static 'scripts/clients_scripts.js' %}"></script>
 
 </main>
 
-<!-- Include your custom JS file here -->
-<script src="{% static 'scripts/clients_scripts.js' %}"></script>
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
+
+        if (searchQuery !== '') {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('search', searchQuery);
+            window.location.href = currentUrl.toString();
+        }
+    });
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const resetSortingButton = document.getElementById('resetSortingButton');
+
+    resetSortingButton.addEventListener('click', function() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('sort');  // Remove the 'sort' parameter
+        window.location.href = currentUrl.toString();
+    });
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const resetSortingButton = document.getElementById('resetSortingButton');
+
+    resetSortingButton.addEventListener('click', function() {
+        const currentUrl = new URL(window.location.href);
+        const searchParamIndex = currentUrl.href.indexOf('?search');
+
+        if (searchParamIndex !== -1) {
+            const baseUrl = currentUrl.href.substring(0, searchParamIndex);
+            window.location.href = baseUrl;
+        }
+    });
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    // Event listener to enlarge the input field when typing
+    searchInput.addEventListener('input', function() {
+        if (searchInput.value.trim() !== '') {
+            searchInput.classList.add('enlarged');
+        } else {
+            searchInput.classList.remove('enlarged');
+        }
+    });
+
+    // Event listener for the search button click
+    searchButton.addEventListener('click', function() {
+        // Perform the search functionality here
+        alert('Searching for: ' + searchInput.value);
+    });
+});
+
+</script>
 
 </body>
 </html>
