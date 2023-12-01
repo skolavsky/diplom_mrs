@@ -12,14 +12,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='client',
-            name='token',
-            field=models.CharField(default=secrets.token_urlsafe, max_length=32, unique=True),
-        ),
         migrations.AlterField(
             model_name='client',
-            name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            name='token',
+            field=models.CharField(max_length=100, default=secrets.token_urlsafe, unique=True),
         ),
     ]
