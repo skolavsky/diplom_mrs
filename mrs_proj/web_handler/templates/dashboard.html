@@ -1,0 +1,21 @@
+<!-- templates/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Your Website{% endblock %}
+
+{% block header %}
+    Dashboard
+{% endblock %}
+
+{% block user_info %}
+    {% if user.is_authenticated %}
+        <span>Welcome, {{ user.username }}!</span>
+    {% else %}
+        <span>Not logged in</span>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <h2>Добро пожаловать!</h2>
+    <p>Записи.</p>
+{% endblock %}
