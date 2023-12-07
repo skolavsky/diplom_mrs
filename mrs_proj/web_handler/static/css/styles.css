@@ -98,10 +98,12 @@ body {
 
 .header h1
 {
-    height: auto;
-    text-align: center;
-
     font: 700 27px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.header h2
+{
+    font: 400 19px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
 .header .menu
