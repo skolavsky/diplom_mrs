@@ -103,7 +103,7 @@ body {
 
 .header h2
 {
-    font: 400 19px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-family:  Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
 .header .menu
