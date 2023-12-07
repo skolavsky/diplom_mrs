@@ -1,32 +1,38 @@
-{% load static %}
+ <!--{% load static %} -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Django App{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_base.css' %}">
+    <link rel="stylesheet" type="text/css" href="/mrs_proj/web_handler/static/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/mrs_proj/web_handler/static/css/reset.css">
+
+    <link rel="icon" type="image/x-icon" href="/mrs_proj/web_handler/static/img/favicon/favicon-32x32.png">
 </head>
 <body>
-    <header>
-        <h1>Your Site Name</h1>
-    </header>
+    <div class="wrapper">
+        <header class="header">
+            <div class="wrapp">
+                <h1>YOUR SITE NAME</h1>
+                <nav class="menu">
+                    <a href="{% url 'home' %}">На главную</a>
+                    <a href="{% url 'client_list' %}">Все записи</a>
+                    <a href="{% url 'contacts' %}">Контакты</a>
+                    <a href="{% url 'dashboard' %}">Обновления</a>
+                </nav>
+            </div>
+        </header>
 
-    <nav>
-        <a href="{% url 'home' %}">На главную</a>
-        <a href="{% url 'client_list' %}">Все записи</a>
-        <a href="{% url 'contacts' %}">Контакты</a>
-        <a href="{% url 'dashboard' %}">Обновления</a>
-        <!-- Add more links as needed -->
-    </nav>
+        <main class="main">
+            {% block content %}{% endblock %}
+        </main>
 
-   {% block content %}{% endblock %}
-
-    <!-- Insert sidebar content here -->
-    {% block sidebar %}{% endblock %}
-
-    <footer>
-        <p>&copy; 2023 My Django App</p>
-    </footer>
+        <footer class="footer">
+            <div class="wrapp">
+                <p>&copy; 2023 My Django App</p>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>

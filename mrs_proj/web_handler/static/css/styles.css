@@ -1,5 +1,6 @@
+/*
 body {
-    background: linear-gradient(to bottom, #003f7f, #20639b, #4392c3, #f0f0f0); /* Four-color gradient background */
+    background: linear-gradient(to bottom, #003f7f, #20639b, #4392c3, #f0f0f0); /* Four-color gradient background 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,13 +9,13 @@ body {
 }
 
 .login-box {
-    background-color: rgba(0, 0, 0, 0.6); /* Dark background with transparency */
+    background-color: rgba(0, 0, 0, 0.6); /* Dark background with transparency 
     padding: 20px;
     border-radius: 10px;
-    color: #fff; /* Text color for the form */
+    color: #fff; /* Text color for the form 
     position: relative;
-    z-index: 2; /* Place it above other elements */
-    animation: shimmer 3s infinite; /* Apply shimmer animation */
+    z-index: 2; /* Place it above other elements 
+    animation: shimmer 3s infinite; /* Apply shimmer animation 
 }
 
 .login-box h2 {
@@ -26,7 +27,7 @@ body {
     margin-bottom: 20px;
 }
 
-/* Shimmer animation keyframes */
+/* Shimmer animation keyframes 
 @keyframes shimmer {
     0% {
         box-shadow: -10px 0 10px rgba(0, 0, 0, 0.6);
@@ -39,7 +40,7 @@ body {
     }
 }
 
-/* Style for the hint button */
+/* Style for the hint button 
 .hint-button {
     position: relative;
     cursor: pointer;
@@ -49,11 +50,11 @@ body {
     visibility: hidden;
     position: absolute;
     z-index: 3;
-    top: -35px; /* Adjust this value to control the tooltip position */
+    top: -35px; /* Adjust this value to control the tooltip position 
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8); /* Dark background color */
-    color: #fff; /* Text color for the hint */
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background color 
+    color: #fff; /* Text color for the hint 
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 14px;
@@ -62,4 +63,71 @@ body {
 
 .hint-button:hover .hint-tooltip {
     visibility: visible;
+}
+*/
+
+
+.wrapper
+{
+    min-height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.wrapp
+{
+    max-width: 1440px;
+    height: 100%;
+    margin: auto 100px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header
+{
+    height: 60px;
+
+    background-color: #2B4141;
+    color: #FFF;
+}
+
+
+.header h1
+{
+    height: auto;
+    text-align: center;
+
+    font: 700 27px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.header .menu
+{
+    display: flex;
+    gap: 20px;
+}
+
+.menu a
+{
+    color: #FFF;
+}
+
+.menu a:hover
+{
+    border-bottom: 1px solid #FFF;
+}
+
+.footer
+{
+    height: 30px;
+
+    background-color: #2B4141;
+}
+
+.footer p
+{
+    color: #FFF;
 }
