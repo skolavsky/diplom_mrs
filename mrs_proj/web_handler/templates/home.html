@@ -5,9 +5,15 @@
 
 {% block content %}
     <h3>Записи, без результатов</h3>
-    <ul>
+    <ul class="list">
         {% for patient in no_results_patients %}
-        <li><a href="{% url 'client_detail' token=patient.token %}">{{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</a></li>
+        <li>
+            <a href="{% url 'client_detail' token=patient.token %}">
+                <div class="list_item">
+                    {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
+                </div>
+            </a>
+        </li>
         {% endfor %}
     </ul>
 
