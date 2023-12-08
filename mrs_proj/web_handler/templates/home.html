@@ -1,22 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Home{% endblock %}
+{% block header %}Главная страница{% endblock %}
 
 {% block content %}
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-        <h1 class="mt-4">Главная страница</h1>
+    <h3>Записи, без результатов</h3>
+    <ul>
+        {% for patient in no_results_patients %}
+        <li><a href="{% url 'client_detail' token=patient.token %}">{{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</a></li>
+        {% endfor %}
+    </ul>
 
-        <h2>Записи, без результатов</h2>
-        <ul>
-            {% for patient in no_results_patients %}
-            <li><a href="{% url 'client_detail' token=patient.token %}">{{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}</a></li>
-            {% endfor %}
-        </ul>
-
-        {% if more_than_five %}
-        <p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
-        {% endif %}
-    </main>
+    {% if more_than_five %}
+    <p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
+    {% endif %}
 {% endblock %}
 
 
