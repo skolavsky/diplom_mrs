@@ -92,8 +92,6 @@ class ClientDetailView(LoginRequiredMixin, View):
     def post(self, request, token):
         action = request.POST.get('action', '')
 
-        print(request.POST)
-
         if action == 'delete_client':
             client = get_object_or_404(Client, token=token)
             # Delete the client and redirect to the client list
@@ -109,6 +107,3 @@ class ClientDetailView(LoginRequiredMixin, View):
                 return HttpResponseBadRequest("Invalid form submission")
         else:
             return HttpResponseBadRequest("Invalid action")
-
-        return HttpResponseBadRequest("Invalid action")
-

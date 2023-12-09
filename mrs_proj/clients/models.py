@@ -14,9 +14,9 @@ class Client(models.Model):
 
     token = models.CharField(max_length=100, default=secrets.token_urlsafe, unique=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
-    patronymic = models.CharField(max_length=100, null=True)
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    patronymic = models.CharField(max_length=100, blank=True)
     age = models.IntegerField(null=False)
     body_mass_index = models.FloatField(null=True, blank=True)
     spo2 = models.IntegerField(null=True, blank=True)
