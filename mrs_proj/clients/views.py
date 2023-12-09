@@ -109,4 +109,5 @@ class ClientDetailView(LoginRequiredMixin, View):
         else:
             return HttpResponseBadRequest("Invalid action")
 
-        return HttpResponse(status=400)
+        return HttpResponseBadRequest("Invalid action")
+
