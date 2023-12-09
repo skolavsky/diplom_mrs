@@ -3,34 +3,34 @@ document.getElementById('toggleFormBtn').addEventListener('click', function () {
 });
 
 function toggleForm() {
-    var form = document.getElementById('addClientForm');
+    let form = document.getElementById('addClientForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
 function cancelAddClient() {
-    var form = document.getElementById('addClientForm');
+    let form = document.getElementById('addClientForm');
     form.style.display = 'none';
 }
 
 function toggleForm() {
-    var form = document.getElementById('addClientForm');
+    let form = document.getElementById('addClientForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
 function cancelAddClient() {
-    var form = document.getElementById('addClientForm');
+    let form = document.getElementById('addClientForm');
     form.style.display = 'none';
 }
 
 // Function to validate the client form
 function validateClientForm() {
     // Get form inputs
-    var firstName = $('#id_first_name').val().trim();
-    var lastName = $('#id_last_name').val().trim();
-    var patronymic = $('#id_patronymic').val().trim();
-    var age = $('#id_age').val().trim();
-    var bodyMassIndex = $('#id_body_mass_index').val().trim();
-    var SPO2 = $('#id_SPO2').val().trim();
+    let firstName = $('#id_first_name').val().trim();
+    let lastName = $('#id_last_name').val().trim();
+    let patronymic = $('#id_patronymic').val().trim();
+    let age = $('#id_age').val().trim();
+    let bodyMassIndex = $('#id_body_mass_index').val().trim();
+    let SPO2 = $('#id_SPO2').val().trim();
 
     // Validate first name
     if (!firstName) {

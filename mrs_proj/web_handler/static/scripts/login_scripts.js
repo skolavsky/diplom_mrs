@@ -2,8 +2,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Wait for the DOM content to be fully loaded before executing the script
 
-    var showPasswordButton = document.getElementById('showPassword');
-    var passwordInput = document.getElementById('password');
+    let showPasswordButton = document.getElementById('showPassword');
+    let passwordInput = document.getElementById('password');
 
     if (showPasswordButton && passwordInput) {
         // Check if the elements are present on the page
