@@ -17,7 +17,8 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / 'web_handler' / 'static',
+    BASE_DIR / 'clients' / 'static',
 ]
 
 # Quick-start development settings - unsuitable for production
