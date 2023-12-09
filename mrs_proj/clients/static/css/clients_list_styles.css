@@ -1,0 +1,197 @@
+.client-details-container {
+    width: 100%;
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.client-details-table {
+    width: 100%;
+    max-width: 1200px; /* Set a max-width for better readability */
+    margin: 0 auto; /* Center the table on the page */
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.client-details-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.client-details-table td:first-child {
+    font-weight: bold;
+    width: 30%; /* Set a fixed width for the first column */
+}
+/* clients_styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #0056b3;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+main {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex-grow: 1;
+    margin: 20px;
+}
+
+h2 {
+    color: #343a40;
+}
+
+/* Input styles */
+input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd; /* Add this line to create borders */
+}
+
+th {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+th:hover {
+    background-color: #0056b3;
+}
+
+/* Add these styles to emphasize the cell boundaries */
+
+td {
+    border-left: 1px solid #ddd;
+}
+
+th:first-child,
+td:first-child {
+    border-left: none;
+}
+
+td:last-child {
+    border-right: 1px solid #ddd;
+}
+/* Pagination styles */
+.pagination {
+    margin-top: 20px;
+}
+
+.step-links a {
+    color: #007bff;
+    padding: 8px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    margin-right: 4px;
+}
+
+.step-links a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Form styles */
+form {
+    display: none;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Add your own validation styles if needed */
+
+button[type="submit"], button[type="button"] {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+button[type="submit"]:hover, button[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    color: #ffffff;
+    background-color: #343a40;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto;
+}
+
+#searchInput {
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+    width: 200px; /* Set the initial width */
+    height: 15px; /* Set the initial height */
+    font-size: 16px; /* Set the initial font size */
+
+}
+
+#searchInput.enlarged {
+    width: 250px; /* Set the enlarged width */
+    height: 50px; /* Set the enlarged height */
+    font-size: 18px; /* Set the enlarged font size */
+
+}
+
+#searchButton {
+    /* Add your button styling here */
+}
+nav {
+    background-color: #007BFF;
+    padding: 10px;
+}

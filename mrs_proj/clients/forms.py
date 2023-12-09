@@ -21,7 +21,7 @@ class ClientForm(forms.ModelForm):
 
         widgets = {
             'first_name': forms.TextInput(attrs={'style': 'width: 80%;'}),
-            'admission_date': forms.DateInput(attrs={'type': 'date'}),
+            'admission_date': forms.SelectDateWidget(),
             # Add widgets for other fields
         }
 

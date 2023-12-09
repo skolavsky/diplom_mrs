@@ -1,0 +1,12 @@
+{
+  "BRANCH_NAME_CHECKS": {
+    "prefixes": ["feature/", "bugfix/", "chore/"],
+    "regexpFlags": "i",
+    "ignoreLabels": ["ignore-branch-name-check"]
+  },
+  "MESSAGES": {
+    "success": "Branch name is valid",
+    "failure": "Invalid branch name. Branch names should start with 'feature/', 'bugfix/', or 'chore/'. Example: 'feature/add-new-feature'",
+    "notice": ""
+  }
+}
