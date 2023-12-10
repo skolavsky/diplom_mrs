@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ client.first_name }} {{ client.last_name }} Details</title>
+    <link rel="stylesheet" href="{% static 'css/clients_details_styles.css' %}">
+
+</head>
+<body>
+<h1>Подробные данные</h1>
+
+<div class="client-details-container">
+    <h2>Client Details</h2>
+
+    <table class="client-details-table">
+        <caption>Client Details</caption>
+
+        <thead>
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        </thead>
+        <tr>
+            <td>ФИО:</td>
+            <td>{{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</td>
+        </tr>
+        <tr>
+            <td>Возраст:</td>
+            <td>{{ client.age }}</td>
+        </tr>
+        <tr>
+            <td>ИМТ:</td>
+            <td>{{ client.body_mass_index }}</td>
+        </tr>
+        <tr>
+            <td>SPO2:</td>
+            <td>{{ client.spo2 }}</td>
+        </tr>
+        <tr>
+            <td>Дата поступления:</td>
+            <td>{{ client.admission_date }}</td>
+        </tr>
+        <tr>
+            <td>Результат:</td>
+            <td>{{ client.result }}</td>
+        </tr>
+    </table>
+
+</div>
+<main>
+    <a href="{% url 'client_list' %}">Назад к списку пациентов</a>
+
+    <h2>Действия</h2>
+
+    <button id="delete" type="button" onclick="confirmDelete()">Удалить пациента</button>
+
+    <form id="client_delete" method="post" action="{% url 'client_detail' token=client.token %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_client">
+        <div id="confirmDeletionDiv" style="display: none;">
+            <p>Вы уверены, что хотите удалить? {{ client.first_name }} {{ client.last_name }}?</p>
+            <button type="submit">Да, удалить</button>
+            <button type="button" onclick="cancelDelete()">Нет</button>
+        </div>
+    </form>
+
+
+    <br>
+    <br>
+
+    <button id="loadDiagramButton" type="button">Load Diagram</button>
+
+
+    <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
+    <form id="editForm" method="post" action="{% url 'client_detail' token=client.token %}" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="edit_client">
+        {{ form.as_table }}
+        <button type="submit">Cохранить</button>
+        <button type="button" onclick="cancelEdit()">Отменить</button>
+    </form>
+
+
+    <br>
+    <br>
+    <br>
+
+    <div class="container">
+        <h1>{{ client.first_name }} {{ client.last_name }}</h1>
+
+        <h2>Change History</h2>
+        {% for version in history_entries %}
+        <p>
+            {{ version.history_date }} -
+            {{ version.history_user.username }} made the following changes:
+        <ul>
+            <li class="change-item" data-spo2="{{ version.spo2 }}" data-result="{{ version.result }}">
+                <span class="spo2">{{ version.spo2 }}</span> _ result:
+                <span class="result">{{ version.result }}</span>
+            </li>
+        </ul>
+        </p>
+        {% endfor %}
+    </div>
+
+
+</main>
+
+<script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block header %}Главная страница{% endblock %}
+
+{% block content %}
+
+    <h2>Список записей</h2>
+
+    <input type="text" id="searchInput" placeholder="Поиск по ФИО">
+    <button type="button" id="searchButton">Search</button>
+
+    <button type="submit" id="resetSortingButton">Сброс сортировки</button>
+
+
+    <table>
+        <caption>Client List</caption>
+        <thead>
+        <tr>
+            <th {% if sort_by == 'last_name' %}class="active"{% endif %}><a href="?sort=last_name&order={{ next_order }}">ФИО</a></th>
+            <th {% if sort_by == 'age'%}class="active"{% endif %}><a href="?sort=age&order={{ next_order }}">Возраст</a></th>
+            <th {% if sort_by == 'body_mass_index'%}class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
+            <th {% if sort_by == 'spo2'%}class="active"{% endif %}><a href="?sort=spo2&order={{ next_order }}">SPO2</a></th>
+            <th {% if sort_by == 'admission_date'%}class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
+            <th {% if sort_by == 'result'%}class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+        <tr>
+            <td>
+                <a href="{% url 'client_detail' token=client.token %}">{{ client.last_name }} {{client.first_name }} {{ client.patronymic }}</a>
+            </td>
+            <td>{{ client.age }}</td>
+            <td>{{ client.body_mass_index }}</td>
+            <td>{{ client.spo2 }}</td>
+            <td>{{ client.admission_date }}</td>
+            <td>{{ client.result }}</td>
+            <td>
+                <a href="{% url 'client_detail' token=client.token %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
+
+    <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;"
+          onsubmit="return validateClientForm()">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="hidden" name="action" value="save">
+        <button type="submit">Сохранить</button>
+        <button type="button" onclick="cancelAddClient()">Отменить</button>
+    </form>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if clients.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ clients.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ clients.number }} of {{ clients.paginator.num_pages }}.
+            </span>
+
+            {% if clients.has_next %}
+                <a href="?page={{ clients.next_page_number }}">next</a>
+                <a href="?page={{ clients.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <script src="{% static 'scripts/clients_scripts.js' %}"></script>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
+
+        if (searchQuery !== '') {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('search', searchQuery);
+            window.location.href = currentUrl.toString();
+        }
+    });
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const resetSortingButton = document.getElementById('resetSortingButton');
+
+    resetSortingButton.addEventListener('click', function() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('sort');  // Remove the 'sort' parameter
+        window.location.href = currentUrl.toString();
+    });
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const resetSortingButton = document.getElementById('resetSortingButton');
+
+    resetSortingButton.addEventListener('click', function() {
+        const currentUrl = new URL(window.location.href);
+        const searchParamIndex = currentUrl.href.indexOf('?search');
+
+        if (searchParamIndex !== -1) {
+            const baseUrl = currentUrl.href.substring(0, searchParamIndex);
+            window.location.href = baseUrl;
+        }
+    });
+});
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    // Event listener to enlarge the input field when typing
+    searchInput.addEventListener('input', function() {
+        if (searchInput.value.trim() !== '') {
+            searchInput.classList.add('enlarged');
+        } else {
+            searchInput.classList.remove('enlarged');
+        }
+    });
+
+    // Event listener for the search button click
+    searchButton.addEventListener('click', function() {
+        // Perform the search functionality here
+        alert('Searching for: ' + searchInput.value);
+    });
+});
+
+</script>
+
+{% endblock %}
