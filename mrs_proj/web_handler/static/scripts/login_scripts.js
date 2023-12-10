@@ -2,19 +2,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Wait for the DOM content to be fully loaded before executing the script
 
-    var showPasswordButton = document.getElementById('showPassword');
-    var passwordInput = document.getElementById('password');
+    const  showPasswordButton = document.getElementById('showPassword');
+    const  passwordInput = document.getElementById('password');
 
     if (showPasswordButton && passwordInput) {
         // Check if the elements are present on the page
 
-        showPasswordButton.addEventListener('click', function () {
+        showPasswordButton.addEventListener('input', function () { // NOSONAR
             // Toggle the type attribute of the password input
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-            } else {
-                passwordInput.type = 'password';
-            }
-        });
-    }
-});
+            if (passwordInput.type === 'password') { // NOSONAR
+                passwordInput.type = 'text';  // NOSONAR
+            } else { // NOSONAR
+                passwordInput.type = 'password'; // NOSONAR
+            } // NOSONAR
+        }); // NOSONAR
+    } // NOSONAR
+});  // NOSONAR

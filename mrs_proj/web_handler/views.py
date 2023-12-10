@@ -7,9 +7,11 @@ from clients.models import Client
 from datetime import timedelta
 from django.utils import timezone
 
+LOGIN_URL = '/login/'
+
 
 class ContactsView(LoginRequiredMixin, View):
-    login_url = '/login/'
+    login_url = LOGIN_URL
 
     def get(self, request):
         # Define your criteria (e.g., no results or no updates for 30 days)
@@ -17,7 +19,7 @@ class ContactsView(LoginRequiredMixin, View):
 
 
 class HomeView(LoginRequiredMixin, View):
-    login_url = '/login/'
+    login_url = LOGIN_URL
 
     def get(self, request):
         # Define your criteria (e.g., no results or no updates for 30 days)
@@ -35,14 +37,14 @@ class HomeView(LoginRequiredMixin, View):
 
 
 class DashboardView(LoginRequiredMixin, View):
-    login_url = '/login/'
+    login_url = LOGIN_URL
 
     def get(self, request):
         return render(request, 'dashboard.html')
 
 
 class ContactsView(LoginRequiredMixin, View):
-    login_url = '/login/'
+    login_url = LOGIN_URL
 
     def get(self, request):
         return render(request, 'contacts.html')

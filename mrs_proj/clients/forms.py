@@ -5,7 +5,11 @@ from .models import Client
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        exclude = ['token']
+
+        fields = ['first_name', 'last_name', 'patronymic', 'gender', 'age', 'admission_date', 'spo2', 'body_mass_index',
+                  'result', 'f_test_ex', 'f_test_in', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109',
+                  'lf', 'rox', 'spo2_fio', 'ch_d']
+
         labels = {
             'first_name': 'Имя',
             'last_name': 'Фамилия',

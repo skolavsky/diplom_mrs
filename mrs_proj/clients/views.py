@@ -9,9 +9,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db import models
 
+LOGIN_URL = '/login/'
 
 class ClientListView(LoginRequiredMixin, View):
-    login_url = '/login/'
+    login_url = LOGIN_URL
 
     def get(self, request):
         clients_per_page = 10
@@ -78,7 +79,7 @@ class ClientListView(LoginRequiredMixin, View):
 
 
 class ClientDetailView(LoginRequiredMixin, View):
-    login_url = '/login/'
+    login_url = LOGIN_URL
 
     def get(self, request, token):
         client = get_object_or_404(Client, token=token)
@@ -90,8 +91,6 @@ class ClientDetailView(LoginRequiredMixin, View):
 
     def post(self, request, token):
         action = request.POST.get('action', '')
-
-        print(request.POST)
 
         if action == 'delete_client':
             client = get_object_or_404(Client, token=token)
@@ -108,5 +107,3 @@ class ClientDetailView(LoginRequiredMixin, View):
                 return HttpResponseBadRequest("Invalid form submission")
         else:
             return HttpResponseBadRequest("Invalid action")
-
-        return HttpResponse(status=400)

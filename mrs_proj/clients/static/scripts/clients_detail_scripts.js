@@ -1,5 +1,5 @@
 function toggleForm() {
-    var form = document.getElementById('editForm');
+    let form = document.getElementById('editForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
@@ -12,21 +12,21 @@ function cancelDelete() {
 }
 
 function cancelEdit() {
-    var editForm = document.getElementById('editForm');
+    let editForm = document.getElementById('editForm');
     editForm.style.display = 'none';
 }
 
 function highlightChangedValues() {
     // Iterate through each change item
     document.querySelectorAll('.change-item').forEach(function (changeItem) {
-        var currentSPO2 = changeItem.dataset.spo2;
-        var currentResult = changeItem.dataset.result;
+        let currentSPO2 = changeItem.dataset.spo2;
+        let currentResult = changeItem.dataset.result;
 
         // Check if there is a previous entry
-        var prevChangeItem = changeItem.previousElementSibling;
+        let prevChangeItem = changeItem.previousElementSibling;
         if (prevChangeItem) {
-            var prevSPO2 = prevChangeItem.dataset.spo2;
-            var prevResult = prevChangeItem.dataset.result;
+            let prevSPO2 = prevChangeItem.dataset.spo2;
+            let prevResult = prevChangeItem.dataset.result;
 
             // Compare current and previous values
             if (currentSPO2 !== prevSPO2) {

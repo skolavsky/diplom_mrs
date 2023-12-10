@@ -11,37 +11,45 @@
 <body>
 <h1>Подробные данные</h1>
 
- <div class="client-details-container">
-        <h2>Client Details</h2>
+<div class="client-details-container">
+    <h2>Client Details</h2>
 
-        <table class="client-details-table">
-            <tr>
-                <td>ФИО:</td>
-                <td>{{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</td>
-            </tr>
-            <tr>
-                <td>Возраст:</td>
-                <td>{{ client.age }}</td>
-            </tr>
-            <tr>
-                <td>ИМТ:</td>
-                <td>{{ client.body_mass_index }}</td>
-            </tr>
-            <tr>
-                <td>SPO2:</td>
-                <td>{{ client.spo2 }}</td>
-            </tr>
-            <tr>
-                <td>Дата поступления:</td>
-                <td>{{ client.admission_date }}</td>
-            </tr>
-            <tr>
-                <td>Результат:</td>
-                <td>{{ client.result }}</td>
-            </tr>
-        </table>
+    <table class="client-details-table">
+        <caption>Client Details</caption>
 
-    </div>
+        <thead>
+        <tr>
+            <th>Параметр</th>
+            <th>Значение</th>
+        </tr>
+        </thead>
+        <tr>
+            <td>ФИО:</td>
+            <td>{{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</td>
+        </tr>
+        <tr>
+            <td>Возраст:</td>
+            <td>{{ client.age }}</td>
+        </tr>
+        <tr>
+            <td>ИМТ:</td>
+            <td>{{ client.body_mass_index }}</td>
+        </tr>
+        <tr>
+            <td>SPO2:</td>
+            <td>{{ client.spo2 }}</td>
+        </tr>
+        <tr>
+            <td>Дата поступления:</td>
+            <td>{{ client.admission_date }}</td>
+        </tr>
+        <tr>
+            <td>Результат:</td>
+            <td>{{ client.result }}</td>
+        </tr>
+    </table>
+
+</div>
 <main>
     <a href="{% url 'client_list' %}">Назад к списку пациентов</a>
 
