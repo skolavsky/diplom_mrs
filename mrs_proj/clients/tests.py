@@ -2,9 +2,6 @@ from django.test import TestCase
 import os
 from faker import Faker
 from clients.models import Client
-from django.forms import ValidationError
-from django.forms import ModelForm
-import secrets
 
 from clients.forms import ClientForm
 
@@ -22,6 +19,7 @@ class ClientFormTest(TestCase):
             setUp(self): Метод, вызываемый перед выполнением каждого тестового метода.
             test_valid_form(self): Метод тестирования валидности формы с корректными данными.
             test_invalid_form(self): Метод тестирования формы с некорректными данными.
+            test_first_name_length: Метод тестирования корректности ввода по символам
     """
 
     def setUp(self):
@@ -54,6 +52,29 @@ class ClientFormTest(TestCase):
         form = ClientForm(data)
         self.assertFalse(form.is_valid())
 
+    def test_first_name_length(self):
+        """
+        Тестирование корректности ввода длины имени в форме.
+
+        Метод создает случайное имя, превышающее максимальную длину поля в форме,
+        заполняет им форму ClientForm и проверяет, что форма считается невалидной.
+
+        Asserts:
+            assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
+            длины имени.
+        """
+        data = {
+            'first_name': str('a'*101), # воод 101 символа
+            'last_name': self.fake.last_name(),
+            'age': self.fake.random_int(min=18, max=99),
+            'spo2': 100,
+            'admission_date': self.fake.date_this_decade(),
+            'gender': '1'
+            # Добавьте остальные поля модели
+        }
+
+        form = ClientForm(data)
+        self.assertFalse(form.is_valid(), f'Form should be invalid due to first name length')
 
 class ClientModelTest(TestCase):
 
