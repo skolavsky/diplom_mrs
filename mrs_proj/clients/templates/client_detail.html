@@ -25,7 +25,7 @@
         </thead>
         <tr>
             <td>ФИО:</td>
-            <td>{{ client.first_name }} {{ client.last_name }} {{ client.patronymic }}</td>
+            <td>{{ client }}</td>
         </tr>
         <tr>
             <td>Возраст:</td>
@@ -51,7 +51,7 @@
 
 </div>
 <main>
-    <a href="{% url 'client_list_view' %}">Назад к списку пациентов</a>
+    <a href="{% url 'client_list' %}">Назад к списку пациентов</a>
 
     <h2>Действия</h2>
 

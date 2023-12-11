@@ -15,5 +15,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 
     # Include the 'clients' app view
-    path('client-list/', ClientListView.as_view(), name='client_list_view'),
+    path('client-list/', ClientListView.as_view(), name='client_list'),
 ]
