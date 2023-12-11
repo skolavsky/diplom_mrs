@@ -52,3 +52,9 @@ class ClientModelTest(TestCase):
         # Используем метод __str__ и выводим строку для каждого объекта
         for client in clients:
             print(str(client))
+
+    def test_token_uniqueness(self):
+        clients = Client.objects.all()
+        tokens = set(client.id_token for client in clients)
+        print(f'test_token_uniqueness: {len(tokens)}')
+        self.assertEqual(len(clients), len(tokens))
