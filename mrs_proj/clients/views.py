@@ -11,6 +11,7 @@ from django.db import models
 
 LOGIN_URL = '/login/'
 
+
 class ClientListView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
@@ -29,7 +30,6 @@ class ClientListView(LoginRequiredMixin, View):
                 models.Q(last_name__icontains=search_query) |
                 models.Q(patronymic__icontains=search_query)
             )
-
 
         next_order = 'desc' if order == 'asc' else 'asc'
 
@@ -54,7 +54,6 @@ class ClientListView(LoginRequiredMixin, View):
 
     def post(self, request):
         action = request.POST.get('action', '')
-        print(request.POST)
 
         if action == 'save':
             form = ClientForm(request.POST)
@@ -66,14 +65,12 @@ class ClientListView(LoginRequiredMixin, View):
                 new_client.added_user = self.request.user  # Use self.request.user
 
                 # Set token to a new random value
-                new_client.token = secrets.token_urlsafe(32)
+                new_client.id_token = secrets.token_urlsafe(32)
 
                 # Save the new client to the database
                 new_client.save()
                 # Redirect to the client list page
                 return redirect('client_list')
-        else:
-            HttpResponse(status=408)
 
         return HttpResponse(status=400)
 
@@ -81,28 +78,28 @@ class ClientListView(LoginRequiredMixin, View):
 class ClientDetailView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
-    def get(self, request, token):
-        client = get_object_or_404(Client, token=token)
+    def get(self, request, id_token):
+        client = get_object_or_404(Client, id_token=id_token)
         history_entries = client.history.all()
         print(history_entries)
         form = ClientForm(instance=client)
         context = {'client': client, 'history_entries': history_entries, 'form': form}
         return render(request, 'client_detail.html', context)
 
-    def post(self, request, token):
+    def post(self, request, id_token):
         action = request.POST.get('action', '')
 
         if action == 'delete_client':
-            client = get_object_or_404(Client, token=token)
+            client = get_object_or_404(Client, id_token=id_token)
             # Delete the client and redirect to the client list
             client.delete()
             return redirect('client_list')
         elif action == 'edit_client':
-            client = get_object_or_404(Client, token=token)
+            client = get_object_or_404(Client, id_token=id_token)
             form = ClientForm(request.POST, instance=client)  # Use ClientForm for editing
             if form.is_valid():
                 form.save()
-                return redirect('client_detail', token=token)
+                return redirect('client_detail', id_token=id_token)
             else:
                 return HttpResponseBadRequest("Invalid form submission")
         else:

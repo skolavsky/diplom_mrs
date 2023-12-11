@@ -6,18 +6,16 @@ from simple_history.models import HistoricalRecords
 
 class Client(models.Model):
     GENDER_CHOICES = [
-        (0, 'Female'),
-        (1, 'Male'),
+        (0, 'Женский'),
+        (1, 'Мужской'),
     ]
 
-    exclude = ['user', 'age']
-
-    token = models.CharField(max_length=100, default=secrets.token_urlsafe, unique=True)
+    id_token = models.CharField(max_length=100, default=None, unique=True, editable=False)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=100, blank=True, default='')
     last_name = models.CharField(max_length=100, blank=True, default='')
     patronymic = models.CharField(max_length=100, blank=True, default='')
-    age = models.IntegerField(null=False)
+    age = models.IntegerField(null=False, blank=True, default=0)
     body_mass_index = models.FloatField(null=True, blank=True)
     spo2 = models.IntegerField(null=True, blank=True)
     admission_date = models.DateField(null=False)
@@ -38,8 +36,13 @@ class Client(models.Model):
     spo2_fio = models.FloatField(null=True, blank=True)
     ch_d = models.IntegerField(null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if not self.id_token:
+            self.token = secrets.token_urlsafe(32)
+        super().save(*args, **kwargs)
+
     def get_gender_display(self):
-        return dict(self.GENDER_CHOICES).get(self.gender, 'Unknown')
+        return dict(self.GENDER_CHOICES).get(self.gender, 'не выбран')
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.last_name} {self.first_name} {self.patronymic} "

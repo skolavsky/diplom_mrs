@@ -51,13 +51,13 @@
 
 </div>
 <main>
-    <a href="{% url 'client_list' %}">Назад к списку пациентов</a>
+    <a href="{% url 'client_list_view' %}">Назад к списку пациентов</a>
 
     <h2>Действия</h2>
 
     <button id="delete" type="button" onclick="confirmDelete()">Удалить пациента</button>
 
-    <form id="client_delete" method="post" action="{% url 'client_detail' token=client.token %}">
+    <form id="client_delete" method="post" action="{% url 'client_detail' id_token=client.id_token %}">
         {% csrf_token %}
         <input type="hidden" name="action" value="delete_client">
         <div id="confirmDeletionDiv" style="display: none;">
@@ -75,7 +75,7 @@
 
 
     <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
-    <form id="editForm" method="post" action="{% url 'client_detail' token=client.token %}" style="display: none;">
+    <form id="editForm" method="post" action="{% url 'client_detail' id_token=client.id_token %}" style="display: none;">
         {% csrf_token %}
         <input type="hidden" name="action" value="edit_client">
         {{ form.as_table }}
