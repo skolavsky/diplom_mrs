@@ -74,7 +74,7 @@ class ClientFormTest(TestCase):
         }
 
         form = ClientForm(data)
-        self.assertFalse(form.is_valid(), f'Form should be invalid due to first name length')
+        self.assertFalse(form.is_valid(), 'Form should be invalid due to first name length')
 
 class ClientModelTest(TestCase):
 
