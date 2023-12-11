@@ -46,40 +46,40 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HistoricalClient',
             fields=[
-                ('id_token', models.CharField(db_index=True, default=None, editable=False, max_length=100)), # NOSONAR
-                ('id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),# NOSONAR
-                ('first_name', models.CharField(blank=True, default='', max_length=100)),# NOSONAR
-                ('last_name', models.CharField(blank=True, default='', max_length=100)),# NOSONAR
-                ('patronymic', models.CharField(blank=True, default='', max_length=100)),# NOSONAR
-                ('age', models.IntegerField(blank=True, default=0)),# NOSONAR
-                ('body_mass_index', models.FloatField(blank=True, null=True)),# NOSONAR
-                ('spo2', models.IntegerField(blank=True, null=True)),# NOSONAR
-                ('admission_date', models.DateField()),# NOSONAR
-                ('result', models.IntegerField(blank=True, null=True)),# NOSONAR
-                ('gender', models.BooleanField(choices=[(0, 'Женский'), (1, 'Мужской')], default=True)),# NOSONAR
-                ('f_test_ex', models.IntegerField(blank=True, null=True)),# NOSONAR
-                ('f_test_in', models.IntegerField(blank=True, null=True)),# NOSONAR
-                ('comorb_ccc', models.BooleanField(blank=True, default=False)),# NOSONAR
-                ('comorb_bl', models.BooleanField(blank=True, default=False)),# NOSONAR
-                ('cd_ozhir', models.BooleanField(blank=True, default=False)),# NOSONAR
-                ('comorb_all', models.BooleanField(blank=True, default=False)),# NOSONAR
-                ('l_109', models.FloatField(blank=True, null=True)),# NOSONAR
-                ('lf', models.IntegerField(blank=True, null=True)),# NOSONAR
-                ('rox', models.FloatField(blank=True, null=True)),# NOSONAR
-                ('spo2_fio', models.FloatField(blank=True, null=True)),# NOSONAR
-                ('ch_d', models.IntegerField(blank=True, null=True)),# NOSONAR
+                ('id_token', models.CharField(db_index=True, default=None, editable=False, max_length=100)),
+                ('id', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False)),
+                ('first_name', models.CharField(blank=True, default='', max_length=100)),
+                ('last_name', models.CharField(blank=True, default='', max_length=100)),
+                ('patronymic', models.CharField(blank=True, default='', max_length=100)),
+                ('age', models.IntegerField(blank=True, default=0)),
+                ('body_mass_index', models.FloatField(blank=True, null=True)),
+                ('spo2', models.IntegerField(blank=True, null=True)),
+                ('admission_date', models.DateField()),
+                ('result', models.IntegerField(blank=True, null=True)),
+                ('gender', models.BooleanField(choices=[(0, 'Женский'), (1, 'Мужской')], default=True)),
+                ('f_test_ex', models.IntegerField(blank=True, null=True)),
+                ('f_test_in', models.IntegerField(blank=True, null=True)),
+                ('comorb_ccc', models.BooleanField(blank=True, default=False)),
+                ('comorb_bl', models.BooleanField(blank=True, default=False)),
+                ('cd_ozhir', models.BooleanField(blank=True, default=False)),
+                ('comorb_all', models.BooleanField(blank=True, default=False)),
+                ('l_109', models.FloatField(blank=True, null=True)),
+                ('lf', models.IntegerField(blank=True, null=True)),
+                ('rox', models.FloatField(blank=True, null=True)),
+                ('spo2_fio', models.FloatField(blank=True, null=True)),
+                ('ch_d', models.IntegerField(blank=True, null=True)),
                 ('history_id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField(db_index=True)),# NOSONAR
-                ('history_change_reason', models.CharField(max_length=100, null=True)),# NOSONAR
+                ('history_date', models.DateTimeField(db_index=True)),#
+                ('history_change_reason', models.CharField(max_length=100, null=True)),
                 ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
                 ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
-            options={# NOSONAR
-                'verbose_name': 'historical client',# NOSONAR
-                'verbose_name_plural': 'historical clients',# NOSONAR
-                'ordering': ('-history_date', '-history_id'),# NOSONAR
-                'get_latest_by': ('history_date', 'history_id'),# NOSONAR
-            },# NOSONAR
-            bases=(simple_history.models.HistoricalChanges, models.Model),# NOSONAR
+            options={
+                'verbose_name': 'historical client',
+                'verbose_name_plural': 'historical clients',
+                'ordering': ('-history_date', '-history_id'),
+                'get_latest_by': ('history_date', 'history_id'),
+            },
+            bases=(simple_history.models.HistoricalChanges, models.Model),
         ),
     ]
