@@ -5,22 +5,38 @@ from clients.models import Client
 from django.forms import ValidationError
 from django.forms import ModelForm
 import secrets
+
 from clients.forms import ClientForm
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
 
+
 class ClientFormTest(TestCase):
+    """
+        Класс для тестирования валидности формы ClientForm.
+
+        Attributes:
+            fake (Faker): Объект Faker для генерации случайных данных.
+
+        Methods:
+            setUp(self): Метод, вызываемый перед выполнением каждого тестового метода.
+            test_valid_form(self): Метод тестирования валидности формы с корректными данными.
+            test_invalid_form(self): Метод тестирования формы с некорректными данными.
+    """
+
     def setUp(self):
+        """Настройка объекта Faker перед каждым тестовым методом."""
         self.fake = Faker()
 
     def test_valid_form(self):
+        """Тест валидности формы с корректными данными."""
         data = {
             'first_name': self.fake.first_name(),
             'last_name': self.fake.last_name(),
             'age': self.fake.random_int(min=18, max=99),
             'admission_date': self.fake.date_this_decade(),
             'gender': '1'
-            # Добавьте остальные поля модели
+            # остальные поля модели
         }
 
         form = ClientForm(data)
@@ -28,6 +44,7 @@ class ClientFormTest(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_invalid_form(self):
+        """Тест формы с некорректными данными."""
         data = {
             'first_name': self.fake.first_name(),
             'last_name': self.fake.last_name(),
