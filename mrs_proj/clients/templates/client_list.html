@@ -30,7 +30,7 @@
         {% for client in clients %}
         <tr>
             <td>
-                <a href="{% url 'client_detail' token=client.token %}">{{ client.last_name }} {{client.first_name }} {{ client.patronymic }}</a>
+                <a href="{% url 'client_detail' id_token=client.id_token %}">{{ client }}</a>
             </td>
             <td>{{ client.age }}</td>
             <td>{{ client.body_mass_index }}</td>
@@ -38,7 +38,7 @@
             <td>{{ client.admission_date }}</td>
             <td>{{ client.result }}</td>
             <td>
-                <a href="{% url 'client_detail' token=client.token %}">Delete</a>
+                <a href="{% url 'client_detail' id_token=client.id_token %}">Delete</a>
             </td>
         </tr>
         {% endfor %}

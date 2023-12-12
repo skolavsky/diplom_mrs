@@ -11,7 +11,7 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name='login'),
     path('', HomeView.as_view(), name='home'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('client-detail/<str:token>/', ClientDetailView.as_view(), name='client_detail'),
+    path('client-detail/<str:id_token>/', ClientDetailView.as_view(), name='client_detail'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 
     # Include the 'clients' app view
