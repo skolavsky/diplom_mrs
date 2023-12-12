@@ -89,3 +89,30 @@ class WebHandlerViewsTest(TestCase):
         response = self.client.get('/dashboard/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'dashboard.html')
+
+    def test_unauthenticated_access(self):
+        """
+        Тестирование доступа к представлениям без аутентификации.
+
+        - Проверка доступа к представлению контактов без аутентификации.
+        - Проверка доступа к представлению домашней страницы без аутентификации.
+        - Проверка доступа к представлению панели управления без аутентификации.
+        """
+
+        # Проверка доступа к представлению контактов без аутентификации
+        response = self.client.get('/contacts/')
+        self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
+
+        # Проверка доступа к представлению домашней страницы без аутентификации
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
+
+        # Проверка доступа к представлению панели управления без аутентификации
+        response = self.client.get('/dashboard/')
+        self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
+
+        # Проверка доступа к представлению домашней страницы без результатов пациентов
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
+        self.assertRedirects(response, '/login/?next=/', target_status_code=200)
+        # Ожидается перенаправление на страницу входа с сохранением параметра 'next'
