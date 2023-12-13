@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Home{% endblock %}
-{% block header %}Главная страница{% endblock %}
+{% block header %}Список записей{% endblock %}
 
 {% block content %}
-
-    <h2>Список записей</h2>
-
     <input type="text" id="searchInput" placeholder="Поиск по ФИО">
     <button type="button" id="searchButton">Search</button>
 
@@ -16,36 +13,36 @@
     <table>
         <caption>Client List</caption>
         <thead>
-        <tr>
-            <th {% if sort_by == 'last_name' %}class="active"{% endif %}><a href="?sort=last_name&order={{ next_order }}">ФИО</a></th>
-            <th {% if sort_by == 'age'%}class="active"{% endif %}><a href="?sort=age&order={{ next_order }}">Возраст</a></th>
-            <th {% if sort_by == 'body_mass_index'%}class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
-            <th {% if sort_by == 'spo2'%}class="active"{% endif %}><a href="?sort=spo2&order={{ next_order }}">SPO2</a></th>
-            <th {% if sort_by == 'admission_date'%}class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
-            <th {% if sort_by == 'result'%}class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
-            <th>Действия</th>
-        </tr>
+            <tr class="table">
+                <th {% if sort_by == 'last_name' %} class="active"{% endif %}><a href="?sort=last_name&order={{ next_order }}">ФИО</a></th>
+                <th {% if sort_by == 'age' %} class="active"{% endif %}><a href="?sort=age&order={{ next_order }}">Возраст</a></th>
+                <th {% if sort_by == 'body_mass_index' %} class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
+                <th {% if sort_by == 'spo2' %} class="active"{% endif %}><a href="?sort=spo2&order={{ next_order }}">SPO2</a></th>
+                <th {% if sort_by == 'admission_date' %} class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
+                <th {% if sort_by == 'result' %} class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
+                <th>Действия</th>
+            </tr>
         </thead>
         <tbody>
         {% for client in clients %}
-        <tr>
-            <td>
+        <tr class="table">
+            <td class="cell_name">
                 <a href="{% url 'client_detail' token=client.token %}">{{ client.last_name }} {{client.first_name }} {{ client.patronymic }}</a>
             </td>
-            <td>{{ client.age }}</td>
-            <td>{{ client.body_mass_index }}</td>
-            <td>{{ client.spo2 }}</td>
-            <td>{{ client.admission_date }}</td>
-            <td>{{ client.result }}</td>
-            <td>
-                <a href="{% url 'client_detail' token=client.token %}">Delete</a>
+            <td class="cell_age">{{ client.age }}</td>
+            <td class="cell_imt">{{ client.body_mass_index }}</td>
+            <td class="cell_spo">{{ client.spo2 }}</td>
+            <td class="cell_date">{{ client.admission_date }}</td>
+            <td class="cell_res">{{ client.result }}</td>
+            <td class="cell_button">
+                <a class="button" href="{% url 'client_detail' token=client.token %}">Delete</a>
             </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <button id="toggleFormBtn" onclick="toggleForm()">Добавить пациента</button>
+    <button id="toggleFormBtn" class="button" onclick="toggleForm()">Добавить пациента</button>
 
     <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;"
           onsubmit="return validateClientForm()">
