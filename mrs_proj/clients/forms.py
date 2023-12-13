@@ -23,13 +23,23 @@ class ClientForm(forms.ModelForm):
             'body_mass_index': 'ИМТ',
             'result': 'Исход',
             'ch_d': 'Частота дыхания',
-            'cd_ozhir': 'Сахарный диабет или ожирение'
+            'cd_ozhir': 'Сахарный диабет или ожирение',
+            'spo2_fio': 'spo2_fio',
+            'rox': 'rox',
+            'lf': 'lf',
+            'l_109': 'l_109',
+            'comorb_all': 'comorb_all',
+            'comorb_ccc': 'comorb_ccc',
+            'f_test_in': 'f_test_in',
+            'f_test_ex': 'f_test_ex',
+            'comorb_bl': 'comorb_bl',
             # Add labels for other fields
         }
 
         widgets = {
             'first_name': forms.TextInput(attrs={'style': 'width: 80%;'}),
             'admission_date': forms.SelectDateWidget(),
+            'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
             # Add widgets for other fields
         }
 
@@ -206,3 +216,16 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError("Значение rox не может превышать 50.")
 
         return rox
+
+    def clean_spo2_fio(self):
+        spo2_fio = self.cleaned_data.get('spo2_fio')
+
+        # Проверка на отрицательное значение spo2_fio
+        if spo2_fio is not None and spo2_fio < 0:
+            raise forms.ValidationError("Значение spo2_fio не может быть отрицательным.")
+
+        # Проверка на значение spo2_fio не более 600
+        if spo2_fio is not None and spo2_fio > 600:
+            raise forms.ValidationError("Значение spo2_fio не может превышать 600.")
+
+        return spo2_fio
