@@ -1,17 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/clients_list_styles.css' %}">
+{% endblock %}
 {% block title %}Home{% endblock %}
 {% block header %}Список записей{% endblock %}
 
 {% block content %}
-    <input type="text" id="searchInput" placeholder="Поиск по ФИО">
-    <button type="button" id="searchButton">Search</button>
 
-    <button type="submit" id="resetSortingButton">Сброс сортировки</button>
+    <div class="box_tool">
+        <div class="search_box">
+            <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
+            <button type="button" class="button" id="searchButton"> <i class="fas fa-sign-out-alt"></i> Поиск</button>
+            <button type="submit" class="button" id="resetSortingButton"> <i class="fas fa-sign-out-alt"></i> Сброс сортировки</button>
+        </div>
+
+        <div class="2">
+            <button id="toggleFormBtn" class="button" onclick="toggleForm()">Добавить пациента</button>
+        </div>
+    </div>
 
 
     <table>
-        <caption>Client List</caption>
         <thead>
             <tr class="table">
                 <th {% if sort_by == 'last_name' %} class="active"{% endif %}><a href="?sort=last_name&order={{ next_order }}">ФИО</a></th>
@@ -35,22 +45,24 @@
             <td class="cell_date">{{ client.admission_date }}</td>
             <td class="cell_res">{{ client.result }}</td>
             <td class="cell_button">
-                <a class="button" href="{% url 'client_detail' token=client.token %}">Delete</a>
+                <a href="{% url 'client_detail' token=client.token %}">
+                    <div class="button">
+                        Delete
+                    </div>
+                </a>
             </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <button id="toggleFormBtn" class="button" onclick="toggleForm()">Добавить пациента</button>
-
     <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;"
           onsubmit="return validateClientForm()">
         {% csrf_token %}
         {{ form.as_table }}
         <input type="hidden" name="action" value="save">
-        <button type="submit">Сохранить</button>
-        <button type="button" onclick="cancelAddClient()">Отменить</button>
+        <button type="submit" class="button">Сохранить</button>
+        <button type="button" class="button" onclick="cancelAddClient()">Отменить</button>
     </form>
 
     <div class="pagination">
@@ -60,9 +72,13 @@
                 <a href="?page={{ clients.previous_page_number }}">previous</a>
             {% endif %}
 
-            <span class="current">
-                Page {{ clients.number }} of {{ clients.paginator.num_pages }}.
-            </span>
+            <div class="page_next">
+                <button class="button">&#8592;</button>
+                <p>
+                    Page {{ clients.number }} of {{ clients.paginator.num_pages }}
+                </p>
+                <button class="button">&#8594;</button>
+            </div>
 
             {% if clients.has_next %}
                 <a href="?page={{ clients.next_page_number }}">next</a>
@@ -70,8 +86,8 @@
             {% endif %}
         </span>
     </div>
-    <script src="{% static 'scripts/clients_scripts.js' %}"></script>
 
+    <script src="{% static 'scripts/clients_scripts.js' %}"></script>
 <script>
 
     document.addEventListener('DOMContentLoaded', function() {
