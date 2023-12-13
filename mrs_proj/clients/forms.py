@@ -167,3 +167,42 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError("Значение f_test_in не может превышать 200.")
 
         return f_test_in
+
+    def clean_l_109(self):
+        l_109 = self.cleaned_data.get('l_109')
+
+        # Проверка на отрицательное значение l_109
+        if l_109 is not None and l_109 < 0:
+            raise forms.ValidationError("Значение l_109 не может быть отрицательным.")
+
+        # Проверка на значение l_109 не более 50
+        if l_109 is not None and l_109 > 50:
+            raise forms.ValidationError("Значение l_109 не может превышать 50.")
+
+        return l_109
+
+    def clean_lf(self):
+        lf = self.cleaned_data.get('lf')
+
+        # Проверка на отрицательное значение lf
+        if lf is not None and lf < 0:
+            raise forms.ValidationError("Значение lf не может быть отрицательным.")
+
+        # Проверка на значение lf не более 50
+        if lf is not None and lf > 50:
+            raise forms.ValidationError("Значение lf не может превышать 50.")
+
+        return lf
+
+    def clean_rox(self):
+        rox = self.cleaned_data.get('rox')
+
+        # Проверка на отрицательное значение rox
+        if rox is not None and rox < 0:
+            raise forms.ValidationError("Значение rox не может быть отрицательным.")
+
+        # Проверка на значение rox не более 50
+        if rox is not None and rox > 50:
+            raise forms.ValidationError("Значение rox не может превышать 50.")
+
+        return rox
