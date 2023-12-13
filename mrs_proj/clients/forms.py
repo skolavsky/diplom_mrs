@@ -87,20 +87,17 @@ class ClientForm(forms.ModelForm):
         return age
 
     def clean_body_mass_index(self):
-        weight = self.cleaned_data.get('weight')
-        height = self.cleaned_data.get('height')
+        body_mass_index = self.cleaned_data.get('body_mass_index')
 
-        # Проверка на отрицательный BMI
-        if weight and height:
-            bmi = weight / (height ** 2)
-            if bmi < 0:
-                raise forms.ValidationError("Индекс массы тела не может быть отрицательным.")
+        # Проверка на отрицательное значение BMI
+        if body_mass_index is not None and body_mass_index < 0:
+            raise forms.ValidationError("Индекс массы тела не может быть отрицательным.")
 
-            # Проверка на значение BMI не более 100.0
-            if bmi > 100.0:
-                raise forms.ValidationError("Индекс массы тела не может быть более 100.0.")
+        # Проверка на значение BMI не более 100.0
+        if body_mass_index is not None and body_mass_index > 100.0:
+            raise forms.ValidationError("Индекс массы тела не может быть более 100.0.")
 
-        return self.cleaned_data.get('body_mass_index')
+        return body_mass_index
 
     def clean_spo2(self):
         spo2 = self.cleaned_data.get('spo2')
