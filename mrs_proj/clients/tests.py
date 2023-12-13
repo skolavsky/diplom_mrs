@@ -2,7 +2,7 @@ from django.test import TestCase
 import os
 from faker import Faker
 from clients.models import Client
-
+from datetime import date
 from clients.forms import ClientForm
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
@@ -28,11 +28,12 @@ class ClientFormTest(TestCase):
 
     def test_valid_form(self):
         """Тест валидности формы с корректными данными."""
+        start_year = 2023
         data = {
             'first_name': self.fake.first_name(),
             'last_name': self.fake.last_name(),
             'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_this_decade(),
+            'admission_date': self.fake.date_between_dates(date(start_year, 1, 1), date.today()),
             'gender': '1'
             # остальные поля модели
         }
