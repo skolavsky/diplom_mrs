@@ -128,3 +128,42 @@ class ClientForm(forms.ModelForm):
                 raise forms.ValidationError("Дата поступления не может быть раньше 2023 года.")
 
         return admission_date
+
+    def clean_ch_d(self):
+        ch_d = self.cleaned_data.get('ch_d')
+
+        # Проверка на отрицательное значение ch_d
+        if ch_d is not None and ch_d < 0:
+            raise forms.ValidationError("Частота дыхания не может быть отрицательной.")
+
+        # Проверка на значение ch_d не более 150
+        if ch_d is not None and ch_d > 150:
+            raise forms.ValidationError("Частота дыхания не может превышать 150.")
+
+        return ch_d
+
+    def clean_f_test_ex(self):
+        f_test_ex = self.cleaned_data.get('f_test_ex')
+
+        # Проверка на отрицательное значение f_test_ex
+        if f_test_ex is not None and f_test_ex < 0:
+            raise forms.ValidationError("Значение f_test_ex не может быть отрицательным.")
+
+        # Проверка на значение f_test_ex не более 200
+        if f_test_ex is not None and f_test_ex > 200:
+            raise forms.ValidationError("Значение f_test_ex не может превышать 200.")
+
+        return f_test_ex
+
+    def clean_f_test_in(self):
+        f_test_in = self.cleaned_data.get('f_test_in')
+
+        # Проверка на отрицательное значение f_test_in
+        if f_test_in is not None and f_test_in < 0:
+            raise forms.ValidationError("Значение f_test_in не может быть отрицательным.")
+
+        # Проверка на значение f_test_in не более 200
+        if f_test_in is not None and f_test_in > 200:
+            raise forms.ValidationError("Значение f_test_in не может превышать 200.")
+
+        return f_test_in
