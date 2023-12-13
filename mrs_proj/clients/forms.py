@@ -36,9 +36,14 @@ class ClientForm(forms.ModelForm):
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
 
+        # Проверка на длину не более 100 символов
         max_length = 100
         if first_name and len(first_name) > max_length:
             raise forms.ValidationError(f"Длина имени не должна превышать {max_length} символов.")
+
+        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
+        if first_name and not re.match("^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$", first_name):
+            raise forms.ValidationError("Имя может содержать только буквы, апостроф, дефис и пробел.")
 
         return first_name
 
@@ -55,6 +60,20 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError("Фамилия может содержать только буквы, апостроф, дефис и пробел.")
 
         return last_name
+
+    def clean_patronymic(self):
+        patronymic = self.cleaned_data.get('patronymic')
+
+        # Проверка на длину не более 100 символов
+        max_length = 100
+        if patronymic and len(patronymic) > max_length:
+            raise forms.ValidationError(f"Длина отчества не должна превышать {max_length} символов.")
+
+        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
+        if patronymic and not re.match("^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$", patronymic):
+            raise forms.ValidationError("Отчество может содержать только буквы, апостроф, дефис и пробел.")
+
+        return patronymic
 
     def clean_age(self):
         age = self.cleaned_data.get('age')
