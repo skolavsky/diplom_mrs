@@ -1,5 +1,7 @@
 from django import forms
 from .models import Client
+from django.utils import timezone
+import re
 
 
 class ClientForm(forms.ModelForm):
@@ -40,6 +42,20 @@ class ClientForm(forms.ModelForm):
 
         return first_name
 
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+
+        # Проверка на длину не более 100 символов
+        max_length = 100
+        if last_name and len(last_name) > max_length:
+            raise forms.ValidationError(f"Длина фамилии не должна превышать {max_length} символов.")
+
+        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
+        if last_name and not re.match("^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$", last_name):
+            raise forms.ValidationError("Фамилия может содержать только буквы, апостроф, дефис и пробел.")
+
+        return last_name
+
     def clean_age(self):
         age = self.cleaned_data.get('age')
 
@@ -71,3 +87,17 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError("lf не может быть отрицательным числом.")
 
         return lf
+
+    def clean_admission_date(self):
+        admission_date = self.cleaned_data.get('admission_date')
+
+        if admission_date:
+            # Проверка на дату, не больше сегодняшнего дня
+            if admission_date > timezone.now().date():
+                raise forms.ValidationError("Дата поступления не может быть в будущем.")
+
+            # Проверка на дату, не раньше 2023 года
+            if admission_date.year < 2023:
+                raise forms.ValidationError("Дата поступления не может быть раньше 2023 года.")
+
+        return admission_date
