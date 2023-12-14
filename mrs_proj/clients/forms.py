@@ -2,8 +2,10 @@ from django import forms
 from .models import Client
 from django.utils import timezone
 import re
+from decimal import Decimal, ROUND_DOWN
 
 FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$"
+FIO_MAX_LENGTH = 100
 
 
 class ClientForm(forms.ModelForm):
@@ -47,11 +49,8 @@ class ClientForm(forms.ModelForm):
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
-
-        # Проверка на длину не более 100 символов
-        max_length = 100
-        if first_name and len(first_name) > max_length:
-            raise forms.ValidationError(f"Длина имени не должна превышать {max_length} символов.")
+        if first_name and len(first_name) > FIO_MAX_LENGTH:
+            raise forms.ValidationError(f"Длина имени не должна превышать {FIO_MAX_LENGTH} символов.")
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
         if first_name and not re.match(FIO_RE_VALIDATION, first_name):
@@ -63,9 +62,8 @@ class ClientForm(forms.ModelForm):
         last_name = self.cleaned_data.get('last_name')
 
         # Проверка на длину не более 100 символов
-        max_length = 100
-        if last_name and len(last_name) > max_length:
-            raise forms.ValidationError(f"Длина фамилии не должна превышать {max_length} символов.")
+        if last_name and len(last_name) > FIO_MAX_LENGTH:
+            raise forms.ValidationError(f"Длина фамилии не должна превышать {FIO_MAX_LENGTH} символов.")
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
         if last_name and not re.match(FIO_RE_VALIDATION, last_name):
@@ -76,12 +74,9 @@ class ClientForm(forms.ModelForm):
     def clean_patronymic(self):
         patronymic = self.cleaned_data.get('patronymic')
 
-        # Проверка на длину не более 100 символов
-        max_length = 100
-        if patronymic and len(patronymic) > max_length:
-            raise forms.ValidationError(f"Длина отчества не должна превышать {max_length} символов.")
+        if patronymic and len(patronymic) > FIO_MAX_LENGTH:
+            raise forms.ValidationError(f"Длина отчества не должна превышать {FIO_MAX_LENGTH} символов.")
 
-        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
         if patronymic and not re.match(FIO_RE_VALIDATION, patronymic):
             raise forms.ValidationError("Отчество может содержать только буквы, апостроф, дефис и пробел.")
 
@@ -108,6 +103,12 @@ class ClientForm(forms.ModelForm):
         # Проверка на значение BMI не более 100.0
         if body_mass_index is not None and body_mass_index > 100.0:
             raise forms.ValidationError("Индекс массы тела не может быть более 100.0.")
+
+        # Проверка на количество знаков после запятой (не более 3)
+        if body_mass_index is not None:
+            decimal_part = Decimal(str(body_mass_index)).as_tuple().exponent
+            if decimal_part < -3:
+                raise forms.ValidationError("Индекс массы тела может иметь не более 3 знаков после запятой.")
 
         return body_mass_index
 
