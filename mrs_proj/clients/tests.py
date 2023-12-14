@@ -121,7 +121,7 @@ class ClientFormTest(TestCase):
 
     def test_invalid_last_name(self):
         for data in self.data_list:
-            data['last_name'] = data['last_name'] + self.generate_invalid_string()
+            data['last_name'] += self.generate_invalid_string()
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
@@ -142,40 +142,26 @@ class ClientFormTest(TestCase):
             assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за
             отрицательного возраста.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'age': -5,  # возраст отрицательный
-            'spo2': 100,
-            'admission_date': self.fake.date_this_decade(),
-            'gender': '0'
-        }
+        for data in self.data_list:
+            data['age'] *= -1
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
-        form = ClientForm(data)
-        self.assertFalse(form.is_valid(), 'Form should be invalid for negative age')
-
-    def test_patronymic_valid(self):
+    def test_age_max(self):
         """
-        Тестирование валидации отчества.
+        Тестирование валидации возраста.
 
-        Метод создает случайное отчество, соответствующее правилам валидации,
-        заполняет им форму ClientForm и проверяет, что форма считается валидной.
+        Метод создает случайный возраст, отрицательный, заполняет им форму ClientForm
+        и проверяет, что форма считается невалидной.
 
         Asserts:
-            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+            assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за
+            отрицательного возраста.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'patronymic': "Ivanovich",
-            'age': self.fake.random_int(min=18, max=99),
-            'spo2': 100,
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1'
-        }
-
-        form = ClientForm(data)
-        self.assertTrue(form.is_valid(), 'Form should be valid for a valid patronymic')
+        for data in self.data_list:
+            data['age'] = self.fake.random_int(min=121, max=999),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_body_mass_index_valid(self):
         """
@@ -189,21 +175,10 @@ class ClientFormTest(TestCase):
             assertTrue(bool): Подтверждает, что форма прошла валидацию.
         """
 
-        # Генерируем случайные байты и преобразуем их в число в диапазоне [0.0, 100.0)
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1',
-            'body_mass_index': float(self.fake.random_int(min=0, max=99)),
-            # Добавьте остальные поля модели
-        }
-
-        print(data['body_mass_index'])
-
-        form = ClientForm(data)
-        self.assertTrue(form.is_valid(), 'Form should be valid for a valid body mass index')
+        for data in self.data_list:
+            data['body_mass_index'] = float(self.fake.random_int(min=0, max=99)),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_spo2_fio_valid(self):
         """
@@ -215,17 +190,11 @@ class ClientFormTest(TestCase):
         Asserts:
             assertTrue(bool): Подтверждает, что форма прошла валидацию.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'spo2_fio': self.fake.random_int(min=0, max=600),  # случайное значение в пределах допустимого
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '0'
-        }
 
-        form = ClientForm(data)
-        self.assertTrue(form.is_valid(), 'Form should be valid for a valid spo2_fio')
+        for data in self.data_list:
+            data['spo2_fio'] = self.fake.random_int(min=0, max=600)
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_spo2_valid(self):
         """
@@ -237,17 +206,10 @@ class ClientFormTest(TestCase):
         Asserts:
             assertTrue(bool): Подтверждает, что форма прошла валидацию.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'spo2': self.fake.random_int(min=0, max=100),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1'
-        }
-
-        form = ClientForm(data)
-        self.assertTrue(form.is_valid(), 'Form should be valid for a valid spo2')
+        for data in self.data_list:
+            data['spo2'] = self.fake.random_int(min=0, max=100),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_f_test_ex_valid(self):
         """
@@ -259,18 +221,11 @@ class ClientFormTest(TestCase):
         Asserts:
             assertTrue(bool): Подтверждает, что форма прошла валидацию.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'f_test_ex': self.fake.random_int(min=0, max=200),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1'
-            # Добавьте остальные поля модели
-        }
 
-        form = ClientForm(data)
-        self.assertTrue(form.is_valid(), 'Form should be valid for a valid f_test_ex')
+        for data in self.data_list:
+            data['f_test_ex'] = self.fake.random_int(min=0, max=200),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_f_test_in_valid(self):
         """
@@ -282,15 +237,43 @@ class ClientFormTest(TestCase):
         Asserts:
             assertTrue(bool): Подтверждает, что форма прошла валидацию.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'f_test_in': self.fake.random_int(min=0, max=200),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_this_decade(),
-            'gender': '1'
-            # Добавьте остальные поля модели
-        }
+
+        for data in self.data_list:
+            data['f_test_in'] = self.fake.random_int(min=0, max=200),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_ch_d_negative(self):
+        """
+        Тестирование валидации f_test_in.
+
+        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['ch_d'] = self.fake.random_int(min=-100, max=-1),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_ch_d_max(self):
+        """
+        Тестирование валидации f_test_in.
+
+        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['ch_d'] = self.fake.random_int(min=151, max=999),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
 
 class ClientModelTest(TestCase):

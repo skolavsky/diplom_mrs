@@ -3,6 +3,8 @@ from .models import Client
 from django.utils import timezone
 import re
 
+FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$"
+
 
 class ClientForm(forms.ModelForm):
     class Meta:
@@ -52,7 +54,7 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError(f"Длина имени не должна превышать {max_length} символов.")
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        if first_name and not re.match("^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$", first_name):
+        if first_name and not re.match(FIO_RE_VALIDATION, first_name):
             raise forms.ValidationError("Имя может содержать только буквы, апостроф, дефис и пробел.")
 
         return first_name
@@ -66,7 +68,7 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError(f"Длина фамилии не должна превышать {max_length} символов.")
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        if last_name and not re.match("^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$", last_name):
+        if last_name and not re.match(FIO_RE_VALIDATION, last_name):
             raise forms.ValidationError("Фамилия может содержать только буквы, апостроф, дефис и пробел.")
 
         return last_name
@@ -80,7 +82,7 @@ class ClientForm(forms.ModelForm):
             raise forms.ValidationError(f"Длина отчества не должна превышать {max_length} символов.")
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        if patronymic and not re.match("^[A-Za-zА-Яа-яЁёЇїІіЄєҐґ' -]+$", patronymic):
+        if patronymic and not re.match(FIO_RE_VALIDATION, patronymic):
             raise forms.ValidationError("Отчество может содержать только буквы, апостроф, дефис и пробел.")
 
         return patronymic
