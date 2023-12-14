@@ -24,10 +24,10 @@ class ClientForm(forms.ModelForm):
             'result': 'Исход',
             'ch_d': 'Частота дыхания',
             'cd_ozhir': 'Сахарный диабет или ожирение',
-            'spo2_fio': 'fraction of inspired oxygen',
-            'rox': 'rox-?',
-            'lf': 'lung function',
-            'l_109': 'level_109',
+            'spo2_fio': 'Fraction of inspired oxygen',
+            'rox': 'Rox-?',
+            'lf': 'Lung function',
+            'l_109': 'Level_109',
             'comorb_all': 'аллергии?',
             'comorb_ccc': 'comorb_ccc?',
             'f_test_in': 'внутренний',
@@ -100,7 +100,7 @@ class ClientForm(forms.ModelForm):
         body_mass_index = self.cleaned_data.get('body_mass_index')
 
         # Проверка на отрицательное значение BMI
-        if body_mass_index is not None and body_mass_index < 0:
+        if body_mass_index is not None and body_mass_index < 0.0:
             raise forms.ValidationError("Индекс массы тела не может быть отрицательным.")
 
         # Проверка на значение BMI не более 100.0
