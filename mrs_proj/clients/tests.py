@@ -9,6 +9,8 @@ import string
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
 START_YEAR = 2023  # для admission_date
+NAMES_MAX_LENGTH = 100
+
 
 class ClientFormTest(TestCase):
     """
@@ -23,9 +25,9 @@ class ClientFormTest(TestCase):
             test_invalid_form(self): Метод тестирования формы с некорректными данными.
             test_first_name_length: Метод тестирования корректности ввода по символам
     """
-    fake = Faker()
+    fake = Faker('ru_RU')
 
-    def setUp(self, num_samples: int = 1):
+    def setUp(self, num_samples: int = 2):
         # Генерация данных для каждого теста
         self.data_list = [self.generate_data() for _ in range(num_samples)]
 
@@ -33,6 +35,7 @@ class ClientFormTest(TestCase):
         default_data = {
             'first_name': self.fake.first_name(),
             'last_name': self.fake.last_name(),
+            'patronymic': self.fake.middle_name(),
             'age': self.fake.random_int(min=0, max=120),
             'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
             'gender': secrets.choice(['0', '1']),
@@ -55,7 +58,7 @@ class ClientFormTest(TestCase):
             self.assertTrue(form.is_valid())
 
     def test_invalid_form_with_insufficient_data(self):
-        """Тест формы с некорректными данными."""
+        """Тест формы с недостатком данных."""
         for data in self.data_list:
             insufficient_data = data.copy()
             insufficient_data.popitem()
@@ -73,52 +76,60 @@ class ClientFormTest(TestCase):
             assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
             длины имени.
         """
-        data = {
-            'first_name': str('a' * 101),  # воод 101 символа
-            'last_name': self.fake.last_name(),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1'
-        }
-
-        form = ClientForm(data)
-        self.assertFalse(form.is_valid(), 'Form should be invalid due to first name length')
-
-    def test_invalid_name(self):
-        invalid_name = self.generate_invalid_string()
-        data = {
-            'first_name': invalid_name,
-            'last_name': self.fake.last_name(),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_this_decade(),
-            'gender': '1'
-            # Добавьте остальные поля модели
-        }
-
-        form = ClientForm(data)
-        self.assertFalse(form.is_valid(), 'Form should be invalid for an invalid first name')
+        for data in self.data_list:
+            data['first_name'] = str('a' * (NAMES_MAX_LENGTH + 1))
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_last_name_length(self):
         """
-        Тестирование корректности ввода длины фамилии в форме.
+        Тестирование корректности ввода длины имени в форме.
 
-        Метод создает случайную фамилию, превышающую максимальную длину поля в форме,
-        заполняет ей форму ClientForm и проверяет, что форма считается невалидной.
+        Метод создает случайное имя, превышающее максимальную длину поля в форме,
+        заполняет им форму ClientForm и проверяет, что форма считается невалидной.
 
         Asserts:
             assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
-            длины фамилии.
+            длины имени.
         """
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': str('a' * 101),  # ввод 101 символа
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1'
-        }
+        for data in self.data_list:
+            data['last_name'] = str('a' * (NAMES_MAX_LENGTH + 1))
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
-        form = ClientForm(data)
-        self.assertFalse(form.is_valid(), 'Form should be invalid due to last name length')
+    def test_patronymic_length(self):
+        """
+        Тестирование корректности ввода длины имени в форме.
+
+        Метод создает случайное имя, превышающее максимальную длину поля в форме,
+        заполняет им форму ClientForm и проверяет, что форма считается невалидной.
+
+        Asserts:
+            assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
+            длины имени.
+        """
+        for data in self.data_list:
+            data['patronymic'] = str('a' * (NAMES_MAX_LENGTH + 1))
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_invalid_first_name(self):
+        for data in self.data_list:
+            data['first_name'] = data['first_name'] + self.generate_invalid_string()
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_invalid_last_name(self):
+        for data in self.data_list:
+            data['last_name'] = data['last_name'] + self.generate_invalid_string()
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_invalid_patronymic(self):
+        for data in self.data_list:
+            data['patronymic'] = data['patronymic'] + self.generate_invalid_string()
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_age_negative(self):
         """
@@ -296,7 +307,7 @@ class ClientModelTest(TestCase):
             Client.objects.create(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                patronymic=fake.last_name(),
+                patronymic=fake.middle_name(),
                 age=fake.random_int(min=18, max=100),
                 admission_date=fake.date_between(start_date='-30d', end_date='today'),
                 id_token=fake.uuid4(),
