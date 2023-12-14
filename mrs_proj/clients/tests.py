@@ -5,7 +5,8 @@ from clients.models import Client
 from datetime import date
 from clients.forms import ClientForm
 import secrets
-import binascii
+import string
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
 
@@ -29,6 +30,11 @@ class ClientFormTest(TestCase):
     def setUp(self):
         """Настройка объекта Faker перед каждым тестовым методом."""
         self.fake = Faker()
+
+    def generate_invalid_string(self):
+        invalid_chars = ''.join(secrets.choice(string.punctuation + string.digits) for _ in range(5))
+        invalid_name = self.fake.first_name() + invalid_chars
+        return invalid_name
 
     def test_valid_form(self):
         """Тест валидности формы с корректными данными."""
@@ -77,6 +83,20 @@ class ClientFormTest(TestCase):
 
         form = ClientForm(data)
         self.assertFalse(form.is_valid(), 'Form should be invalid due to first name length')
+
+    def test_invalid_name(self):
+        invalid_name = self.generate_invalid_string()
+        data = {
+            'first_name': invalid_name,
+            'last_name': self.fake.last_name(),
+            'age': self.fake.random_int(min=18, max=99),
+            'admission_date': self.fake.date_this_decade(),
+            'gender': '1'
+            # Добавьте остальные поля модели
+        }
+
+        form = ClientForm(data)
+        self.assertFalse(form.is_valid(), 'Form should be invalid for an invalid first name')
 
     def test_last_name_length(self):
         """
@@ -217,6 +237,49 @@ class ClientFormTest(TestCase):
 
         form = ClientForm(data)
         self.assertTrue(form.is_valid(), 'Form should be valid for a valid spo2')
+
+    def test_f_test_ex_valid(self):
+        """
+        Тестирование валидации f_test_ex.
+
+        Метод создает случайное значение f_test_ex, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+        data = {
+            'first_name': self.fake.first_name(),
+            'last_name': self.fake.last_name(),
+            'f_test_ex': self.fake.random_int(min=0, max=200),
+            'age': self.fake.random_int(min=18, max=99),
+            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
+            'gender': '1'
+            # Добавьте остальные поля модели
+        }
+
+        form = ClientForm(data)
+        self.assertTrue(form.is_valid(), 'Form should be valid for a valid f_test_ex')
+
+    def test_f_test_in_valid(self):
+        """
+        Тестирование валидации f_test_in.
+
+        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+        data = {
+            'first_name': self.fake.first_name(),
+            'last_name': self.fake.last_name(),
+            'f_test_in': self.fake.random_int(min=0, max=200),
+            'age': self.fake.random_int(min=18, max=99),
+            'admission_date': self.fake.date_this_decade(),
+            'gender': '1'
+            # Добавьте остальные поля модели
+        }
 
 class ClientModelTest(TestCase):
 
