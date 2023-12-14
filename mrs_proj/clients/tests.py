@@ -1,17 +1,14 @@
 from django.test import TestCase
-import os
-from faker import Faker
 from clients.models import Client
-from datetime import date
 from clients.forms import ClientForm
+from faker import Faker
+from datetime import date
+import os
 import secrets
 import string
 
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
-
-START_YEAR = 2023
-
+START_YEAR = 2023  # для admission_date
 
 class ClientFormTest(TestCase):
     """
@@ -26,41 +23,44 @@ class ClientFormTest(TestCase):
             test_invalid_form(self): Метод тестирования формы с некорректными данными.
             test_first_name_length: Метод тестирования корректности ввода по символам
     """
+    fake = Faker()
 
-    def setUp(self):
-        """Настройка объекта Faker перед каждым тестовым методом."""
-        self.fake = Faker()
+    def setUp(self, num_samples: int = 1):
+        # Генерация данных для каждого теста
+        self.data_list = [self.generate_data() for _ in range(num_samples)]
 
-    def generate_invalid_string(self):
-        invalid_chars = ''.join(secrets.choice(string.punctuation + string.digits) for _ in range(5))
-        invalid_name = self.fake.first_name() + invalid_chars
-        return invalid_name
+    def generate_data(self, **kwargs):
+        default_data = {
+            'first_name': self.fake.first_name(),
+            'last_name': self.fake.last_name(),
+            'age': self.fake.random_int(min=0, max=120),
+            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
+            'gender': secrets.choice(['0', '1']),
+            # Можно добавить и другие поля модели
+        }
+        default_data.update(kwargs)
+        return default_data
+
+    def generate_invalid_string(self, spec_numbers=5):
+        """
+        :type spec_numbers: int
+        """
+        return ''.join(secrets.choice(string.punctuation + string.digits) for _ in range(spec_numbers))
 
     def test_valid_form(self):
         """Тест валидности формы с корректными данными."""
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            'age': self.fake.random_int(min=18, max=99),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': '1'
-            # остальные поля модели
-        }
-
-        form = ClientForm(data)
-        self.assertTrue(form.is_valid(), f'Form errors: {form.errors}')
-        self.assertTrue(form.is_valid())
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form errors: {form.errors}')
+            self.assertTrue(form.is_valid())
 
     def test_invalid_form_with_insufficient_data(self):
         """Тест формы с некорректными данными."""
-        data = {
-            'first_name': self.fake.first_name(),
-            'last_name': self.fake.last_name(),
-            # Недостаточно данных
-        }
-
-        form = ClientForm(data)
-        self.assertFalse(form.is_valid())
+        for data in self.data_list:
+            insufficient_data = data.copy()
+            insufficient_data.popitem()
+            form = ClientForm(insufficient_data)
+            self.assertFalse(form.is_valid(), f'Form should be invalid for data: {insufficient_data}')
 
     def test_first_name_length(self):
         """
@@ -280,6 +280,7 @@ class ClientFormTest(TestCase):
             'gender': '1'
             # Добавьте остальные поля модели
         }
+
 
 class ClientModelTest(TestCase):
 
