@@ -9,7 +9,7 @@ import string
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
 START_YEAR = 2023  # для admission_date
-NAMES_MAX_LENGTH = 100
+NAMES_FIELD_MAX_LENGTH = 100
 
 
 class ClientFormTest(TestCase):
@@ -27,7 +27,7 @@ class ClientFormTest(TestCase):
     """
     fake = Faker('ru_RU')
 
-    def setUp(self, num_samples: int = 2):
+    def setUp(self, num_samples: int = 5):
         # Генерация данных для каждого теста
         self.data_list = [self.generate_data() for _ in range(num_samples)]
 
@@ -65,7 +65,31 @@ class ClientFormTest(TestCase):
             form = ClientForm(insufficient_data)
             self.assertFalse(form.is_valid(), f'Form should be invalid for data: {insufficient_data}')
 
-    def test_first_name_length(self):
+    def test_all_fields(self):
+        """
+        Тестирование корректности ввода длины имени в форме.
+
+        Метод создает случайное имя, превышающее максимальную длину поля в форме,
+        заполняет им форму ClientForm и проверяет, что форма считается невалидной.
+
+        Asserts:
+            assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
+            длины имени.
+        """
+
+        # tests for first_name
+        self.no_test_maximum_field_length(field_name='first_name')
+        self.no_test_invalid_symbols(field_name='first_name')
+
+        # tests for last_name
+        self.no_test_maximum_field_length(field_name='last_name')
+        self.no_test_invalid_symbols(field_name='last_name')
+
+        # tests for patronymic
+        self.no_test_maximum_field_length(field_name='patronymic')
+        self.no_test_invalid_symbols(field_name='patronymic')
+
+    def no_test_maximum_field_length(self, field_name: string = 'first_name'):
         """
         Тестирование корректности ввода длины имени в форме.
 
@@ -77,57 +101,13 @@ class ClientFormTest(TestCase):
             длины имени.
         """
         for data in self.data_list:
-            data['first_name'] = str('a' * (NAMES_MAX_LENGTH + 1))
+            data[field_name] = str('a' * (NAMES_FIELD_MAX_LENGTH + 1))
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
-    def test_last_name_length(self):
-        """
-        Тестирование корректности ввода длины имени в форме.
-
-        Метод создает случайное имя, превышающее максимальную длину поля в форме,
-        заполняет им форму ClientForm и проверяет, что форма считается невалидной.
-
-        Asserts:
-            assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
-            длины имени.
-        """
+    def no_test_invalid_symbols(self, field_name: string = 'first_name'):
         for data in self.data_list:
-            data['last_name'] = str('a' * (NAMES_MAX_LENGTH + 1))
-            form = ClientForm(data)
-            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
-
-    def test_patronymic_length(self):
-        """
-        Тестирование корректности ввода длины имени в форме.
-
-        Метод создает случайное имя, превышающее максимальную длину поля в форме,
-        заполняет им форму ClientForm и проверяет, что форма считается невалидной.
-
-        Asserts:
-            assertFalse(bool): Подтверждает, что форма не прошла валидацию из-за превышения
-            длины имени.
-        """
-        for data in self.data_list:
-            data['patronymic'] = str('a' * (NAMES_MAX_LENGTH + 1))
-            form = ClientForm(data)
-            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
-
-    def test_invalid_first_name(self):
-        for data in self.data_list:
-            data['first_name'] = data['first_name'] + self.generate_invalid_string()
-            form = ClientForm(data)
-            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
-
-    def test_invalid_last_name(self):
-        for data in self.data_list:
-            data['last_name'] += self.generate_invalid_string()
-            form = ClientForm(data)
-            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
-
-    def test_invalid_patronymic(self):
-        for data in self.data_list:
-            data['patronymic'] = data['patronymic'] + self.generate_invalid_string()
+            data[field_name] += self.generate_invalid_string()
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
