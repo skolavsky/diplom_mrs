@@ -218,7 +218,7 @@ class ClientForm(forms.ModelForm):
             # Проверка на кол-во и наличие
             if ch_d < 0 or ch_d > 150:
                 raise forms.ValidationError(
-                    f"Значение {self.fields['ch_d'].label} должно быть в пределах от 0 до 200.")
+                    f"Значение {self.fields['ch_d'].label} должно быть в пределах от 0 до 150.")
 
         return ch_d
 
