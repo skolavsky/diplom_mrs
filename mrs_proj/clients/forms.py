@@ -7,6 +7,7 @@ from datetime import date
 FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁё' -]+$"
 FIO_MAX_LENGTH = 100
 MAX_PRECISION = 3
+START_ADMISSION_DATE = 2023
 
 
 class ClientForm(forms.ModelForm):
@@ -200,8 +201,9 @@ class ClientForm(forms.ModelForm):
             self.validate_type(admission_date, date, 'admission_date')
 
             # Проверка временного периода
-            if admission_date > timezone.now().date() or admission_date.year < 2023:
-                raise forms.ValidationError("Дата поступления должна быть не позднее сегодня и не ранее 2023 года.")
+            if admission_date > timezone.now().date() or admission_date.year < START_ADMISSION_DATE:
+                raise forms.ValidationError(f"Дата поступления должна быть не позднее сегодня и не ранее "
+                                            f"{START_ADMISSION_DATE} года.")
 
         return admission_date
 
