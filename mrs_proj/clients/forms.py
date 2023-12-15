@@ -6,6 +6,7 @@ from datetime import date
 
 FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁё' -]+$"
 FIO_MAX_LENGTH = 100
+MAX_PRECISION = 3
 
 
 class ClientForm(forms.ModelForm):
@@ -61,9 +62,17 @@ class ClientForm(forms.ModelForm):
         if value is not None and not re.match(regex, str(value)):
             raise forms.ValidationError(f"Значение {self.fields[field_name].label} содержит недопустимые символы.")
 
+    def validate_decimal_precision(self, value: float, field_name):
+        if isinstance(value, float):
+            _, _, fraction = str(value).partition('.')
+            if len(fraction) > MAX_PRECISION:
+                raise forms.ValidationError(f"Значение {self.fields[field_name].label} "
+                                            f"не может иметь более {MAX_PRECISION} знаков после запятой.")
+
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
 
+        # Проверка типа
         self.validate_type(first_name, str, 'first_name')
 
         # Проверка на длину не более 100 символов
@@ -77,6 +86,7 @@ class ClientForm(forms.ModelForm):
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name')
 
+        # Проверка типа
         self.validate_type(last_name, str, 'last_name')
 
         # Проверка на длину не более 100 символов
@@ -91,6 +101,7 @@ class ClientForm(forms.ModelForm):
         patronymic = self.cleaned_data.get('patronymic')
 
         if patronymic is not None:
+            # Проверка типа
             self.validate_type(patronymic, str, 'patronymic')
 
             # Проверка на длину не более 100 символов
@@ -107,7 +118,7 @@ class ClientForm(forms.ModelForm):
         if age is not None:
 
             # Проверка на соответствие типу
-            self.validate_type(age, int, 'body_mass_index')
+            self.validate_type(age, int, 'age')
 
             # Проверка на кол-во и наличие
             if age < 0 or age > 120:
@@ -128,13 +139,8 @@ class ClientForm(forms.ModelForm):
             if body_mass_index < 0 or body_mass_index > 100.0:
                 raise forms.ValidationError(
                     f"Значение {self.fields['body_mass_index'].label} должно быть в пределах от 0 до 100.0.")
-
                 # Проверка на количество знаков после запятой (не более 3)
-            if isinstance(body_mass_index, float):
-                _, _, fraction = str(body_mass_index).partition('.')
-                if len(fraction) > 3:
-                    raise (forms.ValidationError
-                           (f"{self.fields['body_mass_index'].label} не может иметь не более 3 знаков после запятой."))
+            self.validate_decimal_precision(value=body_mass_index, field_name='body_mass_index')
 
         return body_mass_index
 
@@ -180,6 +186,8 @@ class ClientForm(forms.ModelForm):
             if lf < 0 or lf > 50.0:
                 raise forms.ValidationError(
                     f"Значение {self.fields['lf'].label} должно быть в пределах от 0 до 50.0.")
+
+            self.validate_decimal_precision(value=lf, field_name='lf')
 
         return lf
 
@@ -255,6 +263,8 @@ class ClientForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Значение {self.fields['l_109'].label} должно быть в пределах от 0 до 50.0.")
 
+            self.validate_decimal_precision(value=l_109, field_name='l_109')
+
         return l_109
 
     def clean_lf(self):
@@ -285,6 +295,8 @@ class ClientForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"Значение {self.fields['rox'].label} должно быть в пределах от 0 до 50.0")
 
+            self.validate_decimal_precision(value=rox, field_name='rox')
+
         return rox
 
     def clean_spo2_fio(self):
@@ -299,5 +311,7 @@ class ClientForm(forms.ModelForm):
             if spo2_fio < 0 or spo2_fio > 600.0:
                 raise forms.ValidationError(
                     f"Значение {self.fields['spo2_fio'].label} должно быть в пределах от 0 до 600.0")
+
+            self.validate_decimal_precision(value=spo2_fio, field_name='spo2_fio')
 
         return spo2_fio
