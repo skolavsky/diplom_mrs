@@ -14,7 +14,7 @@ class ClientForm(forms.ModelForm):
 
         fields = ['first_name', 'last_name', 'patronymic', 'gender', 'age', 'admission_date', 'spo2', 'body_mass_index',
                   'result', 'f_test_ex', 'f_test_in', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109',
-                  'lf', 'rox', 'spo2_fio', 'ch_d']
+                  'lf', 'rox', 'spo2_fio', 'ch_d', 'dayshome']
 
         labels = {
             'first_name': 'Имя',
@@ -37,6 +37,7 @@ class ClientForm(forms.ModelForm):
             'f_test_in': 'внутренний',
             'f_test_ex': 'внешний',
             'comorb_bl': 'коморбидность',
+            'dayshome': 'дней дома',
             # Add labels for other fields
         }
 
@@ -151,6 +152,21 @@ class ClientForm(forms.ModelForm):
                     f"Значение {self.fields['spo2'].label} должно быть в пределах от 0 до 100.")
 
         return spo2
+
+    def clean_dayshome(self):
+        dayshome = self.cleaned_data.get('dayshome')
+
+        if dayshome is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(dayshome, int, 'dayshome')
+
+            # Проверка на кол-во и наличие
+            if dayshome < 0 or dayshome > 50:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['dayshome'].label} должно быть в пределах от 0 до 50.")
+
+        return dayshome
 
     def clean_lf(self):
         lf = self.cleaned_data.get('lf')
