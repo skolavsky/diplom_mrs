@@ -275,12 +275,12 @@ class ClientForm(forms.ModelForm):
         if lf is not None:
 
             # Проверка на соответствие типу
-            self.validate_type(lf, int, 'lf')
+            self.validate_type(lf, float, 'lf')
 
             # Проверка на кол-во и наличие
-            if lf < 0 or lf > 50:
+            if lf < 0 or lf > 50.0:
                 raise forms.ValidationError(
-                    f"Значение {self.fields['lf'].label} должно быть в пределах от 0 до 50.")
+                    f"Значение {self.fields['lf'].label} должно быть в пределах от 0 до 50.0.")
 
         return lf
 
