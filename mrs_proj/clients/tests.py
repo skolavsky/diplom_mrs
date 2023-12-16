@@ -449,10 +449,9 @@ class ClientFormTest(TestCase):
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
 
-
     def test_spo2_fio_negative(self):
         """
-        Тестирование валидации body_mass_index.
+        Тестирование валидации spo2_fio.
 
         Метод создает случайное значение rox, соответствующее правилам валидации,
         и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
@@ -462,7 +461,7 @@ class ClientFormTest(TestCase):
         """
 
         for data in self.data_list:
-            data['body_mass_index'] = self.fake.pyfloat(min_value=-100.1, max_value=-0.1, right_digits=3),
+            data['spo2_fio'] = self.fake.pyfloat(min_value=-100.1, max_value=-0.1, right_digits=3),
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
