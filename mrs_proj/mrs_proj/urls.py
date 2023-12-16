@@ -12,7 +12,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('client-detail/<str:id_token>/', ClientDetailView.as_view(), name='client_detail'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
 
     # Include the 'clients' app view
     path('client-list/', ClientListView.as_view(), name='client_list'),
