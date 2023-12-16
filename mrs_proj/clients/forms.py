@@ -307,7 +307,7 @@ class ClientForm(forms.ModelForm):
         if spo2_fio is not None:
 
             # Проверка на соответствие типу
-            self.validate_type(spo2_fio, float, 'rox')
+            self.validate_type(spo2_fio, float, 'spo2_fio')
 
             # Проверка на кол-во и наличие
             if spo2_fio < 0 or spo2_fio > 600.0:
@@ -317,3 +317,39 @@ class ClientForm(forms.ModelForm):
             self.validate_decimal_precision(value=spo2_fio, field_name='spo2_fio')
 
         return spo2_fio
+
+    def clean_comorb_all(self):
+        comorb_all = self.cleaned_data.get('comorb_all')
+
+        if comorb_all is not None:
+            # Проверка на соответствие типу
+            self.validate_type(comorb_all, bool, 'comorb_all')
+
+        return comorb_all
+
+    def clean_cd_ozhir(self):
+        cd_ozhir = self.cleaned_data.get('cd_ozhir')
+
+        if cd_ozhir is not None:
+            # Проверка на соответствие типу
+            self.validate_type(cd_ozhir, bool, 'cd_ozhir')
+
+        return cd_ozhir
+
+    def clean_comorb_bl(self):
+        comorb_bl = self.cleaned_data.get('comorb_bl')
+
+        if comorb_bl is not None:
+            # Проверка на соответствие типу
+            self.validate_type(comorb_bl, bool, 'comorb_bl')
+
+        return comorb_bl
+
+    def clean_comorb_ccc(self):
+        comorb_ccc = self.cleaned_data.get('comorb_ccc')
+
+        if comorb_ccc is not None:
+            # Проверка на соответствие типу
+            self.validate_type(comorb_ccc, bool, 'comorb_ccc')
+
+        return comorb_ccc

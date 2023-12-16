@@ -38,11 +38,16 @@ class ClientFormTest(TestCase):
             'patronymic': self.fake.middle_name(),
             'age': self.fake.random_int(min=0, max=120),
             'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
-            'gender': secrets.choice(['0', '1']),
+            'gender': secrets.choice([1, 0]),
+            'comorb_ccc': secrets.choice([True, False]),
+            'comorb_bl': secrets.choice([True, False]),
+            'cd_ozhir': secrets.choice([True, False]),
+            'comorb_all': secrets.choice([True, False]),
             'body_mass_index': self.fake.pyfloat(min_value=0, max_value=100.0, right_digits=3),
             'spo2': self.fake.random_int(min=0, max=100),
             'spo2_fio': self.fake.pyfloat(min_value=0, max_value=600.0, right_digits=3),
             'ch_d': self.fake.random_int(min=0, max=150),
+            'dayshome': self.fake.random_int(min=0, max=50),
             'lf': self.fake.pyfloat(min_value=0, max_value=50.0, right_digits=3),
             'f_test_ex': self.fake.random_int(min=0, max=200),
             'f_test_in': self.fake.random_int(min=0, max=200),
@@ -440,9 +445,42 @@ class ClientFormTest(TestCase):
         """
         for data in self.data_list:
             # Изменяем тип spo2_fio на некорректный
-            data['body_mass_index'] = '123'  # Пример другого типа
+            data['spo2_fio'] = 'spo2fio'  # Пример другого типа
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
+
+    def test_spo2_fio_negative(self):
+        """
+        Тестирование валидации body_mass_index.
+
+        Метод создает случайное значение rox, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['body_mass_index'] = self.fake.pyfloat(min_value=-100.1, max_value=-0.1, right_digits=3),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_spo2_fio_max(self):
+        """
+        Тестирование валидации spo2_fio.
+
+        Метод создает случайное значение spo2_fio, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['spo2_fio'] = self.fake.pyfloat(min_value=600.1, max_value=999.1, right_digits=3),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
     def test_f_test_ex_valid(self):
         """
@@ -779,6 +817,93 @@ class ClientFormTest(TestCase):
         for data in self.data_list:
             # Изменяем тип lf на некорректный
             data['lf'] = '_str'  # Пример другого типа
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
+    def test_comorb_ccc_is_bool(self):
+        """
+        Тестирование, что comorb_ccc действительно строка.
+        """
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['comorb_ccc'], bool, 'comorb_ccc is not a bool')
+
+    def test_comorb_all_is_bool(self):
+        """
+        Тестирование, что comorb_all действительно строка.
+        """
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['comorb_all'], bool, 'comorb_all is not a bool')
+
+    def test_comorb_bl_is_bool(self):
+        """
+        Тестирование, что comorb_bl действительно строка.
+        """
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['comorb_bl'], bool, 'comorb_bl is not a bool')
+
+    def test_cd_ozhir_is_bool(self):
+        """
+        Тестирование, что cd_ozhir действительно строка.
+        """
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['cd_ozhir'], bool, 'cd_ozhir is not a bool')
+
+    def test_dayshome_negative(self):
+        """
+        Тестирование валидации dayshome.
+
+        Метод создает случайное значение dayshome, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['dayshome'] *= -1,
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_dayshome_max(self):
+        """
+        Тестирование валидации dayshome.
+
+        Метод создает случайное значение dayshome, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['dayshome'] = self.fake.random_int(min=51, max=999),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_dayshome_is_int(self):
+        """
+        Тестирование, что dayshome действительно int.
+        """
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['dayshome'], int, 'dayshome is not a int')
+
+    def test_dayshome_wrong_type(self):
+        """
+        Тестирование, что форма не будет работать с неправильным типом spo2.
+        """
+        for data in self.data_list:
+            # Изменяем тип dayshome на некорректный
+            data['dayshome'] = 'days'  # Пример другого типа
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
 
