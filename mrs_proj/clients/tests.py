@@ -45,6 +45,7 @@ class ClientFormTest(TestCase):
             'ch_d': self.fake.random_int(min=0, max=150),
             'f_test_ex': self.fake.random_int(min=0, max=200),
             'f_test_in': self.fake.random_int(min=0, max=200),
+            'rox': self.fake.pyfloat(min_value=0, max_value=50.0, right_digits=3),
             # Можно добавить и другие поля модели
         }
         default_data.update(kwargs)
@@ -272,6 +273,7 @@ class ClientFormTest(TestCase):
             data['body_mass_index'] = '123.32'  # Пример другого типа
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
     def test_spo2_valid(self):
         """
         Тестирование валидации spo2.
@@ -366,12 +368,12 @@ class ClientFormTest(TestCase):
             self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
             self.assertIsInstance(data['f_test_ex'], int, 'f_test_ex is not a int')
 
-    def test_spo2_wrong_type(self):
+    def test_f_test_ex_wrong_type(self):
         """
         Тестирование, что форма не будет работать с неправильным типом f_test_ex.
         """
         for data in self.data_list:
-            # Изменяем тип spo2 на некорректный
+            # Изменяем тип f_test_ex на некорректный
             data['f_test_ex'] = '123.33'  # Пример другого типа
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
@@ -411,6 +413,39 @@ class ClientFormTest(TestCase):
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
 
+    def test_f_test_in_negative(self):
+        """
+        Тестирование валидации f_test_in.
+
+        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['f_test_in'] = self.fake.random_int(min=-200, max=-1),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_f_test_in_max(self):
+        """
+        Тестирование валидации f_test_in.
+
+        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['f_test_in'] = self.fake.random_int(min=201, max=999),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+
     def test_ch_d_negative(self):
         """
         Тестирование валидации f_test_in.
@@ -429,9 +464,9 @@ class ClientFormTest(TestCase):
 
     def test_ch_d_max(self):
         """
-        Тестирование валидации f_test_in.
+        Тестирование валидации ch_d.
 
-        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        Метод создает случайное значение ch_d, соответствующее правилам валидации,
         и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
 
         Asserts:
@@ -461,6 +496,57 @@ class ClientFormTest(TestCase):
             data['ch_d'] = '123.23123'  # Пример другого типа
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
+    def test_rox_is_float(self):
+        """
+        Тестирование, что age действительно float.
+        """
+        for data in self.data_list:
+            form = ClientForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['body_mass_index'], float, 'rox is not a float')
+
+    def test_rox_wrong_type(self):
+        """
+        Тестирование, что форма не будет работать с неправильным типом rox.
+        """
+        for data in self.data_list:
+            # Изменяем тип rox на некорректный
+            data['body_mass_index'] = '123'  # Пример другого типа
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
+    def test_rox_negative(self):
+        """
+        Тестирование валидации rox.
+
+        Метод создает случайное значение rox, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['rox'] = self.fake.pyfloat(min_value=-100.1, max_value=-0.1, right_digits=3),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_rox_max(self):
+        """
+        Тестирование валидации f_test_in.
+
+        Метод создает случайное значение f_test_in, соответствующее правилам валидации,
+        и заполняет им форму ClientForm. Проверяет, что форма считается валидной.
+
+        Asserts:
+            assertTrue(bool): Подтверждает, что форма прошла валидацию.
+        """
+
+        for data in self.data_list:
+            data['rox'] = self.fake.pyfloat(min_value=50.1, max_value=100.1, right_digits=3),
+            form = ClientForm(data)
+            self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
 
 class ClientModelTest(TestCase):
