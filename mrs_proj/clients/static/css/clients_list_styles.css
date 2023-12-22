@@ -112,3 +112,65 @@
 
     text-align: center;
 }
+
+.add_form
+{
+    display: none;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+
+    max-width: 1335px;
+    height: 50%;
+}
+
+.input_box
+{
+    height: 250px;
+    max-width: 1325px;
+
+    color: #FFF;
+    background-color: #2B4141;
+
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px
+}
+
+.input_box input
+{
+    max-width: 250px;
+
+    color: #2B4141;
+    background-color: #C8C2AE;
+}
+
+.input_box label
+{
+    width: 300px;
+    height: 50px;
+    padding: 5px 10px;
+
+    border-bottom: 1px solid #C8C2AE;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button_box
+{
+    height: 40px;
+
+    display: flex;
+    justify-content: end;
+}
+
+.button_box button
+{
+    border-color: #000;
+}

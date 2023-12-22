@@ -16,7 +16,8 @@
         </div>
 
         <div class="2">
-            <button id="toggleFormBtn" class="button" onclick="toggleForm()">Добавить пациента</button>
+            <button id="toggleFormBtn" class="button" onclick="toggleForm()">+ Добавить пациента</button>
+            <button class="button">+</button>
         </div>
     </div>
 
@@ -56,13 +57,43 @@
         </tbody>
     </table>
 
+    <form action="{% url 'client_list' %}" class="add_form">
+        <div class="button_box">
+            <button type="submit" class="button">Сохранить</button>
+            <button type="button" class="button" onclick="cancelAddClient()">Отменить</button>
+        </div>
+
+        <div class="input_box">
+            <label for="">
+                Фамилия:
+                <input type="text" placeholder="Фамилия" required>
+            </label>
+            <label for="">
+                Имя:
+                <input type="text" placeholder="Имя" required>
+            </label>
+            <label for="">
+                Отчество:
+                <input type="text" placeholder="Отчество" required>
+            </label>
+            <label for="">
+                Год рождения:
+                <input type="date" required>
+            </label>
+        </div>
+    </form>
+
     <form id="addClientForm" method="post" action="{% url 'client_list' %}" style="display: none;"
           onsubmit="return validateClientForm()">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input type="hidden" name="action" value="save">
-        <button type="submit" class="button">Сохранить</button>
-        <button type="button" class="button" onclick="cancelAddClient()">Отменить</button>
+          <div class="button_box">
+              <button type="submit" class="button">Сохранить</button>
+              <button type="button" class="button" onclick="cancelAddClient()">Отменить</button>
+          </div>
+          <div>
+              {% csrf_token %}
+              {{ form.as_table }}
+              <input type="hidden" name="action" value="save">
+          </div>
     </form>
 
     <div class="pagination">
