@@ -6,13 +6,13 @@ function show_hide_password(target){
     {
 		target.classList.add('view');
 		input.setAttribute('type', 'text');
-        element.className = 'fas fa-eye';
+		element.className = 'fas fa-eye-slash';
 	} 
     else 
     {
 		target.classList.remove('view');
 		input.setAttribute('type', 'password');
-        element.className = 'fas fa-eye-slash';
+        element.className = 'fas fa-eye';
 	}
 
 	return false;
