@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 LOGIN = '/login/'
 
@@ -33,14 +34,19 @@ class WebHandlerViewsTest(TestCase):
         # Проверка POST-запроса с корректными учетными данными
         response = self.client.post(LOGIN,
                                     {'action': 'login', 'username': 'testuser', 'password': 'testpassword'})
-        self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
+        self.assertRedirects(response, reverse('home'))  # Ожидается код перенаправления
+
+    def test_login_view_with_invalid_credentials(self):
+        """
+        Тестирование представления для входа в систему (login view) с некорректными учетными данными.
+        """
 
         # Проверка POST-запроса с некорректными учетными данными
         response = self.client.post(LOGIN,
                                     {'action': 'login', 'username': 'invaliduser', 'password': 'invalidpassword'})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'login.html')
-        self.assertContains(response, 'Invalid login credentials')
+        self.assertContains(response, 'Неправильные логин или пароль.')
 
     def test_contacts_view(self):
         """
