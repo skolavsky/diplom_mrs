@@ -8,7 +8,7 @@
     <ul class="list">
         {% for patient in no_results_patients %}
         <li>
-            <a href="{% url 'client_detail' token=patient.token %}">
+            <a href="{% url 'client_detail' id_token=patient.id_token %}">
                 <div class="list_item">
                     {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
                 </div>

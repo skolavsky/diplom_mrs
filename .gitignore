@@ -31,7 +31,10 @@ venv/
 *.log
 *.sql
 *.sqlite
+*.sqlite3
 data.csv
+.coverage
+coverage.xml
 
 # Environment variables file (if used)
 .env

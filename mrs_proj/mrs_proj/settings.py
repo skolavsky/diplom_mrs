@@ -28,7 +28,7 @@ STATICFILES_DIRS = [
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # NOSONAR
+DEBUG = True  # NOSONAR
 
 ALLOWED_HOSTS = []
 
@@ -91,8 +91,12 @@ WSGI_APPLICATION = 'mrs_proj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'NAME': BASE_DIR / "db.sqlite3",
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "test_db.sqlite3",
+    },
 }
 
 # Password validation
