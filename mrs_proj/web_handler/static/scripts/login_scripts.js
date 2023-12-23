@@ -1,6 +1,6 @@
 function show_hide_password(target){
-	var input = document.getElementById('password');
-    var element = document.getElementById('eye');
+	const input = document.getElementById('password');
+    const element = document.getElementById('eye');
 
 	if (input.getAttribute('type') == 'password') 
     {
