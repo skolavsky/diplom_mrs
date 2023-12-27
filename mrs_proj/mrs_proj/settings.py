@@ -21,6 +21,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'clients' / 'static',
 ]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
