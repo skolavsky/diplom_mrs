@@ -135,7 +135,6 @@ class LoginViewTests(TestCase):
         self.assertContains(response, 'show_hide_password(this)')
 
     def test_js_toggle_password(self):
-        # Ваша реализация этого теста зависит от того, какую логику вы хотите проверить
         # Например, проверить, что пароль скрывается после клика на кнопку
 
         response = self.client.get(reverse('login'))
@@ -158,3 +157,13 @@ class LoginViewTests(TestCase):
     def test_failed_login(self):
         response = self.client.post(reverse('login'), {'username': 'invalid_user', 'password': 'invalid_password'})
         self.assertEqual(response.status_code, 400)
+
+    def test_failed_login_button(self):
+        # Проверка наличия кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<button type="submit" class="button_open">ВХОД</button>')
+
+    def test_failed_login_header(self):
+        # Проверка наличия кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
