@@ -142,3 +142,11 @@ class LoginViewTests(TestCase):
 
         # Проверяем, что страница возвращает успешный статус
         self.assertEqual(response.status_code, 200)
+
+    def test_login_with_empty_password(self):
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': ''})
+        self.assertEqual(response.status_code, 400)
+
+    def test_failed_login(self):
+        response = self.client.post(reverse('login'), {'username': 'invalid_user', 'password': 'invalid_password'})
+        self.assertEqual(response.status_code, 400)
