@@ -167,3 +167,7 @@ class LoginViewTests(TestCase):
         # Проверка наличия кнопки с текстом "ВХОД" и классом "button_open" в ответе
         response = self.client.get(reverse('login'))
         self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
+
+    def test_failed_login_password_wrong_type(self):
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 123123})
+        self.assertEqual(response.status_code, 400)
