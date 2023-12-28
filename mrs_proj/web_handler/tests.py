@@ -168,6 +168,15 @@ class LoginViewTests(TestCase):
         response = self.client.get(reverse('login'))
         self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
 
+    def test_failed_login_scripts(self):
+        # Проверка наличия кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<script src="/static/scripts/login_scripts.js"></script>')
+
     def test_failed_login_password_wrong_type(self):
         response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 123123})
+        self.assertEqual(response.status_code, 400)
+
+    def test_failed_login_password_wrong_symbols(self):
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 12312.123121})
         self.assertEqual(response.status_code, 400)
