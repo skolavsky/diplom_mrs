@@ -1,20 +1,16 @@
-// hello/static/scripts/script.js
-document.addEventListener('DOMContentLoaded', function () {
-    // Wait for the DOM content to be fully loaded before executing the script
+function show_hide_password(target) {
+    const input = document.getElementById('password');
+    const element = document.getElementById('eye');
 
-    const showPasswordButton = document.getElementById('showPassword');
-    const passwordInput = document.getElementById('password');
-
-    if (showPasswordButton && passwordInput) {
-        // Check if the elements are present on the page
-
-        showPasswordButton.addEventListener('click', function () {
-            // Toggle the type attribute of the password input
-            if (passwordInput.type === 'password') {   // NOSONAR
-                passwordInput.type = 'text'; // NOSONAR
-            } else {
-                passwordInput.type = 'password'; // NOSONAR
-            }
-        });
+    if (input.getAttribute('type') === 'password') {
+        target.classList.add('view');
+        input.setAttribute('type', 'text');
+        element.className = 'fas fa-eye-slash';
+    } else {
+        target.classList.remove('view');
+        input.setAttribute('type', 'password');
+        element.className = 'fas fa-eye';
     }
-});
+
+    return false;
+}

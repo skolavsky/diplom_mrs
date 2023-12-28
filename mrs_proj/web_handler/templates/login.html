@@ -4,44 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Вход в систему</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login_styles.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon/favicon-32x32.png' %}">
 </head>
 <body>
-<div class="login-box">
-    <h2>Вход в систему</h2>
+
+<div class="login_box">
+    <div class="title">
+        <h1>ВХОД В СИСТЕМУ</h1>
+    </div>
+
     {% if error %}
     <p style="color: red;">{{ error }}</p>
     {% endif %}
-    <form method="post" action="{% url 'login' %}">
+    <form method="post" class="form" action="{% url 'login' %}">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="username">Имя пользователя:</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="username" name="username" required>
-                <div class="input-group-append hint-button">
-                    <button type="button" class="btn btn-secondary"><i class="fas fa-question-circle"></i></button>
-                    <div class="hint-tooltip">Учетные данные для входа можно получить у администратора.</div>
-                </div>
+        <div class="form_group">
+            <div class="input_box">
+                <input type="text" class="login_input" id="username" name="username" placeholder="NAME"
+                       autocomplete="nickname" required>
+            </div>
+            <div class="info_box">
+                <p data-tooltip="Учетные данные для входа можно получить у администратора."><i
+                        class="fas fa-question-circle"></i></p>
             </div>
         </div>
-        <div class="form-group">
-            <label for="password">Пароль:</label>
-            <div class="input-group">
-                <input type="password" class="form-control" id="password" name="password" required>
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-secondary" id="showPassword">Показывать пароль</button>
-                </div>
+
+        <div class="form_group">
+            <div class="input_box">
+                <input type="password" id="password" name="password" class="password_input" placeholder="PASSWORD"
+                       autocomplete="current-password" required>
+            </div>
+            <div class="info_box">
+                <a href="#" onclick="return show_hide_password(this);" data-tooltip="Показать пароль."><i id="eye"
+                                                                                                          class="fas fa-eye"></i></a>
             </div>
         </div>
+
         <input type="hidden" name="action" value="login">
-        <button type="submit" class="btn btn-primary">Вход</button>
+        <button type="submit" class="button_open">ВХОД</button>
     </form>
 </div>
 
 <script src="{% static 'scripts/login_scripts.js' %}"></script>
-
 </body>
 </html>

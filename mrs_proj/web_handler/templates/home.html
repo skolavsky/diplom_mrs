@@ -4,22 +4,22 @@
 {% block header %}Главная страница{% endblock %}
 
 {% block content %}
-    <h3>Записи, без результатов</h3>
-    <ul class="list">
-        {% for patient in no_results_patients %}
-        <li>
-            <a href="{% url 'client_detail' id_token=patient.id_token %}">
-                <div class="list_item">
-                    {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
-                </div>
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+<h3>Записи, без результатов</h3>
+<ul class="list">
+    {% for patient in no_results_patients %}
+    <li>
+        <a href="{% url 'client_detail' id_token=patient.id_token %}">
+            <div class="list_item">
+                {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
+            </div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
 
-    {% if more_than_five %}
-    <p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
-    {% endif %}
+{% if more_than_five %}
+<p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
+{% endif %}
 {% endblock %}
 
 

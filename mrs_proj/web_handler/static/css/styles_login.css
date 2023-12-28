@@ -1,0 +1,161 @@
+body {
+    background-color: #C8C2AE;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login_box {
+    width: 30vw;
+    min-height: 90vh;
+
+    box-shadow: 0 0 10px #2B4141;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    width: 100%;
+    height: 15vh;
+
+    margin-bottom: 60px;
+
+    background-color: #2B4141;
+    border-radius: 15px 15px 0 0;
+
+    display: flex;
+    align-items: center;
+}
+
+.title h1 {
+    width: 100%;
+    text-align: center;
+
+    font: 700 32px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: #FFF;
+}
+
+.form {
+    width: 100%;
+}
+
+.form_group {
+    width: 90%;
+    height: 50px;
+
+    margin: 25px 20px;
+    font: 400 25px/100% 'Times New Roman', Times, serif;
+    color: #2B4141;
+
+    border-radius: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form_group input {
+    margin-left: 10px;
+    font: 400 25px/100% 'Times New Roman', Times, serif;
+    color: #2B4141
+}
+
+.form_group input::selection {
+    background-color: #548C88;
+}
+
+.form_group a {
+    color: #2B4141
+}
+
+.input_box {
+    height: 50px;
+    width: 85%;
+
+    padding: 10px;
+
+    border-radius: 25px 0 0 25px;
+    background-color: #A49A79;
+}
+
+.input_box input {
+    width: 98%;
+
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.input_box input:-webkit-autofill {
+    transition: all 5000s ease-in-out 0s;
+}
+
+.input_box:hover {
+    background-color: #9C916D;
+}
+
+.info_box {
+    height: 50px;
+    width: 15%;
+    padding: 5px 10px;
+
+    background-color: #A49A79;
+    text-align: center;
+
+    border-radius: 0 25px 25px 0;
+    border-left: 5px solid #C8C2AE;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info_box:hover {
+    background-color: #9C916D;
+}
+
+.button_open {
+    width: 90%;
+    height: 50px;
+
+    margin: 25px 20px;
+    border-radius: 25px;
+
+    background-color: #2B4141;
+    text-align: center;
+
+    font: 700 24px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: #FFF;
+}
+
+.button_open:hover {
+    background-color: #293D3D;
+}
+
+[data-tooltip] {
+    position: relative; /* Относительное позиционирование */
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip); /* Выводим текст */
+    position: absolute; /* Абсолютное позиционирование */
+    width: 300px; /* Ширина подсказки */
+    left: 0;
+    top: 0; /* Положение подсказки */
+    background: #548C88; /* Синий цвет фона */
+    color: #fff; /* Цвет текста */
+    padding: 0.5em; /* Поля вокруг текста */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
+    pointer-events: none; /* Подсказка */
+    opacity: 0; /* Подсказка невидима */
+    transition: 1s; /* Время появления подсказки */
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1; /* Показываем подсказку */
+    top: 2em; /* Положение подсказки */
+}

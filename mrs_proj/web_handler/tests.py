@@ -122,3 +122,118 @@ class WebHandlerViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
         self.assertRedirects(response, '/login/?next=/', target_status_code=200)
         # Ожидается перенаправление на страницу входа с сохранением параметра 'next'
+
+
+class LoginViewTests(TestCase):
+    '''
+    Класс для тестирования логина
+    '''
+    def test_login_page_includes_js_code(self):
+        '''
+        Проверка на включение функции js кода на показ пароля
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+
+        # Проверяем, что страница возвращает успешный статус
+        self.assertEqual(response.status_code, 200)
+
+        # Проверяем наличие вашего JavaScript-кода в ответе
+        self.assertContains(response, 'show_hide_password(this)')
+
+    def test_js_toggle_password(self):
+        '''
+        Проверка на страницу логина
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+        # Проверяем, что страница возвращает успешный статус
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_with_empty_password(self):
+        '''
+        Проверка на вход без пароля
+        :return:
+        '''
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': ''})
+        self.assertEqual(response.status_code, 400)
+
+    def test_login_with_empty_login(self):
+        '''
+        Проверка на вход без логина
+        :return:
+        '''
+        response = self.client.post(reverse('login'), {'username': '', 'password': 'testpassword'})
+        self.assertEqual(response.status_code, 400)
+
+    def test_login_with_empty_fields(self):
+        '''
+        Проверка на вход без заполнения полей
+        :return:
+        '''
+        response = self.client.post(reverse('login'), {'username': '', 'password': ''})
+        self.assertEqual(response.status_code, 400)
+
+    def test_failed_login(self):
+        '''
+        Тест на вход с неверными данными
+        :return:
+        '''
+        response = self.client.post(reverse('login'), {'username': 'invalid_user', 'password': 'invalid_password'})
+        self.assertEqual(response.status_code, 400)
+
+    def test_failed_login_button(self):
+        '''
+        Проверка на наличие кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<button type="submit" class="button_open">ВХОД</button>')
+
+    def test_failed_login_header(self):
+        '''
+        Проверка наличия кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
+
+    def test_failed_login_scripts(self):
+        '''
+        Проверка наличия подключенных скриптов
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<script src="/static/scripts/login_scripts.js"></script>')
+
+    def test_failed_login_styles(self):
+        '''
+        Проверка наличия кнопки с текстом стилей на странице
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<link rel="stylesheet" type="text/css" href="/static/css/styles_login.css">')
+
+    def test_login_title(self):
+        '''
+        Проверка соответствия заголовка страницы
+        :return:
+        '''
+        response = self.client.get(reverse('login'))
+        self.assertContains(response, '<title>Вход в систему</title>')
+
+    def test_failed_login_password_wrong_type(self):
+        '''
+        Проверка на вход с неверным типом пароля
+        :return:
+        '''
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 123123})
+        self.assertEqual(response.status_code, 400)
+
+    def test_failed_login_password_wrong_symbols(self):
+        '''
+        Проверка на вход с неверным типом пароля(float)
+        :return:
+        '''
+        response = self.client.post(reverse('login'), {'username': 'testuser', 'password': 12312.123121})
+        self.assertEqual(response.status_code, 400)

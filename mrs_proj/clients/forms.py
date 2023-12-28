@@ -44,7 +44,9 @@ class ClientForm(forms.ModelForm):
         }
 
         widgets = {
-            'first_name': forms.TextInput(attrs={'style': 'width: 80%;'}),
+            'first_name': forms.TextInput(attrs={'class': 'name_input'}),
+            'last_name': forms.TextInput(attrs={'class': 'name_input'}),
+            'patronymic': forms.TextInput(attrs={'class': 'name_input'}),
             'admission_date': forms.SelectDateWidget(),
             'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
         }
