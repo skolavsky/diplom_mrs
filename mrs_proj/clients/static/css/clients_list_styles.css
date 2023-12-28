@@ -1,5 +1,4 @@
-.box_tool
-{
+.box_tool {
     height: 30px;
     margin-bottom: 30px;
 
@@ -8,18 +7,16 @@
     align-items: center;
 }
 
-.table
-{
+.table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.button
-{
+.button {
     height: 100%;
     padding: 5px 10px;
     border: 2px solid #2B4141;
-    
+
     background-color: #2B4141;
     font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
     color: #C8C2AE;
@@ -27,14 +24,12 @@
     text-align: center;
 }
 
-.button:hover
-{
+.button:hover {
     background-color: #C8C2AE;
     color: #2B4141;
 }
 
-.search
-{
+.search {
     width: 250px;
     height: 30px;
 
@@ -42,49 +37,40 @@
     border-bottom: 3px solid #2B4141;
 }
 
-.active a
-{
+.active a {
     color: #2B4141;
 }
 
-[class^="cell_"] 
-{
+[class^="cell_"] {
     border: 2px solid #2B4141;
     text-align: center;
 }
 
-.cell_name
-{
+.cell_name {
     width: 35%;
 }
 
-.cell_age
-{
+.cell_age {
     width: 5%;
 }
 
-.cell_imt
-{
+.cell_imt {
     width: 10%;
 }
 
-.cell_spo
-{
+.cell_spo {
     width: 5%;
 }
 
-.cell_date
-{
+.cell_date {
     width: 20%;
 }
 
-.cell_res
-{
+.cell_res {
     width: 20%;
 }
 
-.cell_button
-{
+.cell_button {
     width: 15%;
 
     font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
@@ -93,19 +79,17 @@
     background-color: #2B4141;
 }
 
-.page_next
-{
+.page_next {
     display: flex;
 
     width: 210px;
     justify-content: space-between;
 }
 
-.page_next p
-{
+.page_next p {
     padding: 5px 10px;
     border: 2px solid #2B4141;
-    
+
     background-color: #2B4141;
     font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
     color: #C8C2AE;
@@ -113,8 +97,7 @@
     text-align: center;
 }
 
-.add_form
-{
+.add_form {
     display: none;
 
     position: absolute;
@@ -127,8 +110,7 @@
     height: 50%;
 }
 
-.input_box
-{
+.input_box {
     height: 250px;
     max-width: 1325px;
 
@@ -141,16 +123,14 @@
     gap: 5px
 }
 
-.input_box input
-{
+.input_box input {
     max-width: 250px;
 
     color: #2B4141;
     background-color: #C8C2AE;
 }
 
-.input_box label
-{
+.input_box label {
     width: 300px;
     height: 50px;
     padding: 5px 10px;
@@ -162,20 +142,17 @@
     align-items: center;
 }
 
-.button_box
-{
+.button_box {
     height: 40px;
 
     display: flex;
     justify-content: end;
 }
 
-.button_box button
-{
+.button_box button {
     border-color: #000;
 }
 
-.name_input
-{
+.name_input {
     width: 10%;
 }

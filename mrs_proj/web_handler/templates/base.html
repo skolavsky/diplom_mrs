@@ -31,10 +31,10 @@
                 <a href="{% url 'dashboard' %}">
                     <i class="fas fa-chart-bar"></i> Обновления
                 </a>
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit"><i class="fas fa-sign-out-alt"></i> Выход</button>
-                    </form>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit"><i class="fas fa-sign-out-alt"></i> Выход</button>
+                </form>
                 </a>
                 <!--{{ user.username }}-->
             </nav>
