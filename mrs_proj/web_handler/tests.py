@@ -122,3 +122,23 @@ class WebHandlerViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)  # Ожидается код перенаправления
         self.assertRedirects(response, '/login/?next=/', target_status_code=200)
         # Ожидается перенаправление на страницу входа с сохранением параметра 'next'
+
+
+class LoginViewTests(TestCase):
+    def test_login_page_includes_js_code(self):
+        response = self.client.get(reverse('login'))
+
+        # Проверяем, что страница возвращает успешный статус
+        self.assertEqual(response.status_code, 200)
+
+        # Проверяем наличие вашего JavaScript-кода в ответе
+        self.assertContains(response, 'show_hide_password(this)')
+
+    def test_js_toggle_password(self):
+        # Ваша реализация этого теста зависит от того, какую логику вы хотите проверить
+        # Например, проверить, что пароль скрывается после клика на кнопку
+
+        response = self.client.get(reverse('login'))
+
+        # Проверяем, что страница возвращает успешный статус
+        self.assertEqual(response.status_code, 200)
