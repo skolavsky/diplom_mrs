@@ -147,6 +147,14 @@ class LoginViewTests(TestCase):
         response = self.client.post(reverse('login'), {'username': 'testuser', 'password': ''})
         self.assertEqual(response.status_code, 400)
 
+    def test_login_with_empty_login(self):
+        response = self.client.post(reverse('login'), {'username': '', 'password': 'testpassword'})
+        self.assertEqual(response.status_code, 400)
+
+    def test_login_with_empty_fields(self):
+        response = self.client.post(reverse('login'), {'username': '', 'password': ''})
+        self.assertEqual(response.status_code, 400)
+
     def test_failed_login(self):
         response = self.client.post(reverse('login'), {'username': 'invalid_user', 'password': 'invalid_password'})
         self.assertEqual(response.status_code, 400)
