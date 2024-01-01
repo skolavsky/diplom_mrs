@@ -4,11 +4,8 @@ from faker import Faker
 import uuid
 import secrets
 from datetime import date
-import argparse
 
-START_YEAR = 2023
-
-fake = Faker('ru_RU')
+fake = Faker('ru_RU')  # Указываем локаль русского языка
 
 
 class Command(BaseCommand):
@@ -18,6 +15,8 @@ class Command(BaseCommand):
         parser.add_argument(
             'count',
             type=int,
+            nargs='?',  # Делаем аргумент необязательным
+            default=10,  # Значение по умолчанию, если аргумент не передан
             help='Number of records to create (1 to 100)',
             choices=range(1, 101),  # Ограничиваем диапазон значений
             metavar='COUNT'
@@ -38,12 +37,12 @@ class Command(BaseCommand):
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
                 patronymic=fake.middle_name(),
-                age=fake.random_int(min=0, max=120),
+                age=fake.random_int(min=18, max=80),
                 body_mass_index=fake.pyfloat(min_value=0, max_value=100.0, right_digits=3),
-                spo2=fake.random_int(min=0, max=100),
-                admission_date=fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
+                spo2=fake.random_int(min=90, max=100),
+                admission_date=fake.date_between(start_date='-30d', end_date='today'),
                 result=fake.random_int(min=0, max=100),
-                dayshome=fake.random_int(min=0, max=50),
+                dayshome=fake.random_int(min=1, max=30),
                 gender=fake.random_element(elements=gender_choices),
                 f_test_ex=fake.random_int(min=0, max=200),
                 f_test_in=fake.random_int(min=0, max=200),
