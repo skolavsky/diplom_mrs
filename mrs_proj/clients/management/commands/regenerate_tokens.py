@@ -1,15 +1,16 @@
 # файл management/commands/regenerate_tokens.py
+import uuid
 from django.core.management.base import BaseCommand
 from clients.models import Client
 import secrets
 
 
 class Command(BaseCommand):
-    help = 'Regenerate tokens for specified clients'
+    help = 'Regenerate tokens for specified clients or all clients'
 
     def add_arguments(self, parser):
         parser.add_argument('--all', action='store_true', help='Regenerate tokens for all clients')
-        parser.add_argument('client_ids', nargs='*', type=int, help='List of client IDs to regenerate tokens for')
+        parser.add_argument('client_ids', nargs='*', type=uuid.UUID, help='List of client IDs to regenerate tokens for')
 
     def handle(self, *args, **kwargs):
         regenerate_all = kwargs['all']
