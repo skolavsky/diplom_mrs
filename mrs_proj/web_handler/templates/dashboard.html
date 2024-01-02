@@ -4,12 +4,12 @@
 {% block title %}Dashboard - Your Website{% endblock %}
 
 {% block header %}
-    Dashboard
+    Обновления
 {% endblock %}
 
 {% block user_info %}
     {% if user.is_authenticated %}
-        <span>Welcome, {{ user.username }}!</span>
+        <span>Добро пожаловать, {{ user.username }}!</span>
     {% else %}
         <span>Not logged in</span>
     {% endif %}
