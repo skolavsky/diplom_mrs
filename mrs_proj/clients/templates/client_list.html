@@ -72,26 +72,30 @@
 </form>
 
 <div class="pagination">
-        <span class="step-links">
+    <span class="step-links">
+        <div class="page_next">
+                    {% if clients.has_previous %}
+            <a href="?page=1" class="button">&laquo; first</a>
+        {% endif %}
             {% if clients.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ clients.previous_page_number }}">previous</a>
+                <a href="?page={{ clients.previous_page_number }}" class="button">&#8592;</a>
             {% endif %}
 
-            <div class="page_next">
-                <button class="button">&#8592;</button>
-                <p>
-                    Page {{ clients.number }} of {{ clients.paginator.num_pages }}
-                </p>
-                <button class="button">&#8594;</button>
-            </div>
+            <p>
+                Page {{ clients.number }} of {{ clients.paginator.num_pages }}
+            </p>
 
             {% if clients.has_next %}
-                <a href="?page={{ clients.next_page_number }}">next</a>
-                <a href="?page={{ clients.paginator.num_pages }}">last &raquo;</a>
+                <a href="?page={{ clients.next_page_number }}" class="button">&#8594;</a>
             {% endif %}
-        </span>
+
+            {% if clients.has_next %}
+                <a href="?page={{ clients.paginator.num_pages }}" class="button">last &raquo;</a>
+            {% endif %}
+        </div>
+    </span>
 </div>
+
 
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
 <script>
