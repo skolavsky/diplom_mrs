@@ -1,7 +1,12 @@
 # settings_common.py
+from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET_KEY = config('SECRET_KEY')
+
 
 STATICFILES_DIRS = [
     BASE_DIR / 'web_handler' / 'static',

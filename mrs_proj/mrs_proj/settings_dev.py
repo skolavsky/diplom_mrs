@@ -3,7 +3,6 @@
 from .settings_common import *
 
 DEBUG = True
-SECRET_KEY = 'your_dev_secret_key'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
