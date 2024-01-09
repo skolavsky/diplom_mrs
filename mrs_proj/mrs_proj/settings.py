@@ -6,6 +6,6 @@ from decouple import config
 DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')
 
 if DJANGO_ENV == 'production':
-    from .settings_prod import *
+    from .settings_prod import * #NOSONAR
 else:
-    from .settings_dev import *
+    from .settings_dev import * #NOSONAR

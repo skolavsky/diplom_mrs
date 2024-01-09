@@ -1,4 +1,4 @@
-from .settings_common import *
+from .settings_common import *   #NOSONAR
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
 

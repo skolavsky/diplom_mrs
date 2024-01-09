@@ -1,6 +1,6 @@
 # settings_dev.py
 
-from .settings_common import *
+from .settings_common import *   #NOSONAR
 
 DEBUG = True
 DATABASES = {
