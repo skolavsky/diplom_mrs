@@ -1,8 +1,9 @@
 from .settings_common import *
-
 # SECURITY WARNING: don't run with debug turned on in production!
+import os
+
 DEBUG = False
-ALLOWED_HOSTS = ['94.139.242.71', 'localhost', 'mrs.hopto.org']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOST', '').split(', ')
 
 DATABASES = {
     'default': {
