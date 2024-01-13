@@ -16,7 +16,7 @@
 <div class="wrapper">
     <header class="header">
         <div class="wrapp">
-            <h1>YOUR SITE NAME</h1>
+            <h1>MRS</h1>
             <h2>{% block header %}{% endblock %}</h2>
             <nav class="menu">
                 <a href="{% url 'home' %}">
@@ -49,8 +49,8 @@
 
     <footer class="footer">
         <div class="wrapp">
-            <p>&copy; 2023 МРС </p>
-            <p>V0.0.1</p>
+            <p>&copy; {% now "Y" %} - {% now "H:i" %} МРС</p>
+            <p>V0.1</p>
         </div>
     </footer>
 </div>
