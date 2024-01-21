@@ -56,7 +56,19 @@
     <h2>Действия</h2>
 
     <button id="delete" type="button" onclick="confirmDelete()">Удалить пациента</button>
-
+{% comment %} My code {% endcomment %}
+    <form id="post" method="post" action="{% url 'client_detail' id_token=client.id_token %}">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="post">
+        <!-- Add any other form fields here -->
+        
+        <button type="submit">Submit</button>
+      </form>
+      
+      {% if result %}
+        <p>{{ result }}</p>
+      {% endif %}
+{% comment %} My code {% endcomment %}
     <form id="client_delete" method="post" action="{% url 'client_detail' id_token=client.id_token %}">
         {% csrf_token %}
         <input type="hidden" name="action" value="delete_client">

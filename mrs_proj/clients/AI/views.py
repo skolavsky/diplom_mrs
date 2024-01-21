@@ -1,19 +1,18 @@
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import ClietSerializer
+from .serializers import ClientSerializer
 from rest_framework.views import APIView
 
 
 class ResultAPI(APIView):
     def get(self, request, format=None):
+        print("GET")
         return Response(data=request.data, status=status.HTTP_200_OK)
     
     def post(self, request, format=None):
-        client_serializer = ClietSerializer(data=request.data)
-        if client_serializer.is_valid():
-            return Response(data=client_serializer.data, status=status.HTTP_200_OK)
-        return Response(client_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = request.data
+        print(data)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 """
 def post_test(request):

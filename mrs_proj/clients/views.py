@@ -8,6 +8,8 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db import models
+from .AI.serializers import ClientSerializer
+import requests
 
 LOGIN_URL = '/login/'
 
@@ -102,5 +104,12 @@ class ClientDetailView(LoginRequiredMixin, View):
                 return redirect('client_detail', id_token=id_token)
             else:
                 return HttpResponseBadRequest("Invalid form submission")
+        elif action == 'post':
+            client = get_object_or_404(Client, id_token=id_token)
+            client_serializer = ClientSerializer(client)
+            print("SEND")
+            response = requests.post("http://127.0.0.1:8000/api/result.api/", client_serializer.data)
+            print("SEND END")
+            return redirect('client_detail', id_token=id_token)
         else:
             return HttpResponseBadRequest("Invalid action")

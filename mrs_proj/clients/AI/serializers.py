@@ -2,7 +2,7 @@ from rest_framework import serializers
 from ..models import Client
 
 
-class ClietSerializer(serializers.ModelSerializer):
+class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         # Specify the fields used by serializer
