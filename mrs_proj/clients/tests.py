@@ -461,7 +461,7 @@ class ClientFormTest(TestCase):
         """
 
         for data in self.data_list:
-            data['spo2_fio'] = self.fake.pyfloat(min_value=-100.1, max_value=-0.1, right_digits=3),
+            data['spo2_fio'] *= -1.0
             form = ClientForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
