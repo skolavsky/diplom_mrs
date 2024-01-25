@@ -1,13 +1,16 @@
-# clients/views.py
+# views.py
+
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Client
-from .forms import ClientForm
-import secrets
 from django.views import View
+from django.core.paginator import Paginator
+import secrets
+from . import models
+from .models import ClientData, PersonalInfo
+from .forms import PersonalInfoForm, ClientDataForm
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-from django.db import models
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 LOGIN_URL = '/login/'
 
@@ -19,35 +22,38 @@ class ClientListView(LoginRequiredMixin, View):
         clients_per_page = 10
         sort_by = request.GET.get('sort', 'last_name')
         order = request.GET.get('order', 'asc')
-        form = ClientForm()
 
         search_query = request.GET.get('search', '')
-        clients = Client.objects.all()
+        clients_data = ClientData.objects.select_related('personal_info')
 
         if search_query:
-            clients = clients.filter(
-                models.Q(first_name__icontains=search_query) |
-                models.Q(last_name__icontains=search_query) |
-                models.Q(patronymic__icontains=search_query)
+            clients_data = clients_data.filter(
+                models.Q(personal_info__first_name__icontains=search_query) |
+                models.Q(personal_info__last_name__icontains=search_query) |
+                models.Q(personal_info__patronymic__icontains=search_query)
             )
 
         next_order = 'desc' if order == 'asc' else 'asc'
 
         if order == 'asc':
-            clients = clients.order_by(sort_by)
+            clients_data = clients_data.order_by(f'personal_info__{sort_by}')
         else:
-            clients = clients.order_by(f'-{sort_by}')
+            clients_data = clients_data.order_by(f'-{sort_by}')
 
-        paginator = Paginator(clients, clients_per_page)
+        paginator = Paginator(clients_data, clients_per_page)
         page_number = request.GET.get('page')
         page = paginator.get_page(page_number)
 
+        client_data_form = ClientDataForm()
+        personal_info_form = PersonalInfoForm()
+
         context = {
-            'clients': page,
+            'clients_data': page,
             'sort_by': sort_by,
             'next_order': next_order,
-            'form': form,
             'search_query': search_query,
+            'personal_info_form': personal_info_form,
+            'client_data_form': client_data_form,
         }
 
         return render(request, 'client_list.html', context)
@@ -56,51 +62,58 @@ class ClientListView(LoginRequiredMixin, View):
         action = request.POST.get('action', '')
 
         if action == 'save':
-            form = ClientForm(request.POST)
-            if form.is_valid():
-                # Create a new Client instance with the form data
-                new_client = form.save(commit=False)
+            personal_info_form = PersonalInfoForm(request.POST)
+            client_data_form = ClientDataForm(request.POST)
 
-                # Set added_user to the currently logged-in user
-                new_client.added_user = self.request.user  # Use self.request.user
+            if personal_info_form.is_valid() and client_data_form.is_valid():
+                # Создаем и сохраняем PersonalInfo
+                new_personal_info = personal_info_form.save()
 
-                # Set token to a new random value
-                new_client.id_token = secrets.token_urlsafe(32)
+                # Создаем и сохраняем ClientData с привязкой к PersonalInfo
+                new_client_data = client_data_form.save(commit=False)
+                new_client_data.personal_info = new_personal_info
+                new_client_data.save()
 
-                # Save the new client to the database
-                new_client.save()
-                # Redirect to the client list page
+                # Обновляем поля в PersonalInfo и сохраняем его
+                new_personal_info.added_user = self.request.user
+                new_personal_info.id_token = secrets.token_urlsafe(
+                    32)  # Можете убрать эту строку, если не требуется обновление id_token после сохранения
+                new_personal_info.save()
+
+                # Редиректим на страницу с клиентами
                 return redirect('client_list')
 
         return HttpResponse(status=400)
 
 
-class ClientDetailView(LoginRequiredMixin, View):
-    login_url = LOGIN_URL
+class ClientDetailView(View):
+    template_name = 'client_detail.html'
 
-    def get(self, request, id_token):
-        client = get_object_or_404(Client, id_token=id_token)
-        history_entries = client.history.all()
-        print(history_entries)
-        form = ClientForm(instance=client)
-        context = {'client': client, 'history_entries': history_entries, 'form': form}
-        return render(request, 'client_detail.html', context)
+    def get(self, request, id):
+        client_data = get_object_or_404(ClientData, personal_info__id=id)
+        form = ClientDataForm(instance=client_data)
+        history_entries = client_data.history.all()
+        return render(request, self.template_name,
+                      {'client_data': client_data, 'form': form, 'history_entries': history_entries})
 
-    def post(self, request, id_token):
+    def post(self, request, id):
         action = request.POST.get('action', '')
 
         if action == 'delete_client':
-            client = get_object_or_404(Client, id_token=id_token)
-            # Delete the client and redirect to the client list
+            client = get_object_or_404(PersonalInfo, id=id)
             client.delete()
             return redirect('client_list')
+
         elif action == 'edit_client':
-            client = get_object_or_404(Client, id_token=id_token)
-            form = ClientForm(request.POST, instance=client)  # Use ClientForm for editing
+            client_data = get_object_or_404(ClientData, personal_info__id=id)
+            form = ClientDataForm(request.POST, instance=client_data)
             if form.is_valid():
                 form.save()
-                return redirect('client_detail', id_token=id_token)
+                return redirect('client_detail', id=id)
             else:
-                return HttpResponseBadRequest("Invalid form submission")
+                # Если форма не валидна, передайте ее вместе с client_data для повторного отображения
+                history_entries = client_data.history.all()
+                context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
+                return render(request, 'client_detail.html', context)
         else:
             return HttpResponseBadRequest("Invalid action")

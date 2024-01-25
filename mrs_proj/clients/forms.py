@@ -1,8 +1,10 @@
+# forms.py
 from django import forms
-from .models import Client
 from django.utils import timezone
 import re
 from datetime import date
+from django import forms
+from .models import ClientData, PersonalInfo
 
 FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁё' -]+$"
 FIO_MAX_LENGTH = 100
@@ -10,21 +12,90 @@ MAX_PRECISION = 3
 START_ADMISSION_DATE = 2023
 
 
-class ClientForm(forms.ModelForm):
+class PersonalInfoForm(forms.ModelForm):
     class Meta:
-        model = Client
-
-        fields = ['first_name', 'last_name', 'patronymic', 'gender', 'age', 'admission_date', 'spo2', 'body_mass_index',
-                  'result', 'f_test_ex', 'f_test_in', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109',
-                  'lf', 'rox', 'spo2_fio', 'ch_d', 'dayshome']
-
+        model = PersonalInfo
+        fields = ['first_name', 'last_name', 'patronymic', 'gender']
         labels = {
             'first_name': 'Имя',
             'last_name': 'Фамилия',
             'patronymic': 'Отчество',
             'gender': 'Пол',
-            'age': 'Возраст',
+        }
+
+    widgets = {
+        'first_name': forms.TextInput(attrs={'class': 'name_input'}),
+        'last_name': forms.TextInput(attrs={'class': 'name_input'}),
+        'patronymic': forms.TextInput(attrs={'class': 'name_input'}),
+    }
+
+    def validate_type(self, value, expected_type, field_name):
+        if value is not None and not isinstance(value, expected_type):
+            raise forms.ValidationError(
+                f"Значение {self.fields[field_name].label} должно быть {expected_type.__name__}.")
+
+    def validate_length(self, value, max_length, field_name):
+        if value is not None and len(str(value)) > max_length:
+            raise forms.ValidationError(
+                f"Длина значения {self.fields[field_name].label} не должна превышать {max_length} символов.")
+
+    def validate_regex(self, value, regex, field_name):
+        if value is not None and not re.match(regex, str(value)):
+            raise forms.ValidationError(f"Значение {self.fields[field_name].label} содержит недопустимые символы.")
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+
+        # Проверка типа
+        self.validate_type(first_name, str, 'first_name')
+
+        # Проверка на длину не более 100 символов
+        self.validate_length(first_name, max_length=FIO_MAX_LENGTH, field_name='first_name')
+
+        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
+        self.validate_regex(first_name, FIO_RE_VALIDATION, field_name='first_name')
+
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+
+        # Проверка типа
+        self.validate_type(last_name, str, 'last_name')
+
+        # Проверка на длину не более 100 символов
+        self.validate_length(last_name, max_length=FIO_MAX_LENGTH, field_name='last_name')
+
+        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
+        self.validate_regex(last_name, FIO_RE_VALIDATION, field_name='last_name')
+
+        return last_name
+
+    def clean_patronymic(self):
+        patronymic = self.cleaned_data.get('patronymic')
+
+        if patronymic is not None:
+            # Проверка типа
+            self.validate_type(patronymic, str, 'patronymic')
+
+            # Проверка на длину не более 100 символов
+            self.validate_length(patronymic, max_length=FIO_MAX_LENGTH, field_name='patronymic')
+
+            # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
+            self.validate_regex(patronymic, FIO_RE_VALIDATION, field_name='patronymic')
+
+        return patronymic
+
+
+class ClientDataForm(forms.ModelForm):
+    class Meta:
+        model = ClientData
+        fields = ['age', 'body_mass_index', 'spo2', 'admission_date', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
+                  'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d']
+
+        labels = {
             'admission_date': 'Дата поступления',
+            'age': 'Возраст',
             'spo2': 'SPO2',
             'body_mass_index': 'ИМТ',
             'result': 'Исход',
@@ -40,13 +111,9 @@ class ClientForm(forms.ModelForm):
             'f_test_ex': 'внешний',
             'comorb_bl': 'коморбидность',
             'dayshome': 'дней дома',
-            # Add labels for other fields
         }
 
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'name_input'}),
-            'last_name': forms.TextInput(attrs={'class': 'name_input'}),
-            'patronymic': forms.TextInput(attrs={'class': 'name_input'}),
             'admission_date': forms.SelectDateWidget(),
             'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
         }

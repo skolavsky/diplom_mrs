@@ -20,8 +20,6 @@ function validateClientForm() {
     let lastName = $('#id_last_name').val().trim();
     let patronymic = $('#id_patronymic').val().trim();
     let age = $('#id_age').val().trim();
-    let bodyMassIndex = $('#id_body_mass_index').val().trim();
-    let SPO2 = $('#id_SPO2').val().trim();
 
     // Validate first name
     if (!firstName) {
@@ -44,18 +42,6 @@ function validateClientForm() {
     // Validate age (should be a positive integer)
     if (!age || isNaN(age) || parseInt(age) < 0) {
         alert('Please enter a valid age.');
-        return false;
-    }
-
-    // Validate body mass index (should be a positive number)
-    if (!bodyMassIndex || isNaN(bodyMassIndex) || parseFloat(bodyMassIndex) < 0) {
-        alert('Please enter a valid body mass index.');
-        return false;
-    }
-
-    // Validate SPO2 (should be a number between 0 and 100)
-    if (!SPO2 || isNaN(SPO2) || parseFloat(SPO2) < 0 || parseFloat(SPO2) > 100) {
-        alert('Please enter a valid SPO2 value between 0 and 100.');
         return false;
     }
 
