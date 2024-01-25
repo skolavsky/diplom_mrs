@@ -55,23 +55,23 @@
 
     <h2>Действия</h2>
 
-<form method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
-    {% csrf_token %}
-    <button type="submit" name="action" value="delete_client">Удалить пациента</button>
-</form>
+    <form method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
+        {% csrf_token %}
+        <button type="submit" name="action" value="delete_client">Удалить пациента</button>
+    </form>
 
     <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
-<form method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" name="action" value="edit_client">Сохранить</button>
-</form>
+    <form method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="action" value="edit_client">Сохранить</button>
+    </form>
 
-<div class="container">
-    <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
+    <div class="container">
+        <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
 
-    <h2>Change History</h2>
-    {% for version in history_entries %}
+        <h2>Change History</h2>
+        {% for version in history_entries %}
         <p>
             {{ version.history_date }} -
             {{ version.history_user.username }} made the following changes:
@@ -83,9 +83,8 @@
             </li>
         </ul>
         </p>
-    {% endfor %}
-</div>
-
+        {% endfor %}
+    </div>
 
 
 </main>

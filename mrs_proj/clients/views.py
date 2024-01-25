@@ -1,5 +1,6 @@
 # views.py
-
+from django.db.models import F, Value, CharField
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.core.paginator import Paginator
@@ -20,7 +21,7 @@ class ClientListView(LoginRequiredMixin, View):
 
     def get(self, request):
         clients_per_page = 10
-        sort_by = request.GET.get('sort', 'last_name')
+        sort_by = request.GET.get('sort', 'personal_info__last_name')
         order = request.GET.get('order', 'asc')
 
         search_query = request.GET.get('search', '')
@@ -28,15 +29,15 @@ class ClientListView(LoginRequiredMixin, View):
 
         if search_query:
             clients_data = clients_data.filter(
-                models.Q(personal_info__first_name__icontains=search_query) |
-                models.Q(personal_info__last_name__icontains=search_query) |
-                models.Q(personal_info__patronymic__icontains=search_query)
+                Q(personal_info__first_name__icontains=search_query) |
+                Q(personal_info__last_name__icontains=search_query) |
+                Q(personal_info__patronymic__icontains=search_query)
             )
 
         next_order = 'desc' if order == 'asc' else 'asc'
 
         if order == 'asc':
-            clients_data = clients_data.order_by(f'personal_info__{sort_by}')
+            clients_data = clients_data.order_by(f'{sort_by}')
         else:
             clients_data = clients_data.order_by(f'-{sort_by}')
 
