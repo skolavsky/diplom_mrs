@@ -7,7 +7,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
-
 STATICFILES_DIRS = [
     BASE_DIR / 'web_handler' / 'static',
     BASE_DIR / 'clients' / 'static',
