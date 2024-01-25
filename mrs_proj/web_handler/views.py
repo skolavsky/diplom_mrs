@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from clients.models import Client
 from datetime import timedelta
 from django.utils import timezone
 
@@ -23,17 +22,8 @@ class HomeView(LoginRequiredMixin, View):
 
     def get(self, request):
         # Define your criteria (e.g., no results or no updates for 30 days)
-        no_results_patients = Client.objects.filter(result__isnull=True,
-                                                    admission_date__lt=timezone.now() - timedelta(days=3))
-        more_than_five = no_results_patients.count() > 5
 
-        context = {
-            'no_results_patients': no_results_patients,
-            'more_than_five': more_than_five,
-
-        }
-
-        return render(request, 'home.html', context)
+        return render(request, 'home.html')
 
 
 class DashboardView(LoginRequiredMixin, View):
