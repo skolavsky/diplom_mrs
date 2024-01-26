@@ -10,8 +10,8 @@ from django.dispatch import receiver
 
 class PersonalInfo(models.Model):
     GENDER_CHOICES = [
-        (0, 'Женский'),
-        (1, 'Мужской'),
+        (False, 'Женский'),
+        (True, 'Мужской'),
     ]
 
     first_name = models.CharField(max_length=100)

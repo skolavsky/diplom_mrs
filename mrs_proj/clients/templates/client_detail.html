@@ -33,7 +33,13 @@
         </tr>
         <tr>
             <td>Пол:</td>
-            <td>{{ client_data.gender }}</td>
+            <td>
+                {% if client_data.gender %}
+                Мужской
+                {% else %}
+                Женский
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <td>ИМТ:</td>
