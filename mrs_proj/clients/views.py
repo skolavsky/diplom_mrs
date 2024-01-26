@@ -1,17 +1,13 @@
 # views.py
-from django.db.models import F, Value, CharField
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.core.paginator import Paginator
 import secrets
-from . import models
 from .models import ClientData, PersonalInfo
 from .forms import PersonalInfoForm, ClientDataForm
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 
 LOGIN_URL = '/login/'
 
@@ -92,10 +88,13 @@ class ClientDetailView(View):
 
     def get(self, request, id):
         client_data = get_object_or_404(ClientData, personal_info__id=id)
+        client_info = get_object_or_404(PersonalInfo, id=id)
         form = ClientDataForm(instance=client_data)
+        form_info = PersonalInfoForm(instance=client_info)
         history_entries = client_data.history.all()
         return render(request, self.template_name,
-                      {'client_data': client_data, 'form': form, 'history_entries': history_entries})
+                      {'client_data': client_data, 'form': form, 'history_entries': history_entries,
+                       'form_info': form_info})
 
     def post(self, request, id):
         action = request.POST.get('action', '')
@@ -104,6 +103,18 @@ class ClientDetailView(View):
             client = get_object_or_404(PersonalInfo, id=id)
             client.delete()
             return redirect('client_list')
+
+        elif action == 'edit_client_info':
+            client_info = get_object_or_404(PersonalInfo, id=id)
+            form = PersonalInfoForm(request.POST, instance=client_info)
+            if form.is_valid():
+                form.save()
+                return redirect('client_detail', id=id)
+            else:
+                client_data = get_object_or_404(ClientData, personal_info__id=id)
+                history_entries = client_data.history.all()
+                context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
+                return render(request, 'client_detail.html', context)
 
         elif action == 'edit_client':
             client_data = get_object_or_404(ClientData, personal_info__id=id)
