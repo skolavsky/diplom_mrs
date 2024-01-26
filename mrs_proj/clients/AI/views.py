@@ -1,17 +1,16 @@
 from rest_framework import status
 from rest_framework.response import Response
-from .serializers import ClientSerializer
+import random
 from rest_framework.views import APIView
 
 
 class ResultAPI(APIView):
     def get(self, request, format=None):
-        print("GET")
-        return Response(data=request.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_200_OK)
     
     def post(self, request, format=None):
-        data = request.data
-        print(data)
+        #data = request.data
+        data = {"result": "gay" if random.random() > 0.5 else "3.14door"}
         return Response(data=data, status=status.HTTP_200_OK)
 
 """

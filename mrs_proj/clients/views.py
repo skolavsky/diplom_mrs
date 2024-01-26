@@ -107,9 +107,12 @@ class ClientDetailView(LoginRequiredMixin, View):
         elif action == 'post':
             client = get_object_or_404(Client, id_token=id_token)
             client_serializer = ClientSerializer(client)
-            print("SEND")
-            response = requests.post("http://127.0.0.1:8000/api/result.api/", client_serializer.data)
-            print("SEND END")
-            return redirect('client_detail', id_token=id_token)
+            response = requests.post("http://127.0.0.1:8000/api/result.json/", client_serializer.data)
+            return render(request, 'client_detail.html',
+                          {'client': client,
+                           'history_entries': client.history.all(),
+                           'result': response.json(),
+                           'form': ClientForm(instance=client)})
+            #return redirect('client_detail', id_token=id_token)
         else:
             return HttpResponseBadRequest("Invalid action")
