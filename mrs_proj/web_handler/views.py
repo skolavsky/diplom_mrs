@@ -6,6 +6,8 @@ from django.views import View
 from datetime import timedelta
 from django.utils import timezone
 
+from clients.models import ClientData
+
 LOGIN_URL = '/login/'
 
 
@@ -21,9 +23,18 @@ class HomeView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
     def get(self, request):
-        # Define your criteria (e.g., no results or no updates for 30 days)
+        # Определите ваши критерии (например, отсутствие результатов или отсутствие обновлений в течение 3 дней)
+        no_results_clients = ClientData.objects.filter(result__isnull=True,
+                                                       admission_date__lt=timezone.now() - timedelta(days=3))
 
-        return render(request, 'home.html')
+        more_than_five = no_results_clients.count() > 5
+
+        context = {
+            'no_results_clients': no_results_clients,
+            'more_than_five': more_than_five,
+        }
+
+        return render(request, 'home.html', context)
 
 
 class DashboardView(LoginRequiredMixin, View):
