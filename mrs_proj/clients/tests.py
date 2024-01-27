@@ -1,15 +1,15 @@
-from django.test import TestCase
+from django.contrib.auth.models import User
+from django.test import TestCase, Client
 from clients.models import PersonalInfo, ClientData
 from clients.forms import PersonalInfoForm, ClientDataForm
 from faker import Faker
 from datetime import date
-import os
 import secrets
 import string
 from django.conf import settings
+from django.urls import reverse
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
-
+LOGIN = '/login/'
 
 class PersonalInfoFormTest(TestCase):
     """
@@ -1012,3 +1012,45 @@ class ClientModelTest(TestCase):
         """
         client = PersonalInfo.objects.first()
         self.assertEqual(client.get_gender_display(), 'Мужской' if client.gender else 'Женский')
+
+
+class ClientListViewTests(TestCase):
+    def setUp(self):
+        # Создаем пользователя и логинимся
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.client.login(username='testuser', password='testpassword')
+
+        # Инициализируем Faker
+        fake = Faker()
+
+        # Создаем PersonalInfo для теста с использованием Faker
+        self.personal_info = PersonalInfo.objects.create(
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
+            patronymic=fake.first_name(),
+            # Добавьте другие необходимые поля
+        )
+
+        # Создаем ClientData для теста с использованием Faker
+        self.client_data = ClientData.objects.create(
+            personal_info=self.personal_info,
+            # Добавьте другие необходимые поля
+        )
+
+        # URL для просмотра списка клиентов
+        self.url = reverse('client_list')
+
+    def test_view_url_exists_at_desired_location(self):
+        # Проверяем, доступен ли URL для списка клиентов
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        # Проверяем, что представление использует правильный шаблон
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'client_list.html')
+
+    def test_view_returns_clients_data(self):
+        # Проверяем, что представление возвращает данные о клиентах
+        response = self.client.get(self.url)
+        self.assertContains(response, self.client_data.personal_info.first_name)
