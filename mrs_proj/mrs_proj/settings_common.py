@@ -2,6 +2,12 @@
 from pathlib import Path
 from decouple import config
 
+# Глобальные переменные в приложении
+FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁё' -]+$"
+FIO_MAX_LENGTH = 100
+MAX_PRECISION_TO_FIELDS = 3
+START_ADMISSION_DATE = 2023
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

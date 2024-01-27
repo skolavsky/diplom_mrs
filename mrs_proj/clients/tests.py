@@ -6,10 +6,9 @@ from datetime import date
 import os
 import secrets
 import string
+from django.conf import settings
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project.settings")
-START_YEAR = 2023  # для admission_date
-FIO_FIELDS_MAX_LENGTH = 100
 
 
 class PersonalInfoFormTest(TestCase):
@@ -60,7 +59,7 @@ class PersonalInfoFormTest(TestCase):
             длины имени.
         """
         for data in self.data_list:
-            data['first_name'] = str('a' * (FIO_FIELDS_MAX_LENGTH + 1))
+            data['first_name'] = str('a' * (settings.FIO_MAX_LENGTH + 1))
             print(data['first_name'])
             form = PersonalInfoForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
@@ -77,7 +76,7 @@ class PersonalInfoFormTest(TestCase):
             длины имени.
         """
         for data in self.data_list:
-            data['last_name'] = str('a' * (FIO_FIELDS_MAX_LENGTH + 1))
+            data['last_name'] = str('a' * (settings.FIO_MAX_LENGTH + 1))
             form = PersonalInfoForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
@@ -93,7 +92,7 @@ class PersonalInfoFormTest(TestCase):
             длины имени.
         """
         for data in self.data_list:
-            data['patronymic'] = str('a' * (FIO_FIELDS_MAX_LENGTH + 1))
+            data['patronymic'] = str('a' * (settings.FIO_MAX_LENGTH + 1))
             form = PersonalInfoForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
@@ -214,7 +213,7 @@ class ClientDataFormTest(TestCase):
     def generate_data(self, **kwargs):
         default_data = {
             'age': self.fake.random_int(min=0, max=120),
-            'admission_date': self.fake.date_between_dates(date(START_YEAR, 1, 1), date.today()),
+            'admission_date': self.fake.date_between_dates(date(settings.START_ADMISSION_DATE, 1, 1), date.today()),
             'comorb_ccc': secrets.choice([True, False]),
             'comorb_bl': secrets.choice([True, False]),
             'cd_ozhir': secrets.choice([True, False]),
@@ -324,8 +323,8 @@ class ClientDataFormTest(TestCase):
         """
         for data in self.data_list:
             if 'admission_date' in data and isinstance(data['admission_date'], date):
-                self.assertGreaterEqual(data['admission_date'].year, START_YEAR,
-                                        f'admission_date should not be earlier than {START_YEAR}')
+                self.assertGreaterEqual(data['admission_date'].year, settings.START_ADMISSION_DATE,
+                                        f'admission_date should not be earlier than {settings.START_ADMISSION_DATE}')
 
     def test_body_mass_index_valid(self):
         """

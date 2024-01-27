@@ -5,11 +5,7 @@ import re
 from datetime import date
 from django import forms
 from .models import ClientData, PersonalInfo
-
-FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁё' -]+$"
-FIO_MAX_LENGTH = 100
-MAX_PRECISION = 3
-START_ADMISSION_DATE = 2023
+from django.conf import settings
 
 
 class PersonalInfoForm(forms.ModelForm):
@@ -59,10 +55,10 @@ class PersonalInfoForm(forms.ModelForm):
         self.validate_type(first_name, str, 'first_name')
 
         # Проверка на длину не более 100 символов
-        self.validate_length(first_name, max_length=FIO_MAX_LENGTH, field_name='first_name')
+        self.validate_length(first_name, max_length=settings.FIO_MAX_LENGTH, field_name='first_name')
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        self.validate_regex(first_name, FIO_RE_VALIDATION, field_name='first_name')
+        self.validate_regex(first_name, settings.FIO_RE_VALIDATION, field_name='first_name')
 
         return first_name
 
@@ -73,10 +69,10 @@ class PersonalInfoForm(forms.ModelForm):
         self.validate_type(last_name, str, 'last_name')
 
         # Проверка на длину не более 100 символов
-        self.validate_length(last_name, max_length=FIO_MAX_LENGTH, field_name='last_name')
+        self.validate_length(last_name, max_length=settings.FIO_MAX_LENGTH, field_name='last_name')
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        self.validate_regex(last_name, FIO_RE_VALIDATION, field_name='last_name')
+        self.validate_regex(last_name, settings.FIO_RE_VALIDATION, field_name='last_name')
 
         return last_name
 
@@ -88,10 +84,10 @@ class PersonalInfoForm(forms.ModelForm):
             self.validate_type(patronymic, str, 'patronymic')
 
             # Проверка на длину не более 100 символов
-            self.validate_length(patronymic, max_length=FIO_MAX_LENGTH, field_name='patronymic')
+            self.validate_length(patronymic, max_length=settings.FIO_MAX_LENGTH, field_name='patronymic')
 
             # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-            self.validate_regex(patronymic, FIO_RE_VALIDATION, field_name='patronymic')
+            self.validate_regex(patronymic, settings.FIO_RE_VALIDATION, field_name='patronymic')
 
         return patronymic
 
@@ -144,9 +140,9 @@ class ClientDataForm(forms.ModelForm):
     def validate_decimal_precision(self, value: float, field_name):
         if isinstance(value, float):
             _, _, fraction = str(value).partition('.')
-            if len(fraction) > MAX_PRECISION:
+            if len(fraction) > settings.MAX_PRECISION_TO_FIELDS:
                 raise forms.ValidationError(f"Значение {self.fields[field_name].label} "
-                                            f"не может иметь более {MAX_PRECISION} знаков после запятой.")
+                                            f"не может иметь более {settings.MAX_PRECISION_TO_FIELDS} знаков после запятой.")
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
@@ -155,10 +151,10 @@ class ClientDataForm(forms.ModelForm):
         self.validate_type(first_name, str, 'first_name')
 
         # Проверка на длину не более 100 символов
-        self.validate_length(first_name, max_length=FIO_MAX_LENGTH, field_name='first_name')
+        self.validate_length(first_name, max_length=settings.FIO_MAX_LENGTH, field_name='first_name')
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        self.validate_regex(first_name, FIO_RE_VALIDATION, field_name='first_name')
+        self.validate_regex(first_name, settings.FIO_RE_VALIDATION, field_name='first_name')
 
         return first_name
 
@@ -169,10 +165,10 @@ class ClientDataForm(forms.ModelForm):
         self.validate_type(last_name, str, 'last_name')
 
         # Проверка на длину не более 100 символов
-        self.validate_length(last_name, max_length=FIO_MAX_LENGTH, field_name='last_name')
+        self.validate_length(last_name, max_length=settings.FIO_MAX_LENGTH, field_name='last_name')
 
         # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        self.validate_regex(last_name, FIO_RE_VALIDATION, field_name='last_name')
+        self.validate_regex(last_name, settings.FIO_RE_VALIDATION, field_name='last_name')
 
         return last_name
 
@@ -184,10 +180,10 @@ class ClientDataForm(forms.ModelForm):
             self.validate_type(patronymic, str, 'patronymic')
 
             # Проверка на длину не более 100 символов
-            self.validate_length(patronymic, max_length=FIO_MAX_LENGTH, field_name='patronymic')
+            self.validate_length(patronymic, max_length=settings.FIO_MAX_LENGTH, field_name='patronymic')
 
             # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-            self.validate_regex(patronymic, FIO_RE_VALIDATION, field_name='patronymic')
+            self.validate_regex(patronymic, settings.FIO_RE_VALIDATION, field_name='patronymic')
 
         return patronymic
 
@@ -279,9 +275,9 @@ class ClientDataForm(forms.ModelForm):
             self.validate_type(admission_date, date, 'admission_date')
 
             # Проверка временного периода
-            if admission_date > timezone.now().date() or admission_date.year < START_ADMISSION_DATE:
+            if admission_date > timezone.now().date() or admission_date.year < settings.START_ADMISSION_DATE:
                 raise forms.ValidationError(f"Дата поступления должна быть не позднее сегодня и не ранее "
-                                            f"{START_ADMISSION_DATE} года.")
+                                            f"{settings.START_ADMISSION_DATE} года.")
 
         return admission_date
 
