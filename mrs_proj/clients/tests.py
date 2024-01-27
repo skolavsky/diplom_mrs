@@ -1058,6 +1058,10 @@ class ClientListViewTests(TestCase):
 
 
 class ClientDetailViewTests(TestCase):
+    '''
+    Test the client detail(view)
+    тестим вьюху client-detail
+    '''
     def setUp(self):
         # Создаем пользователя и логинимся
         self.user = User.objects.create_user(username='testuser', password='testpassword')
