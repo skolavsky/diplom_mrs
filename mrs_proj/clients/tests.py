@@ -36,7 +36,7 @@ class PersonalInfoFormTest(TestCase):
             'first_name': self.fake.first_name(),
             'last_name': self.fake.last_name(),
             'patronymic': self.fake.middle_name(),
-            'gender': secrets.choice([1, 0]),
+            'gender': self.fake.random_element(elements=[True, False]),
             # Можно добавить и другие поля модели
         }
         default_data.update(kwargs)
@@ -132,6 +132,25 @@ class PersonalInfoFormTest(TestCase):
             form = PersonalInfoForm(data)
             self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
             self.assertIsInstance(data['last_name'], str, 'last_name is not a string')
+
+    def test_gender_is_bool(self):
+        """
+        Тестирование, что patronymic действительно строка.
+        """
+        for data in self.data_list:
+            form = PersonalInfoForm(data)
+            self.assertTrue(form.is_valid(), f'Form should be valid, but got errors: {form.errors}')
+            self.assertIsInstance(data['gender'], bool, 'gender is not a bool')
+
+    def test_gender_wrong_type(self):
+        """
+        Тестирование, что форма не будет работать с неправильным типом gender.
+        """
+        for data in self.data_list:
+            # Изменяем тип gender на некорректный
+            data['gender'] = 1  # Пример другого типа
+            form = PersonalInfoForm(data)
+            self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
 
     def test_patronymic_is_string(self):
         """
@@ -951,7 +970,7 @@ class ClientModelTest(TestCase):
                 last_name=fake.last_name(),
                 patronymic=fake.middle_name(),
                 id=fake.uuid4(),
-                is_active=secrets.choice([1, 0]),
+                gender=fake.random_element(elements=[True, False]),
                 # другие поля модели
             )
 
