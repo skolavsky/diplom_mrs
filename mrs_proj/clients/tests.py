@@ -11,6 +11,7 @@ from django.urls import reverse
 
 LOGIN = '/login/'
 
+
 class PersonalInfoFormTest(TestCase):
     """
         Класс для тестирования валидности формы PersonalInfoForm.
@@ -1021,7 +1022,7 @@ class ClientListViewTests(TestCase):
         self.client.login(username='testuser', password='testpassword')
 
         # Инициализируем Faker
-        fake = Faker()
+        fake = Faker('ru_RU')
 
         # Создаем PersonalInfo для теста с использованием Faker
         self.personal_info = PersonalInfo.objects.create(
@@ -1054,3 +1055,55 @@ class ClientListViewTests(TestCase):
         # Проверяем, что представление возвращает данные о клиентах
         response = self.client.get(self.url)
         self.assertContains(response, self.client_data.personal_info.first_name)
+
+
+class ClientDetailViewTests(TestCase):
+    def setUp(self):
+        # Создаем пользователя и логинимся
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.client.login(username='testuser', password='testpassword')
+
+        # Инициализируем Faker
+        self.faker = Faker('ru_RU')
+
+        # Создаем PersonalInfo для теста с использованием Faker
+        self.personal_info = PersonalInfo.objects.create(
+            first_name=self.faker.first_name(),
+            last_name=self.faker.last_name(),
+            patronymic=self.faker.first_name(),
+            # Добавьте другие необходимые поля
+        )
+
+        # Создаем ClientData для теста с использованием Faker
+        self.client_data = ClientData.objects.create(
+            personal_info=self.personal_info,
+            # Добавьте другие необходимые поля
+        )
+
+        # URL для просмотра деталей клиента
+        self.url = reverse('client_detail', args=[str(self.personal_info.id)])
+
+    def test_view_url_exists_at_desired_location(self):
+        # Проверяем, доступен ли URL для деталей клиента
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        # Проверяем, что представление использует правильный шаблон
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'client_detail.html')
+
+    def test_view_returns_correct_data(self):
+        # Проверяем, что представление возвращает правильные данные о клиенте
+        response = self.client.get(self.url)
+        self.assertContains(response, self.client_data.personal_info.first_name)
+        # Добавьте другие проверки на необходимые поля
+
+    def test_view_can_edit_client_data(self):
+        # Проверяем, что представление может редактировать данные о клиенте
+        new_result = 42  # Новое значение для результата
+        data = {'action': 'edit_client', 'result': new_result}
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, 302)  # Ожидаем перенаправление после успешного редактирования
+        self.client_data.refresh_from_db()  # Обновляем данные из базы
+        self.assertEqual(self.client_data.result, new_result)
