@@ -6,6 +6,8 @@ __pycache__/
 venv/
 .venv/
 
+staticfiles/
+
 # IDE specific files
 .idea/
 *.iml

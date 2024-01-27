@@ -9,4 +9,3 @@ if DJANGO_ENV == 'production':
     from .settings_prod import *
 else:
     from .settings_dev import *
-STATIC_ROOT = '/app/mrs_proj/static/'
