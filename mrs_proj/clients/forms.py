@@ -8,7 +8,20 @@ from .models import ClientData, PersonalInfo
 from django.conf import settings
 
 
-class PersonalInfoForm(forms.ModelForm):
+class ValidationMixin:
+
+    def validate_length(self, value, max_length, field_name):
+        if value is not None and len(str(value)) > max_length:
+            raise forms.ValidationError(
+                f"Длина значения {self.fields[field_name].label} не должна превышать {max_length} символов.")
+
+    def validate_type(self, value, expected_type, field_name):
+        if value is not None and not isinstance(value, expected_type):
+            raise forms.ValidationError(
+                f"Значение {self.fields[field_name].label} должно быть {expected_type.__name__}.")
+
+
+class PersonalInfoForm(forms.ModelForm, ValidationMixin):
     class Meta:
         model = PersonalInfo
         fields = ['first_name', 'last_name', 'patronymic', 'gender']
@@ -25,16 +38,6 @@ class PersonalInfoForm(forms.ModelForm):
         'patronymic': forms.TextInput(attrs={'class': 'name_input'}),
         'gender': forms.CheckboxInput(),
     }
-
-    def validate_type(self, value, expected_type, field_name):
-        if value is not None and not isinstance(value, expected_type):
-            raise forms.ValidationError(
-                f"Значение {self.fields[field_name].label} должно быть {expected_type.__name__}.")
-
-    def validate_length(self, value, max_length, field_name):
-        if value is not None and len(str(value)) > max_length:
-            raise forms.ValidationError(
-                f"Длина значения {self.fields[field_name].label} не должна превышать {max_length} символов.")
 
     def validate_regex(self, value, regex, field_name):
         if value is not None and not re.match(regex, str(value)):
@@ -92,7 +95,7 @@ class PersonalInfoForm(forms.ModelForm):
         return patronymic
 
 
-class ClientDataForm(forms.ModelForm):
+class ClientDataForm(forms.ModelForm, ValidationMixin):
     class Meta:
         model = ClientData
         fields = ['age', 'body_mass_index', 'spo2', 'admission_date', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
@@ -123,69 +126,12 @@ class ClientDataForm(forms.ModelForm):
             'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
         }
 
-    def validate_type(self, value, expected_type, field_name):
-        if value is not None and not isinstance(value, expected_type):
-            raise forms.ValidationError(
-                f"Значение {self.fields[field_name].label} должно быть {expected_type.__name__}.")
-
-    def validate_length(self, value, max_length, field_name):
-        if value is not None and len(str(value)) > max_length:
-            raise forms.ValidationError(
-                f"Длина значения {self.fields[field_name].label} не должна превышать {max_length} символов.")
-
-    def validate_regex(self, value, regex, field_name):
-        if value is not None and not re.match(regex, str(value)):
-            raise forms.ValidationError(f"Значение {self.fields[field_name].label} содержит недопустимые символы.")
-
     def validate_decimal_precision(self, value: float, field_name):
         if isinstance(value, float):
             _, _, fraction = str(value).partition('.')
             if len(fraction) > settings.MAX_PRECISION_TO_FIELDS:
                 raise forms.ValidationError(f"Значение {self.fields[field_name].label} "
                                             f"не может иметь более {settings.MAX_PRECISION_TO_FIELDS} знаков после запятой.")
-
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name')
-
-        # Проверка типа
-        self.validate_type(first_name, str, 'first_name')
-
-        # Проверка на длину не более 100 символов
-        self.validate_length(first_name, max_length=settings.FIO_MAX_LENGTH, field_name='first_name')
-
-        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        self.validate_regex(first_name, settings.FIO_RE_VALIDATION, field_name='first_name')
-
-        return first_name
-
-    def clean_last_name(self):
-        last_name = self.cleaned_data.get('last_name')
-
-        # Проверка типа
-        self.validate_type(last_name, str, 'last_name')
-
-        # Проверка на длину не более 100 символов
-        self.validate_length(last_name, max_length=settings.FIO_MAX_LENGTH, field_name='last_name')
-
-        # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-        self.validate_regex(last_name, settings.FIO_RE_VALIDATION, field_name='last_name')
-
-        return last_name
-
-    def clean_patronymic(self):
-        patronymic = self.cleaned_data.get('patronymic')
-
-        if patronymic is not None:
-            # Проверка типа
-            self.validate_type(patronymic, str, 'patronymic')
-
-            # Проверка на длину не более 100 символов
-            self.validate_length(patronymic, max_length=settings.FIO_MAX_LENGTH, field_name='patronymic')
-
-            # Проверка на наличие цифр, знаков, кроме апострофа и дефиса
-            self.validate_regex(patronymic, settings.FIO_RE_VALIDATION, field_name='patronymic')
-
-        return patronymic
 
     def clean_age(self):
         age = self.cleaned_data.get('age')
