@@ -251,7 +251,7 @@ class ClientDataFormTest(TestCase):
             отрицательного возраста.
         """
         for data in self.data_list:
-            data['age'] *= -1
+            data['age'] = self.fake.random_int(min=-200, max=-1)
             form = ClientDataForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
@@ -440,7 +440,7 @@ class ClientDataFormTest(TestCase):
             отрицательного возраста.
         """
         for data in self.data_list:
-            data['spo2'] *= -1
+            data['spo2'] = self.fake.random_int(min=-200, max=-1),
             form = ClientDataForm(data)
             self.assertFalse(form.is_valid(), f'Form errors: {form.errors}')
 
