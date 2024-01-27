@@ -6,6 +6,7 @@ from decouple import config
 DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')
 
 if DJANGO_ENV == 'production':
-    from .settings_prod import * #NOSONAR
+    from .settings_prod import *
 else:
-    from .settings_dev import * #NOSONAR
+    from .settings_dev import *
+STATIC_ROOT = '/app/mrs_proj/static/'

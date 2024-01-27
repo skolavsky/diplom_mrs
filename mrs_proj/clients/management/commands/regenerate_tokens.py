@@ -1,8 +1,8 @@
 # файл management/commands/regenerate_tokens.py
-import uuid
 from django.core.management.base import BaseCommand
-from clients.models import Client
+from clients.models import PersonalInfo
 import secrets
+import uuid
 
 
 class Command(BaseCommand):
@@ -21,14 +21,14 @@ class Command(BaseCommand):
             return
 
         if regenerate_all:
-            clients = Client.objects.all()
+            clients = PersonalInfo.objects.all()
             client_ids = [client.id for client in clients]
 
         for client_id in client_ids:
             try:
-                client = Client.objects.get(pk=client_id)
-                client.id_token = secrets.token_urlsafe(32)
+                client = PersonalInfo.objects.get(pk=client_id)
+                client.id = uuid.uuid4()  # Regenerate UUID
                 client.save()
                 self.stdout.write(self.style.SUCCESS(f'Successfully regenerated token for client {client_id}'))
-            except Client.DoesNotExist:
+            except PersonalInfo.DoesNotExist:
                 self.stdout.write(self.style.ERROR(f'Client with ID {client_id} does not exist'))
