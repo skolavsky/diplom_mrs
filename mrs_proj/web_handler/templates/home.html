@@ -6,11 +6,11 @@
 {% block content %}
 <h3>Записи, без результатов</h3>
 <ul class="list">
-    {% for patient in no_results_patients %}
+    {% for client in no_results_clients %}
     <li>
-        <a href="{% url 'client_detail' id_token=patient.id_token %}">
+        <a href="{% url 'client_detail' id=client.personal_info.id %}">
             <div class="list_item">
-                {{ patient.last_name }} {{ patient.first_name }} {{ patient.patronymic }}
+                {{ client.personal_info }}
             </div>
         </a>
     </li>
