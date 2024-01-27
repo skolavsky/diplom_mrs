@@ -27,6 +27,7 @@ class PersonalInfoForm(forms.ModelForm):
         'first_name': forms.TextInput(attrs={'class': 'name_input'}),
         'last_name': forms.TextInput(attrs={'class': 'name_input'}),
         'patronymic': forms.TextInput(attrs={'class': 'name_input'}),
+        'gender': forms.CheckboxInput(),
     }
 
     def validate_type(self, value, expected_type, field_name):
@@ -42,6 +43,14 @@ class PersonalInfoForm(forms.ModelForm):
     def validate_regex(self, value, regex, field_name):
         if value is not None and not re.match(regex, str(value)):
             raise forms.ValidationError(f"Значение {self.fields[field_name].label} содержит недопустимые символы.")
+
+    def clean_gender(self):
+        gender = self.cleaned_data.get('gender')
+
+        # Проверка типа
+        self.validate_type(gender, bool, 'gender')
+
+        return gender
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
