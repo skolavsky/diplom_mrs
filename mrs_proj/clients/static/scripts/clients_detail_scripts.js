@@ -3,19 +3,6 @@ function toggleForm() {
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 }
 
-function confirmDelete() {
-    document.getElementById('confirmDeletionDiv').style.display = 'block';
-}
-
-function cancelDelete() {
-    document.getElementById('client_delete').style.display = 'none';
-}
-
-function cancelEdit() {
-    let editForm = document.getElementById('editForm');
-    editForm.style.display = 'none';
-}
-
 function highlightChangedValues() {
     // Iterate through each change item
     document.querySelectorAll('.change-item').forEach(function (changeItem) {
@@ -39,6 +26,19 @@ function highlightChangedValues() {
         }
     });
 }
+
+function showConfirmation() {
+    document.getElementById('confirmEditDiv').style.display = 'block';
+}
+function confirmEdit() {
+    document.getElementById('client_personal_edit').submit();
+}
+
+function cancelEdit() {
+    document.getElementById('confirmEditDiv').style.display = 'none';
+    document.getElementById('client_personal_edit').reset();
+}
+
 
 // Call the new function after the page is loaded
 document.addEventListener('DOMContentLoaded', function () {
