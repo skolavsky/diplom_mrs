@@ -14,6 +14,7 @@ LOGIN_URL = '/login/'
 
 class ClientListView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
+    template_name = 'client_list.html'
 
     def get(self, request):
         clients_per_page = 10
@@ -53,7 +54,7 @@ class ClientListView(LoginRequiredMixin, View):
             'client_data_form': client_data_form,
         }
 
-        return render(request, 'client_list.html', context)
+        return render(request, self.template_name, context)
 
     def post(self, request):
         action = request.POST.get('action', '')
@@ -73,8 +74,7 @@ class ClientListView(LoginRequiredMixin, View):
 
                 # Обновляем поля в PersonalInfo и сохраняем его
                 new_personal_info.added_user = self.request.user
-                new_personal_info.id_token = secrets.token_urlsafe(
-                    32)  # Можете убрать эту строку, если не требуется обновление id_token после сохранения
+                new_personal_info.id_token = secrets.token_urlsafe(32)
                 new_personal_info.save()
 
                 # Редиректим на страницу с клиентами
@@ -92,9 +92,13 @@ class ClientDetailView(View):
         form = ClientDataForm(instance=client_data)
         form_info = PersonalInfoForm(instance=client_info)
         history_entries = client_data.history.all()
-        return render(request, self.template_name,
-                      {'client_data': client_data, 'form': form, 'history_entries': history_entries,
-                       'form_info': form_info})
+        context = {
+            'client_data': client_data,
+            'form': form,
+            'form_info': form_info,
+            'history_entries': history_entries,
+        }
+        return render(request, self.template_name, context)
 
     def post(self, request, id):
         action = request.POST.get('action', '')
@@ -114,7 +118,7 @@ class ClientDetailView(View):
                 client_data = get_object_or_404(ClientData, personal_info__id=id)
                 history_entries = client_data.history.all()
                 context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
-                return render(request, 'client_detail.html', context)
+                return render(request, self.template_name, context)
 
         elif action == 'edit_client':
             client_data = get_object_or_404(ClientData, personal_info__id=id)
@@ -126,6 +130,6 @@ class ClientDetailView(View):
                 # Если форма не валидна, передайте ее вместе с client_data для повторного отображения
                 history_entries = client_data.history.all()
                 context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
-                return render(request, 'client_detail.html', context)
+                return render(request, self.template_name, context)
         else:
             return HttpResponseBadRequest("Invalid action")
