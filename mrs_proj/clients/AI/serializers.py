@@ -1,17 +1,15 @@
 from rest_framework import serializers
-from ..models import Client
+from ..models import ClientData
 
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Client
-        # Specify the fields used by serializer
+        model = ClientData
         fields = [
             'age',
             'body_mass_index',
             'spo2',
             'dayshome',
-            'gender',
             'f_test_ex',
             'f_test_in',
             'comorb_ccc',
