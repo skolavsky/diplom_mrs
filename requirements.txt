@@ -11,3 +11,4 @@ requests
 setuptools
 coverage
 whitenoise
+djangorestframework
