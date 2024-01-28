@@ -1,6 +1,6 @@
 # project/urls.py
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from web_handler.views import HomeView, DashboardView, ContactsView, LoginView, ContactsView
 from django.contrib.auth.views import LogoutView
 from clients.views import ClientListView, ClientDetailView
@@ -16,4 +16,6 @@ urlpatterns = [
 
     path('client-list/', ClientListView.as_view(), name='client_list'),
 
+    #API's pathes
+    path('api/', include('clients.AI.urls')),
 ]

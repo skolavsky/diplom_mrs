@@ -2,12 +2,14 @@
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.core.paginator import Paginator
 import secrets
 from .models import ClientData, PersonalInfo
 from .forms import PersonalInfoForm, ClientDataForm
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+from .AI.serializers import ClientSerializer
+import requests
 
 LOGIN_URL = '/login/'
 
@@ -91,12 +93,23 @@ class ClientDetailView(View):
         client_info = get_object_or_404(PersonalInfo, id=id)
         form = ClientDataForm(instance=client_data)
         form_info = PersonalInfoForm(instance=client_info)
-        history_entries = client_data.history.all()
+        client_serializer = ClientSerializer(client_data)
+        result_data = None
+        try:
+            response = requests.post("http://127.0.0.1:8000/api/result.json/", client_serializer.data)
+            response.raise_for_status()  # Поднимает исключение при неудачном запросе (например, 4xx или 5xx)
+            result_data = response.json().get('result', '')
+
+            # Дальнейшая обработка успешного запроса
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
+
         context = {
             'client_data': client_data,
             'form': form,
             'form_info': form_info,
-            'history_entries': history_entries,
+            'result': result_data,
+            'history_entries': client_data.history.all(),
         }
         return render(request, self.template_name, context)
 
@@ -127,9 +140,6 @@ class ClientDetailView(View):
                 form.save()
                 return redirect('client_detail', id=id)
             else:
-                # Если форма не валидна, передайте ее вместе с client_data для повторного отображения
-                history_entries = client_data.history.all()
-                context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
-                return render(request, self.template_name, context)
+                return HttpResponseBadRequest("Invalid form submission")
         else:
             return HttpResponseBadRequest("Invalid action")
