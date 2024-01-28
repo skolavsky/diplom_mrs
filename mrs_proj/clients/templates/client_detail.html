@@ -57,6 +57,15 @@
             <td>Результат:</td>
             <td>{{ client_data.result }}</td>
         </tr>
+        <tr>
+            <td>Прогноз результата:</td>
+            <td>{% if result %}
+                {{ result }}
+                {% else %}
+                Обрабатывается
+                {% endif %}
+            </td>
+        </tr>
     </table>
 </div>
 
@@ -65,22 +74,8 @@
 
     <h2>Действия</h2>
 
-    <button id="delete" type="button" onclick="confirmDelete()">Удалить пациента</button>
-{% comment %} My code {% endcomment %}
-    <form id="post" method="post" action="{% url 'client_detail' id_token=client.id_token %}">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="post">
-        <!-- Add any other form fields here -->
-        
-        <button type="submit">Submit</button>
-      </form>
-      
-      {% if result %}
-        <p>{{ result }}</p>
-      {% endif %}
-{% comment %} My code {% endcomment %}
-    <form id="client_delete" method="post" action="{% url 'client_detail' id_token=client.id_token %}">
     <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
+
 
     <form id="client_personal_edit" method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
         {% csrf_token %}
