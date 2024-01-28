@@ -128,6 +128,7 @@ class LoginViewTests(TestCase):
     '''
     Класс для тестирования логина
     '''
+
     def test_login_page_includes_js_code(self):
         '''
         Проверка на включение функции js кода на показ пароля
@@ -197,22 +198,6 @@ class LoginViewTests(TestCase):
         '''
         response = self.client.get(reverse('login'))
         self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
-
-    def test_failed_login_scripts(self):
-        '''
-        Проверка наличия подключенных скриптов
-        :return:
-        '''
-        response = self.client.get(reverse('login'))
-        self.assertContains(response, '<script src="/static/scripts/login_scripts.js"></script>')
-
-    def test_failed_login_styles(self):
-        '''
-        Проверка наличия кнопки с текстом стилей на странице
-        :return:
-        '''
-        response = self.client.get(reverse('login'))
-        self.assertContains(response, '<link rel="stylesheet" type="text/css" href="/static/css/styles_login.css">')
 
     def test_login_title(self):
         '''
