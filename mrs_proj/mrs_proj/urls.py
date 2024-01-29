@@ -11,6 +11,8 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name='login'),
     path('', HomeView.as_view(), name='home'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('load_articles/', DashboardView.as_view(), name='load_articles'), # ajax for dashboard path
+
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('client-detail/<str:id>/', ClientDetailView.as_view(), name='client_detail'),
 

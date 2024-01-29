@@ -4,18 +4,99 @@
 {% block title %}Dashboard - Your Website{% endblock %}
 
 {% block header %}
-    Обновления
+Обновления
 {% endblock %}
 
 {% block user_info %}
-    {% if user.is_authenticated %}
-        <span>Добро пожаловать, {{ user.username }}!</span>
-    {% else %}
-        <span>Not logged in</span>
-    {% endif %}
+{% if user.is_authenticated %}
+<span>Добро пожаловать, {{ user.username }}!</span>
+{% else %}
+<span>Not logged in</span>
+{% endif %}
 {% endblock %}
 
 {% block content %}
-    <h2>Добро пожаловать!</h2>
-    <p>Записи.</p>
+<h2>Добро пожаловать!</h2>
+<p>Записи.</p>
+
+<div id="article-container">
+    {% for article in articles %}
+    <div class="article">
+        <h3>{{ article.title }}</h3>
+        <p>{{ article.content }}</p>
+        <p>Author: {{ article.author.username }}</p>
+        <p>Created at: {{ article.created_at }}</p>
+        <p>Last Modified at: {{ article.last_modified_at }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- NOSONAR -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    var offset = 0;
+    var limit = 3;  // Начальное количество статей для загрузки
+    var loading = false;  // Флаг, чтобы избежать параллельных запросов
+
+    function loadArticles() {
+        if (!loading) {
+            loading = true;  // Устанавливаем флаг загрузки
+            $.ajax({
+                url: '/load_articles/',
+                data: {
+                    'offset': offset,
+                    'limit': limit,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.articles.length > 0) {
+                        offset += data.articles.length;
+                        // Используем for-of для итерации по массиву
+                        for (const article of data.articles) {
+                            var articleHtml = '<div class="article">' +
+                                '<h3>' + article.title + '</h3>' +
+                                '<p>' + article.content + '</p>' +
+                                '<p>Author: ' + article.author + '</p>' +
+                                '<p>Created at: ' + article.created_at + '</p>' +
+                                '<p>Last Modified at: ' + article.last_modified_at + '</p>' +
+                                '</div>';
+                            $('#article-container').append(articleHtml);
+                        }
+
+
+                        // Если есть еще статьи, запускаем таймер для следующей порции
+                        if (data.articles.length >= limit) {
+                            setTimeout(function () {
+                                loading = false;  // Сбрасываем флаг загрузки
+                                loadArticles();
+                            }, 15000);  // Задержка в 15 секунд перед следующей порцией
+                        } else {
+                            // Если больше нет статей, отписываемся от события scroll
+                            $(window).off('scroll', onScroll);
+                        }
+                    } else {
+                        // Если больше нет статей, отписываемся от события scroll
+                        $(window).off('scroll', onScroll);
+                    }
+                }
+            });
+        }
+    }
+
+    function onScroll() {
+        // Если прокрутили до низа страницы, загружаем дополнительные статьи
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+            loadArticles();
+        }
+    }
+
+    $(document).ready(function () {
+        // Начинаем загружать статьи при загрузке страницы
+        loadArticles();
+
+        // Подписываемся на событие scroll
+        $(window).on('scroll', onScroll);
+    });
+</script>
 {% endblock %}

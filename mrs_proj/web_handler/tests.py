@@ -1,8 +1,79 @@
+from datetime import datetime, timedelta
+
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
+from .models import Article
 
 LOGIN = '/login/'
+class DashboardViewTests(TestCase):
+    def setUp(self):
+        # Создаем пользователя для тестов
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+
+        # Создаем несколько статей для пользователя
+        self.article1 = Article.objects.create(
+            title='Article 1',
+            content='Content 1',
+            author=self.user,
+            created_at=datetime.now(),
+            last_modified_at=datetime.now(),
+        )
+        self.article2 = Article.objects.create(
+            title='Article 2',
+            content='Content 2',
+            author=self.user,
+            created_at=datetime.now() - timedelta(days=1),
+            last_modified_at=datetime.now() - timedelta(days=1),
+        )
+
+    def test_dashboard_view(self):
+        # Авторизуем пользователя
+        self.client.login(username='testuser', password='testpassword')
+
+        # Запрашиваем страницу dashboard
+        response = self.client.get(reverse('dashboard'))
+
+        # Проверяем, что ответ имеет код 200 (успешный запрос)
+        self.assertEqual(response.status_code, 200)
+
+        # Проверяем, что на странице отображаются данные из статей
+        self.assertContains(response, 'Article 1')
+        self.assertContains(response, 'Article 2')
+        self.assertContains(response, 'Content 1')
+        self.assertContains(response, 'Content 2')
+
+    def test_dashboard_view_with_unauthenticated_user(self):
+        # Выходим из системы пользователя
+        self.client.logout()
+
+        # Запрашиваем страницу dashboard
+        response = self.client.get(reverse('dashboard'))
+
+        # Проверяем, что ответ имеет код 302 (редирект на страницу входа)
+        self.assertEqual(response.status_code, 302)
+
+        # Проверяем, что происходит редирект на страницу входа
+        self.assertRedirects(response, '/login/?next=/dashboard/')
+
+    def test_dashboard_view_with_no_articles(self):
+        # Удаляем все статьи
+        Article.objects.all().delete()
+
+        # Авторизуем пользователя
+        self.client.login(username='testuser', password='testpassword')
+
+        # Запрашиваем страницу dashboard
+        response = self.client.get(reverse('dashboard'))
+
+        # Проверяем, что ответ имеет код 200 (успешный запрос)
+        self.assertEqual(response.status_code, 200)
+
+        # Проверяем, что на странице отсутствуют данные статей
+        self.assertNotContains(response, 'Article 1')
+        self.assertNotContains(response, 'Article 2')
+        self.assertNotContains(response, 'Content 1')
+        self.assertNotContains(response, 'Content 2')
 
 
 class WebHandlerViewsTest(TestCase):
