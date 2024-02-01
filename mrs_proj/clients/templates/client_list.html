@@ -87,9 +87,11 @@
             {% if clients_data.has_previous %}
                 <a href="?page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
             {% endif %}
-            <p>
+
+            <p class="page-info" onclick="openGoToPageModal()">
                 Page {{ clients_data.number }} of {{ clients_data.paginator.num_pages }}
             </p>
+
             {% if clients_data.has_next %}
                 <a href="?page={{ clients_data.next_page_number }}" class="button">&#8594;</a>
             {% endif %}
@@ -98,6 +100,18 @@
             {% endif %}
         </div>
     </span>
+</div>
+
+<!-- Модальное окно для ввода номера страницы -->
+<div id="goToPageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeGoToPageModal()">&times;</span>
+        <form id="goToPageForm">
+            <label for="page-input">Enter page number:</label>
+            <input type="number" id="page-input" min="1" max="{{ clients_data.paginator.num_pages }}">
+            <button type="button" onclick="goToPage()">Go</button>
+        </form>
+    </div>
 </div>
 
 
@@ -119,6 +133,31 @@
         });
     });
 
+     function openGoToPageModal() {
+        document.getElementById('goToPageModal').style.display = 'block';
+    }
+
+    function closeGoToPageModal() {
+        document.getElementById('goToPageModal').style.display = 'none';
+    }
+
+    function goToPage() {
+        var pageNumber = document.getElementById('page-input').value;
+        if (pageNumber !== '' && !isNaN(pageNumber) && pageNumber > 0 && pageNumber <= {{ clients_data.paginator.num_pages }}) {
+            window.location.href = '?page=' + pageNumber;
+            closeGoToPageModal();
+        } else {
+            alert('Please enter a valid page number.');
+        }
+    }
+
+    window.onclick = function(event) {
+        var modal = document.getElementById('goToPageModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
     document.addEventListener('DOMContentLoaded', function () {
         const resetSortingButton = document.getElementById('resetSortingButton');
 
@@ -129,39 +168,9 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const resetSortingButton = document.getElementById('resetSortingButton');
 
-        resetSortingButton.addEventListener('click', function () {
-            const currentUrl = new URL(window.location.href);
-            const searchParamIndex = currentUrl.href.indexOf('?search');
 
-            if (searchParamIndex !== -1) {
-                const baseUrl = currentUrl.href.substring(0, searchParamIndex);
-                window.location.href = baseUrl;
-            }
-        });
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
-
-        // Event listener to enlarge the input field when typing
-        searchInput.addEventListener('input', function () {
-            if (searchInput.value.trim() !== '') {
-                searchInput.classList.add('enlarged');
-            } else {
-                searchInput.classList.remove('enlarged');
-            }
-        });
-
-        // Event listener for the search button click
-        searchButton.addEventListener('click', function () {
-            // Perform the search functionality here
-            alert('Searching for: ' + searchInput.value);
-        });
-    });
 
 </script>
 

@@ -12,6 +12,33 @@ function cancelAddClient() {
     form.style.display = 'none';
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    // Event listener to enlarge the input field when typing
+    searchInput.addEventListener('input', function () {
+        if (searchInput.value.trim() !== '') {
+            searchInput.classList.add('enlarged');
+        } else {
+            searchInput.classList.remove('enlarged');
+        }
+    });
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const resetSortingButton = document.getElementById('resetSortingButton');
+
+    resetSortingButton.addEventListener('click', function () {
+        const currentUrl = new URL(window.location.href);
+        const searchParamIndex = currentUrl.href.indexOf('?search');
+
+        if (searchParamIndex !== -1) {
+            const baseUrl = currentUrl.href.substring(0, searchParamIndex);
+            window.location.href = baseUrl;
+        }
+    });
+});
 
 // Function to validate the client form
 function validateClientForm() {
