@@ -41,7 +41,7 @@ class ClientListView(LoginRequiredMixin, View):
             clients_data = clients_data.order_by(f'-{sort_by}')
 
         paginator = Paginator(clients_data, clients_per_page)
-        page_number = request.GET.get('page')
+        page_number = int(request.GET.get('page', 1))
         page = paginator.get_page(page_number)
 
         client_data_form = ClientDataForm()
