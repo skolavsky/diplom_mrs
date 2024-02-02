@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.db.models import BooleanField
+from django.urls import reverse
 from simple_history.models import HistoricalRecords
 from datetime import date
 from django.db import models
@@ -20,6 +21,9 @@ class PersonalInfo(models.Model):
     gender: BooleanField = models.BooleanField(default=True, choices=GENDER_CHOICES)
     is_active: BooleanField = models.BooleanField(default=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    def get_absolute_url(self):
+        return reverse('client_detail', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         if not self.id:
