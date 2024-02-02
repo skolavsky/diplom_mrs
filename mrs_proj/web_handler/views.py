@@ -9,6 +9,7 @@ from .models import Article
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 LOGIN_URL = '/login/'
 
@@ -20,13 +21,12 @@ class ContactsView(LoginRequiredMixin, View):
         # Define your criteria (e.g., no results or no updates for 30 days)
         return render(request, 'contacts.html')
 
-
 class HomeView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
     def get(self, request):
         # Определите ваши критерии (например, отсутствие результатов или отсутствие обновлений в течение 3 дней)
-        no_results_clients = ClientData.objects.filter(result__isnull=True,
+        no_results_clients = ClientData.objects.filter(Q(result__isnull=True) | Q(result=0),
                                                        admission_date__lt=timezone.now() - timedelta(days=3))
 
         more_than_five = no_results_clients.count() > 5
