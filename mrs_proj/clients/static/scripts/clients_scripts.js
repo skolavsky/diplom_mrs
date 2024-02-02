@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
-    const searchButton = document.getElementById('searchButton');
 
     // Event listener to enlarge the input field when typing
     searchInput.addEventListener('input', function () {
@@ -58,7 +57,7 @@ function closeGoToPageModal() {
 }
 
 window.onclick = function (event) {
-    var modal = document.getElementById('goToPageModal');
+    let modal = document.getElementById('goToPageModal');
     if (event.target === modal) {
         modal.style.display = 'none';
     }
