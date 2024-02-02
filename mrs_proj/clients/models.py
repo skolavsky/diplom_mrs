@@ -34,6 +34,13 @@ class PersonalInfo(models.Model):
 
 
 class ClientData(models.Model):
+    RESULT_CHOICES = [
+        (0, 'В процессе'),
+        (1, 'Значение 1'),
+        (2, 'Значение 2'),
+        (3, 'Значение 3'),
+    ]
+
     personal_info = models.OneToOneField(PersonalInfo, null=True, blank=True, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     date_last_modified = models.DateTimeField(auto_now=True)
@@ -42,7 +49,7 @@ class ClientData(models.Model):
     body_mass_index = models.FloatField(null=True, blank=True)
     spo2 = models.IntegerField(null=True, blank=True)
     admission_date = models.DateField(default=date.today, null=False, blank=True)
-    result = models.IntegerField(null=True, blank=True)
+    result = models.IntegerField(choices=RESULT_CHOICES, default=0, blank=False)
     dayshome = models.IntegerField(null=True, blank=True)
     f_test_ex = models.IntegerField(null=True, blank=True)
     f_test_in = models.IntegerField(null=True, blank=True)

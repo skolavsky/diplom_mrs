@@ -214,6 +214,7 @@ class ClientDataFormTest(TestCase):
     def generate_data(self, **kwargs):
         default_data = {
             'age': self.fake.random_int(min=0, max=120),
+            'result': self.fake.random_int(min=0, max=3),
             'admission_date': self.fake.date_between_dates(date(settings.START_ADMISSION_DATE, 1, 1), date.today()),
             'comorb_ccc': secrets.choice([True, False]),
             'comorb_bl': secrets.choice([True, False]),
@@ -239,6 +240,36 @@ class ClientDataFormTest(TestCase):
         for data in self.data_list:
             form = ClientDataForm(data)
             self.assertTrue(form.is_valid(), f'Form errors: {form.errors}')
+
+    def test_result_wrong_type(self):
+        """
+        Тестирование, что форма не будет работать с неправильным типом result.
+        """
+        for data in self.data_list:
+            # Изменяем тип gender на некорректный
+            data['result'] = 'variable'  # Пример другого типа
+            form = PersonalInfoForm(data)
+            self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
+    def test_result_is_negative(self):
+        """
+        Тестирование, что форма не будет работать с отрицательными result.
+        """
+        for data in self.data_list:
+            # Изменяем тип gender на некорректный
+            data['result'] = self.fake.random_int(min=-100, max=-1)
+            form = PersonalInfoForm(data)
+            self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
+
+    def test_result_is_unset_value(self):
+        """
+        Тестирование, что форма не будет работать с нерегламентированными results.
+        """
+        for data in self.data_list:
+            # Изменяем тип gender на некорректный
+            data['result'] = self.fake.random_int(min=4, max=100)
+            form = PersonalInfoForm(data)
+            self.assertFalse(form.is_valid(), f'Form should not be valid, but got errors: {form.errors}')
 
     def test_age_is_negative(self):
         """
@@ -1062,6 +1093,7 @@ class ClientDetailViewTests(TestCase):
     Test the client detail(view)
     тестим вьюху client-detail
     '''
+
     def setUp(self):
         # Создаем пользователя и логинимся
         self.user = User.objects.create_user(username='testuser', password='testpassword')
@@ -1105,7 +1137,7 @@ class ClientDetailViewTests(TestCase):
 
     def test_view_can_edit_client_data(self):
         # Проверяем, что представление может редактировать данные о клиенте
-        new_result = 42  # Новое значение для результата
+        new_result = 3  # Новое значение для результата
         data = {'action': 'edit_client', 'result': new_result}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, 302)  # Ожидаем перенаправление после успешного редактирования

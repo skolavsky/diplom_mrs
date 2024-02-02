@@ -106,7 +106,7 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'age': 'Возраст',
             'spo2': 'SPO2',
             'body_mass_index': 'ИМТ',
-            'result': 'Исход',
+            'result': 'Результат',
             'ch_d': 'Частота дыхания',
             'cd_ozhir': 'Сахарный диабет или ожирение',
             'spo2_fio': 'Fraction of inspired oxygen',
@@ -125,6 +125,15 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'admission_date': forms.SelectDateWidget(),
             'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
         }
+
+    def clean_result(self):
+        result = self.cleaned_data['result']
+
+        # Проверяем, что значение находится в допустимом диапазоне
+        if result not in [choice[0] for choice in ClientData.RESULT_CHOICES]:
+            raise forms.ValidationError("Недопустимое значение для результата")
+
+        return result
 
     def validate_decimal_precision(self, value: float, field_name):
         if isinstance(value, float):
