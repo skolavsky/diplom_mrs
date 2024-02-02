@@ -126,7 +126,7 @@ class ClientDetailView(View):
             form = PersonalInfoForm(request.POST, instance=client_info)
             if form.is_valid():
                 form.save()
-                return redirect('client_detail')
+                return redirect('client_detail', id=id)
             else:
                 client_data = get_object_or_404(ClientData, personal_info__id=id)
                 history_entries = client_data.history.all()
@@ -138,7 +138,7 @@ class ClientDetailView(View):
             form = ClientDataForm(request.POST, instance=client_data)
             if form.is_valid():
                 form.save()
-                return redirect('client_detail')
+                return redirect('client_detail', id=id)
             else:
                 return HttpResponseBadRequest("Invalid form submission")
         else:
