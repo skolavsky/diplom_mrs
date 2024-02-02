@@ -7,7 +7,7 @@ import secrets
 
 class ResultAPI(APIView):
 
-    #permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, format=None):
         return Response(status=status.HTTP_200_OK)
