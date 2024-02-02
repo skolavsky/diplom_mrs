@@ -6,8 +6,6 @@
 {% block title %}Список клиентов{% endblock %}
 {% block header %}Список записей{% endblock %}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 {% block content %}
 
 <div class="box_tool">
@@ -38,28 +36,31 @@
     </tr>
 </thead>
     <tbody>
-{% for client_data in clients_data %}
-    <tr class="table">
-        <td class="cell_name">
-            <a href="{% url 'client_detail' id=client_data.personal_info.id %}">
-                {{ client_data.personal_info }}
-            </a>
-        </td>
-        <td class="cell_age">{{ client_data.age }}</td>
-        <td class="cell_imt">{{ client_data.body_mass_index }}</td>
-        <td class="cell_spo">{{ client_data.spo2 }}</td>
-        <td class="cell_date">{{ client_data.admission_date }}</td>
-        <td class="cell_res">{{ client_data.result }}</td>
-        <td class="cell_button">
-            <a href="{% url 'client_detail' id=client_data.personal_info.id %}">
-                <div class="button">
-                    Delete
-                </div>
-            </a>
-        </td>
-    </tr>
-{% endfor %}
-
+{% if clients_data %}
+    {% for client_data in clients_data %}
+        <tr class="table">
+            <td class="cell_name">
+                <a href="{% url 'client_detail' id=client_data.personal_info.id %}">
+                    {{ client_data.personal_info }}
+                </a>
+            </td>
+            <td class="cell_age">{{ client_data.age }}</td>
+            <td class="cell_imt">{{ client_data.body_mass_index }}</td>
+            <td class="cell_spo">{{ client_data.spo2 }}</td>
+            <td class="cell_date">{{ client_data.admission_date }}</td>
+            <td class="cell_res">{{ client_data.result }}</td>
+            <td class="cell_button">
+                <a href="{% url 'client_detail' id=client_data.personal_info.id %}">
+                    <div class="button">
+                        Delete
+                    </div>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <H3>Извините, ничего не обнаружено</H3>
+{% endif %}
 
     </tbody>
 </table>
