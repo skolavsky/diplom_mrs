@@ -6,13 +6,15 @@
 {% block title %}Список клиентов{% endblock %}
 {% block header %}Список записей{% endblock %}
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {% block content %}
 
 <div class="box_tool">
     <div class="search_box">
         <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
         <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-        <button type="submit" class="button" id="resetSortingButton"><i class="fas fa-eraser"></i> Сброс сортировки
+        <button type="submit" class="button" id="resetSortingButton"><i class="fas fa-eraser"></i> Сброс сортировки и поиска
         </button>
     </div>
 
@@ -82,21 +84,21 @@
     <span class="step-links">
         <div class="page_next">
             {% if clients_data.has_previous %}
-                <a href="?page=1" class="button">&laquo; first</a>
+                <a href="?page=1" class="button">&laquo; Первая страница</a>
             {% endif %}
             {% if clients_data.has_previous %}
                 <a href="?page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
             {% endif %}
 
             <p class="page-info" onclick="openGoToPageModal()">
-                Page {{ clients_data.number }} of {{ clients_data.paginator.num_pages }}
+                Страница {{ clients_data.number }} / {{ clients_data.paginator.num_pages }}
             </p>
 
             {% if clients_data.has_next %}
                 <a href="?page={{ clients_data.next_page_number }}" class="button">&#8594;</a>
             {% endif %}
             {% if clients_data.has_next %}
-                <a href="?page={{ clients_data.paginator.num_pages }}" class="button">last &raquo;</a>
+                <a href="?page={{ clients_data.paginator.num_pages }}" class="button">Последняя страница &raquo;</a>
             {% endif %}
         </div>
     </span>
@@ -107,15 +109,15 @@
     <div class="modal-content">
         <span class="close" onclick="closeGoToPageModal()">&times;</span>
         <form id="goToPageForm">
-            <label for="page-input">Enter page number:</label>
+            <label for="page-input">К странице номер:</label>
             <input type="number" id="page-input" min="1" max="{{ clients_data.paginator.num_pages }}">
-            <button type="button" onclick="goToPage()">Go</button>
+            <button type="button" onclick="goToPage()">Перейти</button>
         </form>
     </div>
 </div>
 
-
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
+
 <script>
 
     function goToPage() {

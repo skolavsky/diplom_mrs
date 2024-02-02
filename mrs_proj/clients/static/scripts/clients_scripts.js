@@ -2,6 +2,21 @@ document.getElementById('toggleFormBtn').addEventListener('click', function () {
     document.getElementById('addClientForm').style.display = 'block';
 });
 
+ document.addEventListener('DOMContentLoaded', function () {
+        const searchButton = document.getElementById('searchButton');
+
+        searchButton.addEventListener('click', function () {
+            const searchInput = document.getElementById('searchInput');
+            const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
+
+            if (searchQuery !== '') {
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('search', searchQuery);
+                window.location.href = currentUrl.toString();
+            }
+        });
+    });
+
 function toggleForm() {
     let form = document.getElementById('addClientForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
@@ -18,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     resetSortingButton.addEventListener('click', function () {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete('sort');  // Remove the 'sort' parameter
+        currentUrl.searchParams.delete('search');  // Remove the 'search' parameter
         window.location.href = currentUrl.toString();
     });
 });
