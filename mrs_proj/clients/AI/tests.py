@@ -10,7 +10,7 @@ API_URL = reverse('result')
 class ResultAPITest(APITestCase):
     def setUp(self) -> None:
         self.client = APIClient()
-        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.user = User.objects.create_user(username='testuser', password='testpass') #NOSONAR
 
     def test_get(self):
         response = self.client.get(API_URL)
