@@ -34,9 +34,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'querystring_tag',
     'web_handler',
     'clients',
     'simple_history',
+
 ]
 
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
@@ -66,6 +68,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'clients.context_processors.add_query_params_to_context',
+
             ],
         },
     },

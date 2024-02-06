@@ -95,10 +95,10 @@
     <span class="step-links">
         <div class="page_next">
             {% if clients_data.has_previous %}
-                <a href="?page=1" class="button">&laquo; Первая страница</a>
+                <a href="?{{ query_params }}&page=1" class="button">&laquo; Первая страница</a>
             {% endif %}
             {% if clients_data.has_previous %}
-                <a href="?page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
+                <a href="?{{ query_params }}&page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
             {% endif %}
 
             <p class="page-info" onclick="openGoToPageModal()">
@@ -106,14 +106,17 @@
             </p>
 
             {% if clients_data.has_next %}
-                <a href="?page={{ clients_data.next_page_number }}" class="button">&#8594;</a>
+                <a href="?{{ query_params }}&page={{ clients_data.next_page_number }}" class="button">&#8594;</a>
             {% endif %}
             {% if clients_data.has_next %}
-                <a href="?page={{ clients_data.paginator.num_pages }}" class="button">Последняя страница &raquo;</a>
+                <a href="?{{ query_params }}&page={{ clients_data.paginator.num_pages }}" class="button">Последняя страница &raquo;</a>
             {% endif %}
         </div>
     </span>
 </div>
+
+
+
 
 <!-- Модальное окно для ввода номера страницы -->
 <div id="goToPageModal" class="modal">
