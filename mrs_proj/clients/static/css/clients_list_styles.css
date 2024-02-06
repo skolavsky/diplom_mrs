@@ -1,10 +1,5 @@
 /* Стили для чекбоксов */
 details input[type="checkbox"] {
-    margin-right: 5px; /* Добавляем отступ справа для чекбоксов */
-}
-
-/* Стили для чекбоксов */
-details input[type="checkbox"] {
   margin-right: 5px; /* Добавляем отступ справа для чекбоксов */
   appearance: none; /* Отключаем стандартные стили браузера для чекбоксов */
   -webkit-appearance: none; /* Для поддержки вебкитовских браузеров */
