@@ -26,6 +26,11 @@ class ClientListView(LoginRequiredMixin, View):
         search_query = request.GET.get('search', '')
         clients_data = ClientData.objects.select_related('personal_info')
 
+        # Фильтрация по результату
+        result_filters = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('result_')]
+        if result_filters:
+            clients_data = clients_data.filter(result__in=result_filters)
+
         if search_query:
             clients_data = clients_data.filter(
                 Q(personal_info__first_name__icontains=search_query) |
@@ -41,7 +46,7 @@ class ClientListView(LoginRequiredMixin, View):
             clients_data = clients_data.order_by(f'-{sort_by}')
 
         paginator = Paginator(clients_data, clients_per_page)
-        page_number = request.GET.get('page')
+        page_number = int(request.GET.get('page', 1))
         page = paginator.get_page(page_number)
 
         client_data_form = ClientDataForm()

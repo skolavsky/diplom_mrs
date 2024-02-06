@@ -12,7 +12,7 @@
     <div class="search_box">
         <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
         <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-        <button type="submit" class="button" id="resetSortingButton"><i class="fas fa-eraser"></i> Сброс сортировки
+        <button type="submit" class="button" id="resetSortingButton"><i class="fas fa-eraser"></i> Сброс сортировки и поиска
         </button>
     </div>
 
@@ -21,6 +21,19 @@
         </button>
     </div>
 </div>
+
+<details>
+  <summary>Фильтры</summary>
+  <form method="get">
+    <label><input type="checkbox" name="result_0"> Результат 0</label><br>
+    <label><input type="checkbox" name="result_1"> Результат 1</label><br>
+    <label><input type="checkbox" name="result_2"> Результат 2</label><br>
+    <label><input type="checkbox" name="result_3"> Результат 3</label><br>
+    <button type="submit">Применить фильтры</button>
+  </form>
+</details>
+
+
 
 <table>
     <caption></caption>
@@ -36,28 +49,31 @@
     </tr>
 </thead>
     <tbody>
-{% for client_data in clients_data %}
-    <tr class="table">
-        <td class="cell_name">
-            <a href="{% url 'client_detail' id=client_data.personal_info.id %}">
-                {{ client_data.personal_info }}
-            </a>
-        </td>
-        <td class="cell_age">{{ client_data.age }}</td>
-        <td class="cell_imt">{{ client_data.body_mass_index }}</td>
-        <td class="cell_spo">{{ client_data.spo2 }}</td>
-        <td class="cell_date">{{ client_data.admission_date }}</td>
-        <td class="cell_res">{{ client_data.result }}</td>
-        <td class="cell_button">
-            <a href="{% url 'client_detail' id=client_data.personal_info.id %}">
-                <div class="button">
-                    Delete
-                </div>
-            </a>
-        </td>
-    </tr>
-{% endfor %}
-
+{% if clients_data %}
+    {% for client_data in clients_data %}
+        <tr class="table">
+            <td class="cell_name">
+                <a href="{{ client_data.personal_info.get_absolute_url }}">
+                    {{ client_data.personal_info }}
+                </a>
+            </td>
+            <td class="cell_age">{{ client_data.age }}</td>
+            <td class="cell_imt">{{ client_data.body_mass_index }}</td>
+            <td class="cell_spo">{{ client_data.spo2 }}</td>
+            <td class="cell_date">{{ client_data.admission_date }}</td>
+            <td class="cell_res">{{ client_data.result }}</td>
+            <td class="cell_button">
+                <a href="{{ client_data.personal_info.get_absolute_url }}">
+                    <div class="button">
+                        Delete
+                    </div>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <H3>Извините, ничего не обнаружено</H3>
+{% endif %}
 
     </tbody>
 </table>
@@ -82,86 +98,54 @@
     <span class="step-links">
         <div class="page_next">
             {% if clients_data.has_previous %}
-                <a href="?page=1" class="button">&laquo; first</a>
+                <a href="?{{ query_params }}&page=1" class="button">&laquo; Первая страница</a>
             {% endif %}
             {% if clients_data.has_previous %}
-                <a href="?page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
+                <a href="?{{ query_params }}&page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
             {% endif %}
-            <p>
-                Page {{ clients_data.number }} of {{ clients_data.paginator.num_pages }}
+
+            <p class="page-info" onclick="openGoToPageModal()">
+                Страница {{ clients_data.number }} / {{ clients_data.paginator.num_pages }}
             </p>
+
             {% if clients_data.has_next %}
-                <a href="?page={{ clients_data.next_page_number }}" class="button">&#8594;</a>
+                <a href="?{{ query_params }}&page={{ clients_data.next_page_number }}" class="button">&#8594;</a>
             {% endif %}
             {% if clients_data.has_next %}
-                <a href="?page={{ clients_data.paginator.num_pages }}" class="button">last &raquo;</a>
+                <a href="?{{ query_params }}&page={{ clients_data.paginator.num_pages }}" class="button">Последняя страница &raquo;</a>
             {% endif %}
         </div>
     </span>
 </div>
 
 
+
+
+<!-- Модальное окно для ввода номера страницы -->
+<div id="goToPageModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeGoToPageModal()">&times;</span>
+        <form id="goToPageForm">
+            <label for="page-input">К странице номер:</label>
+            <input type="number" id="page-input" min="1" max="{{ clients_data.paginator.num_pages }}">
+            <button type="button" onclick="goToPage()">Перейти</button>
+        </form>
+    </div>
+</div>
+
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
+
 <script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchButton = document.getElementById('searchButton');
-
-        searchButton.addEventListener('click', function () {
-            const searchInput = document.getElementById('searchInput');
-            const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
-
-            if (searchQuery !== '') {
-                const currentUrl = new URL(window.location.href);
-                currentUrl.searchParams.set('search', searchQuery);
-                window.location.href = currentUrl.toString();
-            }
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const resetSortingButton = document.getElementById('resetSortingButton');
-
-        resetSortingButton.addEventListener('click', function () {
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.delete('sort');  // Remove the 'sort' parameter
-            window.location.href = currentUrl.toString();
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const resetSortingButton = document.getElementById('resetSortingButton');
-
-        resetSortingButton.addEventListener('click', function () {
-            const currentUrl = new URL(window.location.href);
-            const searchParamIndex = currentUrl.href.indexOf('?search');
-
-            if (searchParamIndex !== -1) {
-                const baseUrl = currentUrl.href.substring(0, searchParamIndex);
-                window.location.href = baseUrl;
-            }
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('searchInput');
-        const searchButton = document.getElementById('searchButton');
-
-        // Event listener to enlarge the input field when typing
-        searchInput.addEventListener('input', function () {
-            if (searchInput.value.trim() !== '') {
-                searchInput.classList.add('enlarged');
-            } else {
-                searchInput.classList.remove('enlarged');
-            }
-        });
-
-        // Event listener for the search button click
-        searchButton.addEventListener('click', function () {
-            // Perform the search functionality here
-            alert('Searching for: ' + searchInput.value);
-        });
-    });
+    function goToPage() {
+        var pageNumber = document.getElementById('page-input').value;
+        if (pageNumber !== '' && !isNaN(pageNumber) && pageNumber > 0 && pageNumber <= {{ clients_data.paginator.num_pages }}) {
+            window.location.href = '?page=' + pageNumber;
+            closeGoToPageModal();
+        } else {
+            alert('Please enter a valid page number.');
+        }
+    }
 
 </script>
 

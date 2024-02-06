@@ -9,6 +9,7 @@ from .models import Article
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 LOGIN_URL = '/login/'
 
@@ -25,11 +26,16 @@ class HomeView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
     def get(self, request):
-        # Определите ваши критерии (например, отсутствие результатов или отсутствие обновлений в течение 3 дней)
-        no_results_clients = ClientData.objects.filter(result__isnull=True,
-                                                       admission_date__lt=timezone.now() - timedelta(days=3))
+        # Определите ваши критерии (например, результат 0 и отсутствие обновлений в течение 3 дней)
+        three_days_ago = timezone.now() - timedelta(days=3)
+        no_results_clients = ClientData.objects.filter(result=0, admission_date__lt=three_days_ago)
 
+        # Проверка на количество найденных записей
         more_than_five = no_results_clients.count() > 5
+
+        # Если найдено более 5 записей, ограничить их до 5
+        if more_than_five:
+            no_results_clients = no_results_clients[:5]
 
         context = {
             'no_results_clients': no_results_clients,
@@ -37,6 +43,7 @@ class HomeView(LoginRequiredMixin, View):
         }
 
         return render(request, 'home.html', context)
+
 
 class DashboardView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
@@ -47,7 +54,7 @@ class DashboardView(LoginRequiredMixin, View):
 
     def load_articles(self, request):
         offset = int(request.GET.get('offset', 0))
-        articles = Article.objects.all()[offset:offset+10]
+        articles = Article.objects.all()[offset:offset + 10]
         data = {'articles': []}
         for article in articles:
             data['articles'].append({
@@ -65,6 +72,7 @@ class DashboardView(LoginRequiredMixin, View):
         if self.request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return self.load_articles(self.request)
         return super().dispatch(*args, **kwargs)
+
 
 class ContactsView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
