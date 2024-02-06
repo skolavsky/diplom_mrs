@@ -29,6 +29,6 @@ class ResultAPITest(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_200_OK
-            )
+        )
         result = json.loads(response.content).get('result')
         self.assertIn(result, ["Прогноз: 1", "Прогноз: 2"])
