@@ -32,6 +32,7 @@ class Command(BaseCommand):
                 last_name=fake.last_name(),
                 patronymic=fake.middle_name(),
                 gender=fake.random_element(elements=[0, 1]),
+
             )
 
             # Создаем объект ClientData с ссылкой на PersonalInfo
