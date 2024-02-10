@@ -5,7 +5,10 @@ from clients.models import ClientData
 from .management.commands.populate_data import Command as PopulateDataCommand
 from django.core.management import call_command
 from io import BytesIO, StringIO
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from .management.commands.download_client_data import Command as DownloadClientDataCommand
+from django.utils.timezone import now
+from django.urls import reverse
 
 
 @admin.register(PersonalInfo)
@@ -26,8 +29,36 @@ class PersonalInfoAdmin(admin.ModelAdmin):
 
 @admin.register(ClientData)
 class ClientDataAdmin(admin.ModelAdmin):
-    list_display = ['personal_info', 'age', 'body_mass_index', 'spo2', 'admission_date', 'result', 'dayshome', 'rox',
-                    'f_test_ex', 'f_test_in', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'ch_d', 'lf', 'l_109', 'spo2_fio',
-                    'date_added', ]
-    list_filter = ['admission_date', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'date_added', ]
-    search_fields = ['age', 'body_mass_index', 'spo2', 'result']
+    list_display = ['personal_info', 'age', 'admission_date', 'result']
+    actions = ['download_excel', 'download_csv', 'download_json', 'download_xml']
+
+    def download_excel(self, request, queryset):
+        return self._download_data(request, queryset, 'excel')
+
+    def download_csv(self, request, queryset):
+        return self._download_data(request, queryset, 'csv')
+
+    def download_json(self, request, queryset):
+        return self._download_data(request, queryset, 'json')
+
+    def download_xml(self, request, queryset):
+        return self._download_data(request, queryset, 'xml')
+
+    def _download_data(self, request, queryset, format_type):
+        file_path = f'data.{format_type}'
+        # Получаем список UUID из поля id связанных объектов PersonalInfo
+        personal_info_ids = [str(obj.personal_info.id) for obj in queryset]
+
+        # Вызываем соответствующую команду для скачивания данных
+        call_command('download_client_data', format_type, ' '.join(personal_info_ids))
+        self.message_user(request, f'Successfully downloaded selected data as {format_type.upper()}.')
+
+        with open(file_path, 'rb') as file:
+            response = HttpResponse(file.read())
+            response['Content-Disposition'] = f'attachment; filename="{format_type}data.json"'
+            return response
+
+    download_excel.short_description = "Download selected as Excel"
+    download_csv.short_description = "Download selected as CSV"
+    download_json.short_description = "Download selected as JSON"
+    download_xml.short_description = "Download selected as XML"

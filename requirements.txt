@@ -12,3 +12,4 @@ setuptools
 coverage
 whitenoise
 djangorestframework
+pandas

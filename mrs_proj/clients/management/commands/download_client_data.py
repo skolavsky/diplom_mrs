@@ -1,4 +1,6 @@
 from django.core.management.base import BaseCommand
+from django.http import HttpResponse
+
 from clients.models import ClientData, PersonalInfo
 from datetime import date
 import pandas as pd
@@ -59,6 +61,7 @@ class Command(BaseCommand):
                     field_elem = ET.SubElement(client_elem, field)
                     field_elem.text = value
             tree = ET.ElementTree(root)
+            # Проверяем, указан ли путь к файлу
             tree.write(filename)
 
         else:
