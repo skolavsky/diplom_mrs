@@ -6,6 +6,12 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+---
+
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
 
 ## Оглавление(ссылки)
 
@@ -74,20 +80,28 @@ python manage.py populate_data 40
 
 _Будет создано 40 новых записей_
 
-#### Пересброс token_id
+#### Сохранение файла с данными бд локально
 
-Команда на случай если будет проблема с id token(проблемы мало вероятны, однако полезно при тесте)
+Команда чтобы выгружать отдельные данные из базы. Ну, или все.
 
-_Переделает для всех записей в бд:_
+Принимает следующие агрументы:
+
+--all - взять всё
+--format для выбора формата файла, есть:
+* json
+* excel
+* csv
+* xml
+<br>
+можно взять --all либо, ну или передать ID тех, кого нужно
 
 ```cmd
-python manage.py regenerate_tokens --all
+python manage.py download_client_data --format json --all
 ```
-
-_Переделает для отправленных id(можно списком):_
+или так:
 
 ```cmd
-python manage.py regenerate_tokens <id>
+python manage.py download_client_data --format excel fb8e1387-6019-4b99-af9e-fcfd87e24aee
 ```
 
 ---
