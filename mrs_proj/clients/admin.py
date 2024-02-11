@@ -1,14 +1,12 @@
 # clients.admin.py
+from datetime import datetime
+
+from .ClientDataDownloader import ClientDataDownloader
 from .models import PersonalInfo, ClientData
 from django.contrib import admin
 from clients.models import ClientData
 from .management.commands.populate_data import Command as PopulateDataCommand
-from django.core.management import call_command
-from io import BytesIO, StringIO
 from django.http import HttpResponse, HttpResponseRedirect
-from .management.commands.download_client_data import Command as DownloadClientDataCommand
-from django.utils.timezone import now
-from django.urls import reverse
 
 
 @admin.register(PersonalInfo)
@@ -29,34 +27,40 @@ class PersonalInfoAdmin(admin.ModelAdmin):
 
 @admin.register(ClientData)
 class ClientDataAdmin(admin.ModelAdmin):
+    file_name = f'{datetime.now().strftime("%Y%m%d-%H%M")}-data'
+
     list_display = ['personal_info', 'age', 'admission_date', 'result']
     actions = ['download_excel', 'download_csv', 'download_json', 'download_xml']
 
+    def saver_from_id(self, queryset):
+        personal_info_ids = [str(obj.personal_info.id) for obj in queryset]
+        return ClientDataDownloader(personal_info_ids)
+
     def download_excel(self, request, queryset):
-        return self._download_data(request, queryset, 'excel')
+        downloader = self.saver_from_id(queryset)
+        buffer = downloader.generate_excel()
+        return self._download_response(buffer, f'{self.file_name}.xlsx',
+                                       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     def download_csv(self, request, queryset):
-        return self._download_data(request, queryset, 'csv')
+        downloader = self.saver_from_id(queryset)
+        buffer = downloader.generate_csv()
+        return self._download_response(buffer, f'{self.file_name}.csv', 'text/csv')
 
     def download_json(self, request, queryset):
-        return self._download_data(request, queryset, 'json')
+        downloader = self.saver_from_id(queryset)
+        buffer = downloader.generate_json()
+        return self._download_response(buffer, f'{self.file_name}.json', 'application/json')
 
     def download_xml(self, request, queryset):
-        return self._download_data(request, queryset, 'xml')
+        downloader = self.saver_from_id(queryset)
+        buffer = downloader.generate_xml()
+        return self._download_response(buffer, f'{self.file_name}.xml', 'application/xml')
 
-    def _download_data(self, request, queryset, format_type):
-        file_path = f'data.{format_type}'
-        # Получаем список UUID из поля id связанных объектов PersonalInfo
-        personal_info_ids = [str(obj.personal_info.id) for obj in queryset]
-
-        # Вызываем соответствующую команду для скачивания данных
-        call_command('download_client_data', format_type, ' '.join(personal_info_ids))
-        self.message_user(request, f'Successfully downloaded selected data as {format_type.upper()}.')
-
-        with open(file_path, 'rb') as file:
-            response = HttpResponse(file.read())
-            response['Content-Disposition'] = f'attachment; filename="{format_type}data.json"'
-            return response
+    def _download_response(self, buffer, filename, content_type):
+        response = HttpResponse(buffer.getvalue(), content_type=content_type)
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
 
     download_excel.short_description = "Download selected as Excel"
     download_csv.short_description = "Download selected as CSV"
