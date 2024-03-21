@@ -101,7 +101,14 @@ class ClientDetailView(View):
         client_serializer = ClientSerializer(client_data)
         result_data = None
         try:
-            response = requests.post("http://127.0.0.1:8000/api/result.json/", client_serializer.data)
+            response = requests.post(
+                self.request.build_absolute_uri(reverse('result')),
+                client_serializer.data,
+                headers={
+                    'X-CSRFToken': request.COOKIES.get('csrftoken', '')
+                },
+                cookies=request.COOKIES
+                )
             response.raise_for_status()  # Поднимает исключение при неудачном запросе (например, 4xx или 5xx)
             result_data = response.json().get('result', '')
 

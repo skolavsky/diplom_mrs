@@ -78,6 +78,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Set session cookie age to 8 hours (in seconds)
 SESSION_COOKIE_AGE = 8 * 60 * 60  # 8 hours * 60 minutes * 60 seconds
+SSESION_COOKIE_SECURE = True
 LOGIN_URL = '/login/'
 
 WSGI_APPLICATION = 'mrs_proj.wsgi.application'
@@ -93,6 +94,9 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny', #.AllowAny | .IsAuthenticated | .IsAdminUser
     ],
