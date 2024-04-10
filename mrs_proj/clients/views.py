@@ -9,6 +9,7 @@ from .forms import PersonalInfoForm, ClientDataForm
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.urls import reverse
 from .AI.serializers import ClientSerializer
 import requests
 
