@@ -1,6 +1,7 @@
 # views.py
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views import View
 import secrets
 from .models import ClientData, PersonalInfo
@@ -90,7 +91,7 @@ class ClientListView(LoginRequiredMixin, View):
         return HttpResponse(status=400)
 
 
-class ClientDetailView(View):
+class ClientDetailView(View, LoginRequiredMixin):
     template_name = 'client_detail.html'
 
     def get(self, request, id):
@@ -108,7 +109,7 @@ class ClientDetailView(View):
                     'X-CSRFToken': request.COOKIES.get('csrftoken', '')
                 },
                 cookies=request.COOKIES
-                )
+            )
             response.raise_for_status()  # Поднимает исключение при неудачном запросе (например, 4xx или 5xx)
             result_data = response.json().get('result', '')
 
