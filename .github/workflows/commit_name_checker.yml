@@ -1,0 +1,31 @@
+name: "Commit Message Check"
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, edited ]
+  pull_request_target:
+    types: [ opened, synchronize, reopened, edited ]
+  push:
+    branches:
+      - main
+
+jobs:
+  check-commit-message:
+    name: Check Commit Message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Read commit prefixes
+        id: read-prefixes
+        run: echo ::set-output name=prefixes::$(jq -r '.commitPrefixes | join("|")' .github/commit-checker.json)
+
+      - name: Check Commit Message
+        run: |
+          COMMIT_PREFIXES=$(echo "${{ steps.read-prefixes.outputs.prefixes }}")
+          git log --pretty=format:"%s" | while IFS= read -r COMMIT; do
+            if [[ ! $COMMIT =~ ^($COMMIT_PREFIXES):.*$ && ! $COMMIT =~ ^Merge.*$ ]]; then
+              echo "Commit message '$COMMIT' does not start with a valid prefix."
+              exit 1
+            fi
+          done
