@@ -26,7 +26,7 @@ jobs:
           COMMIT_MESSAGES=$(git log --pretty=format:"%s")
 
           for COMMIT in $COMMIT_MESSAGES; do
-            if [[ ! $COMMIT =~ ^($COMMIT_PREFIXES):.*$ ]]; then
+            if [[ ! $COMMIT =~ ^($COMMIT_PREFIXES):.*$ && ! $COMMIT =~ ^Merge.*$ ]]; then
               echo "Commit message '$COMMIT' does not start with a valid prefix."
               exit 1
             fi
