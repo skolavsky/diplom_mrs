@@ -1,0 +1,11 @@
+{
+  "commitPrefixes": [
+    "fix",
+    "feat",
+    "docs",
+    "refactor",
+    "style",
+    "test",
+    "update"
+  ]
+}

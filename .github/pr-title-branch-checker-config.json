@@ -1,8 +1,16 @@
 {
   "BRANCH_NAME_CHECKS": {
-    "prefixes": ["feature/", "bugfix/", "chore/"],
+    "prefixes": [
+      "feature/",
+      "bugfix/",
+      "chore/",
+      "update/"
+    ],
     "regexpFlags": "i",
-    "ignoreLabels": ["ignore-branch-name-check", "main"]
+    "ignoreLabels": [
+      "ignore-branch-name-check",
+      "main"
+    ]
   },
   "MESSAGES": {
     "success": "Branch name is valid",

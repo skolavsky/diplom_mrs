@@ -17,4 +17,4 @@ jobs:
         uses: actions/github-script@v3
         with:
          script: |
-          core.setFailed('Branch shouldn't be main')
+          core.setFailed("Branch shouldn't be main")
