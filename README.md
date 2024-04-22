@@ -1,5 +1,7 @@
 # Диплом
 
+Описание
+
 [![Automated tests](https://github.com/ElGansoDorado/Diplom/actions/workflows/build.yml/badge.svg)](https://github.com/ElGansoDorado/Diplom/actions/workflows/build.yml)
 [![Automated tests](https://github.com/ElGansoDorado/Diplom/actions/workflows/pr-title-checker.yml/badge.svg)](https://github.com/ElGansoDorado/Diplom/actions/workflows/pr-title-checker.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
