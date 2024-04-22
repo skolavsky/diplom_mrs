@@ -23,9 +23,7 @@ jobs:
       - name: Check Commit Message
         run: |
           COMMIT_PREFIXES=$(echo "${{ steps.read-prefixes.outputs.prefixes }}")
-          COMMIT_MESSAGES=$(git log --pretty=format:"%s")
-
-          for COMMIT in $COMMIT_MESSAGES; do
+          git log --pretty=format:"%s" | while IFS= read -r COMMIT; do
             if [[ ! $COMMIT =~ ^($COMMIT_PREFIXES):.*$ && ! $COMMIT =~ ^Merge.*$ ]]; then
               echo "Commit message '$COMMIT' does not start with a valid prefix."
               exit 1
