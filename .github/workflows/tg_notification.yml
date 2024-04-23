@@ -17,8 +17,8 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           args: |
-            Привет, это сообщение отправлено - из GitHub Actions!
-            Событие: ${{ github.event_name }}
+            Это сообщение отправлено из GitHub Actions!
+            Событие: ${{ github.event_name }} // ${{ github.event.path }}
             Репозиторий: ${{ github.repository }}
-            Ветка: ${{ github.ref }}
-            New 0.1.${{ github.run_id }} version publish
+            Ветка: ${{ commit.ref }}
+            New ${{ github.run_id }} version publish
