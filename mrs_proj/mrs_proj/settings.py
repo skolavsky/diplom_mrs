@@ -1,7 +1,6 @@
 # settings.py
 
 import os
-from decouple import config
 
 DJANGO_ENV = os.environ.get('DJANGO_ENV', 'development')
 
