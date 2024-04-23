@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'web_handler',
     'clients',
+    'tgbot',
     'simple_history',
 
 ]
