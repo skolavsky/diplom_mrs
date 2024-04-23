@@ -17,7 +17,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            Привет, это сообщение отправлено из GitHub Actions!
+            Привет, это сообщение отправлено - из GitHub Actions!
             Событие: ${{ github.event_name }}
             Репозиторий: ${{ github.repository }}
             Ветка: ${{ github.ref }}
