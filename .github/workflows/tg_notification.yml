@@ -1,15 +1,16 @@
 name: "Telegram Notification"
 on:
   pull_request:
-    types: [ opened, synchronize, reopened, edited ]
+    types: [ opened, reopened, edited, closed ]
   pull_request_target:
-    types: [ opened, synchronize, reopened, edited ]
+    types: [ opened, reopened, edited ]
   push:
     branches:
       - main
 jobs:
   send-notification:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
     steps:
       - name: Send Notification
         uses: appleboy/telegram-action@master
@@ -20,5 +21,6 @@ jobs:
             Это сообщение отправлено из GitHub Actions!
             Событие: ${{ github.event_name }} // ${{ github.event.path }}
             Репозиторий: ${{ github.repository }}
-            Ветка: ${{ commit.ref }}
+            Ветка: ${{ github.ref }}
+            PR №: ${{ github.event.pull_request.number }}
             New ${{ github.run_id }} version publish
