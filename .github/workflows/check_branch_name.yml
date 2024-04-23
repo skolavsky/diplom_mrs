@@ -4,7 +4,7 @@ on:
     branches:
       - main
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -13,8 +13,8 @@ jobs:
         id: branch-name
         uses: tj-actions/branch-names@v7
       - name: Current branch name
-        if: ${{steps.branch-name.outputs.current_branch == 'main'}}
+        if: ${{ github.ref != 'refs/heads/main' }} # Проверяем, что текущая ветка не является main
         uses: actions/github-script@v3
         with:
-         script: |
-          core.setFailed("Branch shouldn't be main")
+          script: |
+            core.setFailed("Branch shouldn't be main")

@@ -1,7 +1,7 @@
 name: "PR Title Checker"
 on:
   pull_request_target:
-    types: [ opened, synchronize, reopened, edited, labeled, unlabeled ]
+    types: [ opened,  reopened, edited, synchronize, labeled, unlabeled ]
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -10,4 +10,4 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
           pass_on_octokit_error: false
-          configuration_path: .github/pr-tiВАИВАtle-checker-config.json #(optional. defaults to .github/pr-title-checker-config.json)
+          configuration_path: .github/pr-title-checker-config.json # (optional. defaults to .github/pr-title-checker-config.json)
