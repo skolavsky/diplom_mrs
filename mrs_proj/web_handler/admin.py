@@ -1,6 +1,14 @@
 # web_handler.admin.py
 from django.contrib import admin
 from .models import Article
+from .models import Profile
+
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'telegram_id', 'is_white_list')  # Определите поля для отображения в списке объектов
+
+
+admin.site.register(Profile, ProfileAdmin)
 
 
 class ArticleAdmin(admin.ModelAdmin):
