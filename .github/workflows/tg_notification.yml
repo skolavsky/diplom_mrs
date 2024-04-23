@@ -1,27 +1,24 @@
 name: "Telegram Notification"
 on:
+  pull_request:
+    types: [ opened,  reopened, edited ]
+  pull_request_target:
+    types: [ opened,  reopened, edited ]
   push:
     branches:
       - main
-    tags:
-      - '*'
-  pull_request:
-    types: [opened, closed] # Уведомление будет отправлено при открытии или закрытии PR
-  create:
-    branches:
-      - '*' # Уведомление будет отправлено при создании новой ветки
-
 jobs:
   send-notification:
     runs-on: ubuntu-latest
     steps:
       - name: Send Notification
-        uses: appleboy/telegram-action@v0.2.0
+        uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          message: |
-            Привет, это сообщение отправлено из GitHub Actions!
-            Событие: ${{ github.event_name }}
+          args: |
+            Это сообщение отправлено из GitHub Actions!
+            Событие: ${{ github.event_name }} // ${{ github.event.path }}
             Репозиторий: ${{ github.repository }}
             Ветка: ${{ github.ref }}
+            New ${{ github.run_id }} version publish
