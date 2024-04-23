@@ -1,9 +1,9 @@
 name: "Telegram Notification"
 on:
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    types: [ opened, synchronize, reopened, edited ]
   pull_request_target:
-    types: [opened, synchronize, reopened, edited]
+    types: [ opened, synchronize, reopened, edited ]
   push:
     branches:
       - main
@@ -16,14 +16,9 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          args: New 0.1.${{ github.run_id }} version publish
           message: |
-            Привет, это сообщение отправлено из GitHub Actions!
+            Привет, это сообщение отправлено - из GitHub Actions!
             Событие: ${{ github.event_name }}
             Репозиторий: ${{ github.repository }}
             Ветка: ${{ github.ref }}
-            ${{ if github.event_name == 'pull_request' }} 
-              Это новый Pull Request!
-            ${{ else if github.event_name == 'push' }} 
-              Это новый пуш в ветку main.
-            ${{ endif }}
-          args: New 0.1.${{ github.run_id }} version publish
