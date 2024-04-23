@@ -1,19 +1,14 @@
 # Диплом
 
-Описание
+[![Automated tests](https://github.com/skolavsky/diplom_mrs/actions/workflows/build.yml/badge.svg)](https://github.com/skolavsky/diplom_mrs/actions/workflows/build.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=skolavsky_diplom_mrs&metric=coverage)](https://sonarcloud.io/summary/new_code?id=skolavsky_diplom_mrs)[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=skolavsky_diplom_mrs&metric=bugs)](https://sonarcloud.io/summary/new_code?id=skolavsky_diplom_mrs)[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
 
-[![Automated tests](https://github.com/ElGansoDorado/Diplom/actions/workflows/build.yml/badge.svg)](https://github.com/ElGansoDorado/Diplom/actions/workflows/build.yml)
-[![Automated tests](https://github.com/ElGansoDorado/Diplom/actions/workflows/pr-title-checker.yml/badge.svg)](https://github.com/ElGansoDorado/Diplom/actions/workflows/pr-title-checker.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=bugs)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
 ---
-
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=skolavsky_diplom_mrs&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=skolavsky_diplom_mrs)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=skolavsky_diplom_mrs&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=skolavsky_diplom_mrs)[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=skolavsky_diplom_mrs&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=skolavsky_diplom_mrs)[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ElGansoDorado_Diplom&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=ElGansoDorado_Diplom)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=skolavsky_diplom_mrs&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=skolavsky_diplom_mrs)
 
 ## Оглавление(ссылки)
 
@@ -90,12 +85,13 @@ _Будет создано 40 новых записей_
 
 --all - взять всё
 --format для выбора формата файла, есть:
+
 * json
 * excel
 * csv
 * xml
-<br>
-чтобы взять всё:
+  <br>
+  чтобы взять всё:
 
 --all <br>
 чтобы взять выборочно: (список id)
@@ -103,6 +99,7 @@ _Будет создано 40 новых записей_
 ```cmd
 python manage.py download_client_data --format json --all
 ```
+
 или так:
 
 ```cmd
@@ -421,11 +418,13 @@ docker save -o mrs_proj_image.tar mrs_proj:latest # экспорт Docker-обр
 ```cmd
 docker load -i mrs_proj_image.tar # импортируйте Docker-образ на другой машине
 ```
+
 Запустить контейнер
 
 ```cmd
 docker run -p 8000:8000 mrs_proj:latest gunicorn mrs_proj.wsgi:application
 ```
+
 Замените 8000:8000 на необходимые вам порты, и убедитесь, что ваши Django-настройки (например, ALLOWED_HOSTS)<br>
 и настройки Gunicorn соответствуют вашему окружению.<br>
 Теперь ваш Django проект должен быть доступен на порту 8000 внутри контейнера.
