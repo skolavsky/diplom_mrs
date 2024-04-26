@@ -1,5 +1,6 @@
 # settings_common.py
 from pathlib import Path
+
 from decouple import config
 
 # Глобальные переменные в приложении
@@ -34,9 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'web_handler',
-    'clients',
     'simple_history',
+    'web_handler.apps.WebHandlerConfig',  # own application
+    'clients.apps.ClientsConfig',  # own application
 
 ]
 
@@ -98,7 +99,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', #.AllowAny | .IsAuthenticated | .IsAdminUser
+        'rest_framework.permissions.AllowAny',  # .AllowAny | .IsAuthenticated | .IsAdminUser
     ],
     # API requests limitation
     'DEFAULT_THROTTLE_CLASSES': [
