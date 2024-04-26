@@ -23,7 +23,7 @@ class PersonalInfo(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def get_absolute_url(self):
-        return reverse('client_detail', args=[str(self.id)])
+        return reverse('clients:client_detail', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         if not self.id:
