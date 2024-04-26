@@ -18,6 +18,7 @@ staticfiles/
 *.iws
 .idea_modules/
 .vscode
+*.code-workspace
 
 # Compiled source files
 *.com
