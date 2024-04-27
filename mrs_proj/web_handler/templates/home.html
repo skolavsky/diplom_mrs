@@ -8,7 +8,7 @@
 <ul class="list">
     {% for client in no_results_clients %}
     <li>
-        <a href="{% url 'client_detail' id=client.personal_info.id %}">
+        <a href="{% url 'clients:client_detail' id=client.personal_info.id %}">
             <div class="list_item">
                 {{ client.personal_info }}
             </div>
@@ -18,7 +18,7 @@
 </ul>
 
 {% if more_than_five %}
-<p>Больше случаев без исхода <a href="{% url 'client_list' %}">Показать весь список</a></p>
+<p>Больше случаев без исхода <a href="{% url 'clients:client_list' %}">Показать весь список</a></p>
 {% endif %}
 {% endblock %}
 
