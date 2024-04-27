@@ -87,7 +87,7 @@ class ClientListView(LoginRequiredMixin, View):
                 new_personal_info.save()
 
                 # Редиректим на страницу с клиентами
-                return redirect('client_list')
+                return redirect('clients:client_list')
 
         return HttpResponse(status=400)
 

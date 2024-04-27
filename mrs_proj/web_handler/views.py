@@ -101,7 +101,7 @@ class LoginView(View):
             if user is not None:
                 # Authentication successful, log in the user
                 login(request, user)
-                return redirect('home')  # Redirect to the home page
+                return redirect('web_handler:home')  # Redirect to the home page
             else:
                 # Authentication failed
                 return render(request, 'login.html', {'error': 'Неправильные логин или пароль.'})

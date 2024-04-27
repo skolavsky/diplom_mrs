@@ -70,14 +70,14 @@
 </div>
 
 <main>
-    <a href="{% url 'client_list' %}">Назад к списку пациентов</a>
+    <a href="{% url 'clients:client_list' %}">Назад к списку пациентов</a>
 
     <h2>Действия</h2>
 
     <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
 
 
-    <form id="client_personal_edit" method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
+    <form id="client_personal_edit" method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
         {% csrf_token %}
         <input type="hidden" name="action" value="edit_client">
         <div id="confirmEditDiv" style="display: none;">
@@ -89,13 +89,13 @@
     </form>
 
 
-    <form method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
+    <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
         {% csrf_token %}
         <button type="submit" name="action" value="delete_client">Удалить пациента</button>
     </form>
 
     <button id="client_edit" type="button" onclick="toggleForm()">Редакатировать запись</button>
-    <form method="post" action="{% url 'client_detail' id=client_data.personal_info.id %}">
+    <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" name="action" value="edit_client">Сохранить</button>
