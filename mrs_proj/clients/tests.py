@@ -2,8 +2,8 @@ import secrets
 import string
 from datetime import date
 
-from clients.forms import PersonalInfoForm, ClientDataForm
-from clients.models import PersonalInfo, ClientData
+from .forms import PersonalInfoForm, ClientDataForm
+from .models import PersonalInfo, ClientData
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -1119,6 +1119,11 @@ class ClientDetailViewTests(TestCase):
         # Проверяем, доступен ли URL для деталей клиента
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        # Проверяем, что представление использует правильный шаблон
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, 'client_detail.html')
 
     def test_view_returns_correct_data(self):
         # Проверяем, что представление возвращает правильные данные о клиенте
