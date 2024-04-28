@@ -13,3 +13,5 @@ coverage
 whitenoise
 djangorestframework
 pandas
+django-taggit
+markdown
