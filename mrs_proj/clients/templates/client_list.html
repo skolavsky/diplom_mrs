@@ -33,8 +33,6 @@
   </form>
 </details>
 
-
-
 <table>
     <caption></caption>
 <thead>
@@ -104,7 +102,7 @@
                 <a href="?{{ query_params }}&page={{ clients_data.previous_page_number }}" class="button">&#8592;</a>
             {% endif %}
 
-            <p class="page-info" onclick="openGoToPageModal()">
+            <p class="page-info">
                 Страница {{ clients_data.number }} / {{ clients_data.paginator.num_pages }}
             </p>
 
@@ -117,9 +115,6 @@
         </div>
     </span>
 </div>
-
-
-
 
 <!-- Модальное окно для ввода номера страницы -->
 <div id="goToPageModal" class="modal">
@@ -134,19 +129,5 @@
 </div>
 
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
-
-<script>
-
-    function goToPage() {
-        var pageNumber = document.getElementById('page-input').value;
-        if (pageNumber !== '' && !isNaN(pageNumber) && pageNumber > 0 && pageNumber <= {{ clients_data.paginator.num_pages }}) {
-            window.location.href = '?page=' + pageNumber;
-            closeGoToPageModal();
-        } else {
-            alert('Please enter a valid page number.');
-        }
-    }
-
-</script>
 
 {% endblock %}

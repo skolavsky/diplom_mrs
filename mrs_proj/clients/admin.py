@@ -1,19 +1,21 @@
 # clients.admin.py
 from datetime import datetime
 
-from .ClientDataDownloader import ClientDataDownloader
-from .models import PersonalInfo, ClientData
 from django.contrib import admin
-from clients.models import ClientData
+from django.http import HttpResponse
+
+from .ClientDataDownloader import ClientDataDownloader
 from .management.commands.populate_data import Command as PopulateDataCommand
-from django.http import HttpResponse, HttpResponseRedirect
+from .models import ClientData
+from .models import PersonalInfo
 
 
 @admin.register(PersonalInfo)
 class PersonalInfoAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'patronymic', 'gender', 'is_active', 'id', ]
-    list_filter = ['gender', 'is_active']
+    list_filter = ['gender', 'is_active', ]
     search_fields = ['first_name', 'last_name', 'patronymic', 'gender']
+    ordering = ['gender', 'is_active', 'id', 'last_name']
     actions = ['generate_test_data']
 
     def generate_test_data(self, request, oper_data):
@@ -28,9 +30,18 @@ class PersonalInfoAdmin(admin.ModelAdmin):
 @admin.register(ClientData)
 class ClientDataAdmin(admin.ModelAdmin):
     file_name = f'{datetime.now().strftime("%Y%m%d-%H%M")}-data'
-
-    list_display = ['personal_info', 'age', 'admission_date', 'result']
+    list_display = ['personal_info_last_name', 'personal_info', 'age', 'admission_date', 'result', ]
+    list_filter = ['result', ]
+    ordering = ['result', 'admission_date', 'personal_info__last_name']
+    search_fields = ['personal_info__last_name']
+    raw_id_fields = ['personal_info']
     actions = ['download_excel', 'download_csv', 'download_json', 'download_xml']
+
+    def personal_info_last_name(self, obj):
+        return obj.personal_info.last_name
+
+    personal_info_last_name.short_description = 'Фамилия'
+    personal_info_last_name.admin_order_field = 'personal_info__last_name'
 
     def saver_from_id(self, queryset):
         personal_info_ids = [str(obj.personal_info.id) for obj in queryset]

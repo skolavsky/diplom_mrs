@@ -1,17 +1,18 @@
 # views.py
+import secrets
+
+import requests
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
-import secrets
-from .models import ClientData, PersonalInfo
-from .forms import PersonalInfoForm, ClientDataForm
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
-from django.urls import reverse
+
 from .AI.serializers import ClientSerializer
-import requests
+from .forms import PersonalInfoForm, ClientDataForm
+from .models import ClientData, PersonalInfo
 
 LOGIN_URL = '/login/'
 
@@ -50,7 +51,16 @@ class ClientListView(LoginRequiredMixin, View):
         paginator = Paginator(clients_data, clients_per_page)
         page_number = int(request.GET.get('page', 1))
         page = paginator.get_page(page_number)
-
+        try:
+            posts = paginator.page(page_number)
+        except PageNotAnInteger:
+            # Если page_number не целое число, то
+            # выдать первую страницу
+            posts = paginator.page(1)
+        except EmptyPage:
+            # Если page_number находится вне диапазона, то
+            # выдать последнюю страницу
+            posts = paginator.page(paginator.num_pages)
         client_data_form = ClientDataForm()
         personal_info_form = PersonalInfoForm()
 
@@ -140,7 +150,7 @@ class ClientDetailView(View, LoginRequiredMixin):
             form = PersonalInfoForm(request.POST, instance=client_info)
             if form.is_valid():
                 form.save()
-                return redirect('client_detail', id=id)
+                return redirect('clients:client_detail', id=id)
             else:
                 client_data = get_object_or_404(ClientData, personal_info__id=id)
                 history_entries = client_data.history.all()
