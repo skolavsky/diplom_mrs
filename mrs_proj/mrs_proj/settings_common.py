@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'simple_history',
+    'taggit',  # приложение для тегов(используется в блоге)
     'web_handler.apps.WebHandlerConfig',  # own application
     'clients.apps.ClientsConfig',  # own application
+    'blog.apps.BlogConfig',  # own application
 
 ]
 

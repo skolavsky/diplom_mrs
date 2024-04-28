@@ -41,7 +41,7 @@ class ClientListView(LoginRequiredMixin, View):
                 Q(personal_info__patronymic__icontains=search_query)
             )
 
-        next_order = 'desc' if order == 'asc' else 'asc'
+        next_order = 'desc' if order    == 'asc' else 'asc'
 
         if order == 'asc':
             clients_data = clients_data.order_by(f'{sort_by}')

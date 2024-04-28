@@ -28,8 +28,8 @@
                 <a href="{% url 'web_handler:contacts' %}">
                     <i class="fas fa-address-book"></i> Контакты
                 </a>
-                <a href="{% url 'web_handler:dashboard' %}">
-                    <i class="fas fa-chart-bar"></i> Обновления
+                <a href="{% url 'blog:post_list' %}">
+                    <i class="fas fa-chart-bar"></i> Статьи и обновления
                 </a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
