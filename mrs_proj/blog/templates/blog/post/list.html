@@ -5,6 +5,7 @@
 
 {% block content %}
     <h1>My Blog</h1>
+    I've written {% total_posts %} posts so far.
     {% if tag %}
         <h2>Posts tagged with "{{ tag.name }}"</h2>
     {% endif %}
