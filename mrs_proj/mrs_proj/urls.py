@@ -1,12 +1,13 @@
 # project/urls.py
+from blog.sitemaps import PostSitemap, WebHandlerSitemap
 from django.contrib import admin
 from django.contrib.auth.views import LogoutView
-from django.urls import path, include
 from django.contrib.sitemaps.views import sitemap
-from blog.sitemaps import PostSitemap
+from django.urls import path, include
 
 sitemaps = {
     'posts': PostSitemap,
+    'web_handler': WebHandlerSitemap,
 }
 
 # url's проекта
