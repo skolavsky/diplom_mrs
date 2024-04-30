@@ -9,8 +9,11 @@ FIO_MAX_LENGTH = 100
 MAX_PRECISION_TO_FIELDS = 3
 START_ADMISSION_DATE = 2023
 
-SITE_ID = 1
+SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
 
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,9 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django.contrib.sitemaps', # приложение для карты сайт
-    'django.contrib.postgres', # приложение для работы с базой postgresql
-    'simple_history', # приложение для истории(Clients)
+    'django.contrib.sitemaps',  # приложение для карты сайт
+    'django.contrib.postgres',  # приложение для работы с базой postgresql
+    'simple_history',  # приложение для истории(Clients)
     'taggit',  # приложение для тегов(используется в блоге)
     'web_handler.apps.WebHandlerConfig',  # own application
     'clients.apps.ClientsConfig',  # own application
