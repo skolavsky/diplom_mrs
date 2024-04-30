@@ -5,7 +5,14 @@
 
 {% block content %}
     <h1>My Blog</h1>
-    I've written {% total_posts %} posts so far.
+    Всего статей: {% total_posts %}.
+
+    <p>
+        <a id="copyButton" href="{% url 'blog:post_feed' %}">
+            Подписка на RSS.
+        </a>
+    </p>
+
     {% if tag %}
         <h2>Posts tagged with "{{ tag.name }}"</h2>
     {% endif %}
@@ -30,4 +37,19 @@
         {{ post.body|markdown|truncatewords_html:30 }}
     {% endfor %}
     {% include "pagination.html" with page=posts %}
+
+    <script>
+        document.getElementById('copyButton').addEventListener('click', function (event) {
+            event.preventDefault(); // Отменяем стандартное действие перехода по ссылке
+            var link = this.getAttribute('href'); // Получаем ссылку из атрибута href
+            navigator.clipboard.writeText(link) // Копируем ссылку в буфер обмена
+                .then(function () {
+                    alert('Ссылка скопирована в буфер обмена');
+                })
+                .catch(function (error) {
+                    console.error('Не удалось скопировать ссылку: ', error);
+                });
+        });
+    </script>
+
 {% endblock %}
