@@ -15,3 +15,4 @@ djangorestframework
 pandas
 django-taggit
 markdown
+psycopg2
