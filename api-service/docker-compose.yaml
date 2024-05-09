@@ -32,8 +32,12 @@ services:
         - action: sync
           path: ./app
           target: /app
+    env_file:
+      - path: ./.env
     ports:
       - 8888:8888
     depends_on:
       - db
+    volumes:
+      - ./alembic:/alembic
     restart: always
