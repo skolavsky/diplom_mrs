@@ -1,6 +1,5 @@
 # views.py
 import secrets
-
 import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +9,6 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
-
 from .AI.serializers import ClientSerializer
 from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
@@ -138,6 +136,7 @@ class ClientDetailView(View, LoginRequiredMixin):
             'result': result_data,
             'history_entries': client_data.history.all(),
         }
+
         return render(request, self.template_name, context)
 
     def post(self, request, id):
@@ -146,6 +145,7 @@ class ClientDetailView(View, LoginRequiredMixin):
         if action == 'delete_client':
             client = get_object_or_404(PersonalInfo, id=id)
             client.delete()
+            messages.success(request, f'Запись {client}успешно удалена')
             return redirect('clients:client_list')
 
         elif action == 'edit_client_info':
@@ -153,11 +153,13 @@ class ClientDetailView(View, LoginRequiredMixin):
             form = PersonalInfoForm(request.POST, instance=client_info)
             if form.is_valid():
                 form.save()
+                messages.success(request, f'Данные успешно изменены')
                 return redirect('clients:client_detail', id=id)
             else:
                 client_data = get_object_or_404(ClientData, personal_info__id=id)
                 history_entries = client_data.history.all()
                 context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
+                messages.error(request, f'Ошибка при изменении записи')
                 return render(request, self.template_name, context)
 
         elif action == 'edit_client':
@@ -165,6 +167,7 @@ class ClientDetailView(View, LoginRequiredMixin):
             form = ClientDataForm(request.POST, instance=client_data)
             if form.is_valid():
                 form.save()
+                messages.success(request, f'Запись успешно изменена')
                 return redirect('clients:client_detail', id=id)
             else:
                 return HttpResponseBadRequest("Invalid form submission")
