@@ -143,7 +143,7 @@ class ClientDetailView(View, LoginRequiredMixin):
         if action == 'delete_client':
             client = get_object_or_404(PersonalInfo, id=id)
             client.delete()
-            return redirect('client_list')
+            return redirect('clients:client_list')
 
         elif action == 'edit_client_info':
             client_info = get_object_or_404(PersonalInfo, id=id)
@@ -162,7 +162,7 @@ class ClientDetailView(View, LoginRequiredMixin):
             form = ClientDataForm(request.POST, instance=client_data)
             if form.is_valid():
                 form.save()
-                return redirect('client_detail', id=id)
+                return redirect('clients:client_detail', id=id)
             else:
                 return HttpResponseBadRequest("Invalid form submission")
         else:
