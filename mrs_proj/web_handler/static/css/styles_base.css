@@ -1,6 +1,5 @@
 .wrapper {
-    height: 100%;
-
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -49,8 +48,12 @@ a:hover {
 /* --- footer --- */
 .footer {
     height: 30px;
-
     background-color: #2B4141;
+    color: #FFF;
+    position: fixed;
+    flex: 1;
+    bottom: 0;
+    width: 100%;
 }
 
 .footer p {
@@ -59,9 +62,8 @@ a:hover {
 
 /* --- main --- */
 .main {
-    height: 100%;
+    flex: 1; /* Этот блок будет занимать все доступное пространство между шапкой и футером */
     padding: 20px 0;
-
     background-color: #C8C2AE;
     color: #2B4141;
 }
