@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from taggit.models import Tag
@@ -9,24 +10,33 @@ from taggit.models import Tag
 from .forms import SearchForm
 from .models import Post
 
+
 class PostListView(LoginRequiredMixin, View):
     def get(self, request, tag_slug=None):
         post_list = Post.published.all()
+        posts_only = request.GET.get('posts_only')
+
         tag = None
         if tag_slug:
             tag = get_object_or_404(Tag, slug=tag_slug)
             post_list = post_list.filter(tags__in=[tag])
-        paginator = Paginator(post_list, 3)
+        paginator = Paginator(post_list, 5)
         page_number = request.GET.get('page', 1)
         try:
             posts = paginator.page(page_number)
         except PageNotAnInteger:
             posts = paginator.page(1)
         except EmptyPage:
+            if posts_only:
+                return HttpResponse('')
             posts = paginator.page(paginator.num_pages)
+        if posts_only:
+            return render(request,
+                          'blog/posts.html', {'posts': posts, 'tag': tag})
         return render(request,
                       'blog/post/list.html',
                       {'posts': posts, 'tag': tag})
+
 
 class PostSearchView(LoginRequiredMixin, View):
     def get(self, request):
@@ -47,6 +57,7 @@ class PostSearchView(LoginRequiredMixin, View):
                       {'form': form,
                        'query': query,
                        'results': results})
+
 
 class PostDetailView(LoginRequiredMixin, View):
     def get(self, request, year, month, day, post):
