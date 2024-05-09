@@ -55,4 +55,16 @@
     </footer>
 </div>
 </body>
+
+<script src="//cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+  <script>
+    const csrftoken = Cookies.get('csrftoken'); // берём csrf токен от джанги из кук, через библиотеку для отправки
+    // с пост запросами
+    document.addEventListener('DOMContentLoaded', (event) => {
+      // DOM loaded
+      {% block domready %}
+      {% endblock %}
+    })
+  </script>
+
 </html>
