@@ -66,6 +66,9 @@ class ClientData(models.Model):
     rox = models.FloatField(null=True, blank=True)
     spo2_fio = models.FloatField(null=True, blank=True)
     ch_d = models.IntegerField(null=True, blank=True)
+    measurementday = models.IntegerField(null=True, blank=True)
+    daystoresult = models.IntegerField(null=True, blank=True)
+    week_result = models.BooleanField(default=False, blank=True)
 
     history = HistoricalRecords(inherit=True)
 

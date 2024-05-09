@@ -1,11 +1,12 @@
 # forms.py
-from django import forms
-from django.utils import timezone
 import re
 from datetime import date
+
 from django import forms
-from .models import ClientData, PersonalInfo
 from django.conf import settings
+from django.utils import timezone
+
+from .models import ClientData, PersonalInfo
 
 
 class ValidationMixin:
@@ -99,7 +100,8 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
     class Meta:
         model = ClientData
         fields = ['age', 'body_mass_index', 'spo2', 'admission_date', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
-                  'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d']
+                  'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d',
+                  'measurementday', 'daystoresult', 'week_result']
 
         labels = {
             'admission_date': 'Дата поступления',
@@ -119,12 +121,58 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'f_test_ex': 'внешний',
             'comorb_bl': 'коморбидность',
             'dayshome': 'дней дома',
+            'week_result': 'больше недели или нет',
         }
 
         widgets = {
             'admission_date': forms.SelectDateWidget(),
             'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
         }
+
+    def clean_daystoresult(self):
+        daystoresult = self.cleaned_data.get('daystoresult')
+
+        if daystoresult is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(daystoresult, int, 'daystoresult')
+
+            # Проверка на кол-во и наличие
+            if daystoresult < 0 or daystoresult > 30:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['dayshome'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+        return daystoresult
+
+    def clean_dayshome(self):
+        dayshome = self.cleaned_data.get('dayshome')
+
+        if dayshome is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(dayshome, int, 'dayshome')
+
+            # Проверка на кол-во и наличие
+            if dayshome < 0 or dayshome > 30:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['dayshome'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+        return dayshome
+
+    def clean_measurementday(self):
+        measurementday = self.cleaned_data.get('measurementday')
+
+        if measurementday is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(measurementday, int, 'measurementday')
+
+            # Проверка на кол-во и наличие
+            if measurementday < 0 or measurementday > 30:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['measurementday'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+        return measurementday
 
     def clean_result(self):
         result = self.cleaned_data['result']
