@@ -41,6 +41,17 @@
         </div>
     </header>
 
+ {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">
+          {{ message|safe }}
+          <a href="#" class="close">x</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
     <main class="main">
         <div class="container">
             {% block content %}{% endblock %}
@@ -65,6 +76,23 @@
       {% block domready %}
       {% endblock %}
     })
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Получаем все кнопки закрытия уведомлений
+    var closeButtons = document.querySelectorAll('.messages li a.close');
+
+    // Перебираем каждую кнопку и назначаем обработчик события клика
+    closeButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            // Отменяем стандартное действие ссылки
+            event.preventDefault();
+
+            // Получаем родительский элемент (элемент уведомления) и удаляем его
+            var notification = this.parentNode;
+            notification.parentNode.removeChild(notification);
+        });
+    });
+});
   </script>
 
 </html>

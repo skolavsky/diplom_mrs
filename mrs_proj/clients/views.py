@@ -2,10 +2,11 @@
 import secrets
 
 import requests
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -41,7 +42,7 @@ class ClientListView(LoginRequiredMixin, View):
                 Q(personal_info__patronymic__icontains=search_query)
             )
 
-        next_order = 'desc' if order    == 'asc' else 'asc'
+        next_order = 'desc' if order == 'asc' else 'asc'
 
         if order == 'asc':
             clients_data = clients_data.order_by(f'{sort_by}')
@@ -97,9 +98,11 @@ class ClientListView(LoginRequiredMixin, View):
                 new_personal_info.save()
 
                 # Редиректим на страницу с клиентами
+                messages.success(request, 'Запись успешно добавлена')
                 return redirect('clients:client_list')
 
-        return HttpResponse(status=400)
+        messages.error(request, 'Ошибка при добавлении записи')
+        return redirect('clients:client_list')
 
 
 class ClientDetailView(View, LoginRequiredMixin):

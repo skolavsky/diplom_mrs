@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from django.contrib import messages
 from clients.models import ClientData
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -34,6 +34,7 @@ class HomeView(LoginRequiredMixin, View):
         # Если найдено более 5 записей, ограничить их до 5
         if more_than_five:
             no_results_clients = no_results_clients[:5]
+            messages.info(request, 'Много записей без результатов')
 
         context = {
             'no_results_clients': no_results_clients,
