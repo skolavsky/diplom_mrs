@@ -43,6 +43,7 @@
         <th {% if sort_by == 'spo2' %} class="active"{% endif %}><a href="?sort=spo2&order={{ next_order }}">SPO2</a></th>
         <th {% if sort_by == 'admission_date' %} class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
         <th {% if sort_by == 'result' %} class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
+        <th {% if sort_by == 'group' %} class="active"{% endif %}><a href="?sort=group&order={{ next_order }}">Группа</a></th>
         <th>Действия</th>
     </tr>
 </thead>
@@ -60,6 +61,7 @@
             <td class="cell_spo">{{ client_data.spo2 }}</td>
             <td class="cell_date">{{ client_data.admission_date|date:"d.m.Y" }}</td>
             <td class="cell_res">{{ client_data.get_result_display }}</td>
+            <td class="cell_res">{{ client_data.group }}</td>
             <td class="cell_button">
                 <a href="{{ client_data.personal_info.get_absolute_url }}">
                     <div class="button">

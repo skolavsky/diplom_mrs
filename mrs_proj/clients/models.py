@@ -1,6 +1,7 @@
 import uuid
 from datetime import date
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import BooleanField
 from django.db.models.signals import post_save
@@ -37,6 +38,11 @@ class PersonalInfo(models.Model):
         return f"{self.last_name} {self.first_name} {self.patronymic} "
 
 
+def validate_integer_size(value):
+    if value < 0 or value > 4:
+        raise ValidationError('Значение должно быть в диапазоне от 0 до 4')
+
+
 class ClientData(models.Model):
     RESULT_CHOICES = [
         (0, 'processing'),
@@ -66,11 +72,46 @@ class ClientData(models.Model):
     rox = models.FloatField(null=True, blank=True)
     spo2_fio = models.FloatField(null=True, blank=True)
     ch_d = models.IntegerField(null=True, blank=True)
+    group = models.IntegerField(null=True, blank=True, validators=[validate_integer_size])
     measurementday = models.IntegerField(null=True, blank=True)
     daystoresult = models.IntegerField(null=True, blank=True)
     week_result = models.BooleanField(default=False, blank=True)
 
     history = HistoricalRecords(inherit=True)
+
+    def save(self, *args, **kwargs):
+        # Проверка наличия записи перед получением значений полей
+        if self.pk is not None:
+            previous_record = self.__class__.objects.filter(pk=self.pk).first()
+            if previous_record:
+                previous_spo2_fio = previous_record.spo2_fio
+                previous_rox = previous_record.rox
+            else:
+                previous_spo2_fio = None
+                previous_rox = None
+        else:
+            previous_spo2_fio = None
+            previous_rox = None
+
+        # Проверка, изменились ли поля spo2_fio и rox
+        spo2_fio_changed = self.spo2_fio != previous_spo2_fio if previous_spo2_fio is not None else True
+        rox_changed = self.rox != previous_rox if previous_rox is not None else True
+
+        # Вычисление значения группы на основе spo2_fio и rox только если они изменились
+        if spo2_fio_changed and rox_changed and self.spo2_fio is not None and self.rox is not None:
+            if self.spo2_fio >= 280 and self.rox >= 15:
+                self.group = 1
+            elif self.spo2_fio < 315 and self.rox < 15:
+                self.group = 2
+            elif 230 <= self.spo2_fio < 315 and 11 <= self.rox < 15:
+                self.group = 3
+            elif self.spo2_fio < 280 and self.rox < 15:
+                self.group = 4
+            else:
+                self.group = 0  # Группа для записей без spo2_fio и rox
+
+        # Вызов метода save родительского класса для сохранения модели
+        super().save(*args, **kwargs)
 
     @property
     def has_personal_info(self):
