@@ -24,15 +24,26 @@
 <div class="filters">
   <details>
     <summary>Фильтры</summary>
-    <form method="get">
-      <label><input type="checkbox" name="result_0"> В процессе</label><br>
-      <label><input type="checkbox" name="result_1"> D</label><br>
-      <label><input type="checkbox" name="result_2"> H</label><br>
-      <label><input type="checkbox" name="result_3"> R</label><br>
+    <form method="get" class="filter-form">
+      <!-- Фильтры по результату -->
+      <div class="filter-group">
+        <label><input type="checkbox" name="result_0"> В процессе</label>
+        <label><input type="checkbox" name="result_1"> D</label>
+        <label><input type="checkbox" name="result_2"> H</label>
+        <label><input type="checkbox" name="result_3"> R</label>
+      </div>
+      <!-- Фильтры по группам -->
+      <div class="filter-group">
+        <label><input type="checkbox" name="group_1"> Группа 1</label>
+        <label><input type="checkbox" name="group_2"> Группа 2</label>
+        <label><input type="checkbox" name="group_3"> Группа 3</label>
+      </div>
+
       <button type="submit">Применить фильтры</button>
     </form>
   </details>
 </div>
+
 
 
 <table>

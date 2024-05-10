@@ -6,6 +6,18 @@ details input[type="checkbox"] {
     -moz-appearance: none; /* Для поддержки Firefox */
 }
 
+.filters {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+
 /* Стили для кастомных чекбоксов */
 details input[type="checkbox"] + label::before {
     content: ""; /* Добавляем пустой контент */
