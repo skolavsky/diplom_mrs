@@ -12,8 +12,7 @@
     <div class="search_box">
         <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
         <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-        <button type="submit" class="button" id="resetSortingButton"><i class="fas fa-eraser"></i> Сброс сортировки и поиска
-        </button>
+<a href="{% url 'clients:client_list' %}"><i class="fas fa-undo"></i> Сброс сортировок и поиска </a>
     </div>
 
     <div class="">
@@ -22,16 +21,19 @@
     </div>
 </div>
 
-<details>
-  <summary>Фильтры</summary>
-  <form method="get">
-    <label><input type="checkbox" name="result_0"> В процессе</label><br>
-    <label><input type="checkbox" name="result_1"> D</label><br>
-    <label><input type="checkbox" name="result_2"> H</label><br>
-    <label><input type="checkbox" name="result_3"> R</label><br>
-    <button type="submit">Применить фильтры</button>
-  </form>
-</details>
+<div class="filters">
+  <details>
+    <summary>Фильтры</summary>
+    <form method="get">
+      <label><input type="checkbox" name="result_0"> В процессе</label><br>
+      <label><input type="checkbox" name="result_1"> D</label><br>
+      <label><input type="checkbox" name="result_2"> H</label><br>
+      <label><input type="checkbox" name="result_3"> R</label><br>
+      <button type="submit">Применить фильтры</button>
+    </form>
+  </details>
+</div>
+
 
 <table>
     <caption></caption>

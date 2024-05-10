@@ -78,3 +78,47 @@ window.onclick = function (event) {
         modal.style.display = 'none';
     }
 };
+
+const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[method="get"]');
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    // Обработчик события клика на кнопку "Применить фильтры"
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Предотвращаем стандартное действие кнопки
+        const checkedValues = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.name + '_1');
+        const queryParams = new URLSearchParams(window.location.search);
+        checkedValues.forEach(value => {
+            queryParams.append(value, '1');
+        });
+        window.location.href = window.location.pathname + '?' + queryParams.toString();
+    });
+});
+
+
+
+// Получаем все ссылки в таблице
+const tableLinks = document.querySelectorAll('.table a');
+
+// Добавляем обработчик клика на каждую ссылку
+tableLinks.forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault(); // Предотвращаем стандартное действие ссылки
+        const urlParams = new URLSearchParams(window.location.search);
+        const sortParam = this.getAttribute('href').split('?')[1]; // Получаем параметры сортировки из ссылки
+        const sortParamParts = sortParam.split('&');
+        const sortValue = sortParamParts[0].split('=')[1];
+        const orderValue = sortParamParts[1].split('=')[1];
+        urlParams.set('sort', sortValue);
+        urlParams.set('order', orderValue);
+        // Обновляем URL страницы с новыми параметрами сортировки
+        window.history.replaceState(null, null, '?' + urlParams.toString());
+        // Перезагружаем страницу с новыми параметрами сортировки
+        window.location.reload();
+    });
+});
