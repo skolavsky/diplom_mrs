@@ -1,12 +1,12 @@
-from django.db import models
 import uuid
-from django.db.models import BooleanField
-from django.urls import reverse
-from simple_history.models import HistoricalRecords
 from datetime import date
+
 from django.db import models
+from django.db.models import BooleanField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 
 class PersonalInfo(models.Model):
@@ -39,10 +39,10 @@ class PersonalInfo(models.Model):
 
 class ClientData(models.Model):
     RESULT_CHOICES = [
-        (0, 'В процессе'),
-        (1, 'Значение 1'),
-        (2, 'Значение 2'),
-        (3, 'Значение 3'),
+        (0, 'processing'),
+        (1, 'D'),
+        (2, 'H'),
+        (3, 'R'),
     ]
 
     personal_info = models.OneToOneField(PersonalInfo, null=True, blank=True, on_delete=models.CASCADE)

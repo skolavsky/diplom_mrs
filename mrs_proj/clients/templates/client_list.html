@@ -25,10 +25,10 @@
 <details>
   <summary>Фильтры</summary>
   <form method="get">
-    <label><input type="checkbox" name="result_0"> Результат 0</label><br>
-    <label><input type="checkbox" name="result_1"> Результат 1</label><br>
-    <label><input type="checkbox" name="result_2"> Результат 2</label><br>
-    <label><input type="checkbox" name="result_3"> Результат 3</label><br>
+    <label><input type="checkbox" name="result_0"> В процессе</label><br>
+    <label><input type="checkbox" name="result_1"> D</label><br>
+    <label><input type="checkbox" name="result_2"> H</label><br>
+    <label><input type="checkbox" name="result_3"> R</label><br>
     <button type="submit">Применить фильтры</button>
   </form>
 </details>
@@ -56,10 +56,10 @@
                 </a>
             </td>
             <td class="cell_age">{{ client_data.age }}</td>
-            <td class="cell_imt">{{ client_data.body_mass_index }}</td>
+            <td class="cell_imt">{{ client_data.body_mass_index|floatformat:3 }}</td>
             <td class="cell_spo">{{ client_data.spo2 }}</td>
-            <td class="cell_date">{{ client_data.admission_date }}</td>
-            <td class="cell_res">{{ client_data.result }}</td>
+            <td class="cell_date">{{ client_data.admission_date|date:"d.m.Y" }}</td>
+            <td class="cell_res">{{ client_data.get_result_display }}</td>
             <td class="cell_button">
                 <a href="{{ client_data.personal_info.get_absolute_url }}">
                     <div class="button">
