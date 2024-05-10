@@ -1,5 +1,6 @@
 # views.py
 import secrets
+
 import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +10,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
+
 from .AI.serializers import ClientSerializer
 from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
@@ -30,8 +32,12 @@ class ClientListView(LoginRequiredMixin, View):
 
         # Фильтрация по результату
         result_filters = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('result_')]
+        group_filter = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('group_')]
         if result_filters:
             clients_data = clients_data.filter(result__in=result_filters)
+
+        if group_filter:
+            clients_data = clients_data.filter(group__in=group_filter)
 
         if search_query:
             clients_data = clients_data.filter(

@@ -1,28 +1,53 @@
 /* Стили для чекбоксов */
 details input[type="checkbox"] {
-  margin-right: 5px; /* Добавляем отступ справа для чекбоксов */
-  appearance: none; /* Отключаем стандартные стили браузера для чекбоксов */
-  -webkit-appearance: none; /* Для поддержки вебкитовских браузеров */
-  -moz-appearance: none; /* Для поддержки Firefox */
+    margin-right: 5px; /* Добавляем отступ справа для чекбоксов */
+    appearance: none; /* Отключаем стандартные стили браузера для чекбоксов */
+    -webkit-appearance: none; /* Для поддержки вебкитовских браузеров */
+    -moz-appearance: none; /* Для поддержки Firefox */
 }
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* Стили для кастомных чекбоксов */
 details input[type="checkbox"] + label::before {
-  content: ""; /* Добавляем пустой контент */
-  display: inline-block; /* Делаем элемент блочным */
-  width: 12px; /* Задаем ширину квадратной области для отметки */
-  height: 12px; /* Задаем высоту квадратной области для отметки */
-  border: 1px solid #999; /* Задаем границу квадратной области */
-  margin-right: 5px; /* Добавляем небольшой отступ между чекбоксом и текстом */
-  position: relative; /* Позиционируем элемент относительно его обычного положения */
-  top: 2px; /* Смещаем чекбокс немного вниз, чтобы он был выровнен с текстом */
+    content: ""; /* Добавляем пустой контент */
+    display: inline-block; /* Делаем элемент блочным */
+    width: 12px; /* Задаем ширину квадратной области для отметки */
+    height: 12px; /* Задаем высоту квадратной области для отметки */
+    border: 1px solid #999; /* Задаем границу квадратной области */
+    margin-right: 5px; /* Добавляем небольшой отступ между чекбоксом и текстом */
+    position: relative; /* Позиционируем элемент относительно его обычного положения */
+    top: 2px; /* Смещаем чекбокс немного вниз, чтобы он был выровнен с текстом */
 }
 
 /* Стили для кастомных чекбоксов, когда они отмечены */
 details input[type="checkbox"]:checked + label::before {
-  background-color: #007bff; /* Цвет заливки квадратной области при отметке */
+    background-color: #007bff; /* Цвет заливки квадратной области при отметке */
 }
 
+.filters {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #c8c2ae;
+}
+
+.filters label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+}
 
 .box_tool {
     height: 30px;

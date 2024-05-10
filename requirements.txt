@@ -16,3 +16,4 @@ pandas
 django-taggit
 markdown
 psycopg2
+xlrd
