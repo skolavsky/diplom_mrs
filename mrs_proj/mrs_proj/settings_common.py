@@ -31,6 +31,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # white-noise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'web_handler.authentication.EmailAuthBackend',
+]
+
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -82,6 +87,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 
 TEMPLATES = [
     {
