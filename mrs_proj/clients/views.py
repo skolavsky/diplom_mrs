@@ -1,4 +1,5 @@
 # views.py
+import random
 import secrets
 
 import requests
@@ -7,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -16,6 +18,25 @@ from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
 
 LOGIN_URL = '/login/'
+
+
+class ClientStatsView(View):
+    def post(self, request):
+        # Проверяем, что метод запроса POST
+        if request.method == 'POST':
+            # Здесь логика для получения статистики клиентов
+            # Возвращаем статистику в формате JSON
+            total_clients = ClientData.objects.count()
+            active_clients = ClientData.objects.filter(result=0).count()
+            stats_data = {
+                'total_clients': total_clients,  # Пример данных статистики
+                'active_clients': active_clients,
+                # Другие данные статистики...
+            }
+            return JsonResponse(stats_data)
+        else:
+            # Если запрос не POST, вернуть ошибку
+            return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 class ClientListView(LoginRequiredMixin, View):
