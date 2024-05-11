@@ -54,6 +54,10 @@
             <td>Результат:</td>
             <td>{{ client_data.result }}</td>
         </tr>
+            <tr>
+            <td>Шанс выписаться в ближайшие 7 дней:</td>
+            <td>{{ client_data.forecast_for_week }}</td>
+        </tr>
         <tr>
             <td>Прогноз результата:</td>
             <td>{% if result %}

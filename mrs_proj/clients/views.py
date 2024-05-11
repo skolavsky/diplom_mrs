@@ -28,9 +28,11 @@ class ClientStatsView(View):
             # Возвращаем статистику в формате JSON
             total_clients = ClientData.objects.count()
             active_clients = ClientData.objects.filter(result=0).count()
+            ready_in_week = ClientData.objects.filter(result=0, forecast_for_week__gte=80).count()
             stats_data = {
                 'total_clients': total_clients,  # Пример данных статистики
                 'active_clients': active_clients,
+                'ready_in_week': ready_in_week,
                 # Другие данные статистики...
             }
             return JsonResponse(stats_data)

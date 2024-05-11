@@ -43,6 +43,11 @@ def validate_integer_size(value):
         raise ValidationError('Значение должно быть в диапазоне от 0 до 4')
 
 
+def validate_forecast(value):
+    if value < 0 or value > 100:
+        raise ValidationError('Значение должно быть в диапазоне от 0 до 100')
+
+
 class ClientData(models.Model):
     RESULT_CHOICES = [
         (0, 'processing'),
@@ -76,6 +81,7 @@ class ClientData(models.Model):
     measurementday = models.IntegerField(null=True, blank=True)
     daystoresult = models.IntegerField(null=True, blank=True)
     week_result = models.BooleanField(default=False, blank=True)
+    forecast_for_week = models.IntegerField(null=True, blank=True, validators=[validate_forecast])
 
     history = HistoricalRecords(inherit=True)
 
@@ -96,6 +102,24 @@ class ClientData(models.Model):
         # Проверка, изменились ли поля spo2_fio и rox
         spo2_fio_changed = self.spo2_fio != previous_spo2_fio if previous_spo2_fio is not None else True
         rox_changed = self.rox != previous_rox if previous_rox is not None else True
+
+        if rox_changed and self.rox is not None and self.result in [0, 'in progress']:
+            # Получаем ближайшие 10 записей с rox меньше или равным введенному значению, исключая записи с результатом 0 "in progress"
+            lower_records = ClientData.objects.filter(rox__lte=self.rox, result__in=[1, 2, 3]).exclude(
+                result=0).order_by('-rox')[:10]
+            # Получаем ближайшие 10 записей с rox больше введенного значения, исключая записи с результатом 0 "in progress"
+            higher_records = ClientData.objects.filter(rox__gt=self.rox, result__in=[1, 2, 3]).exclude(
+                result=0).order_by('rox')[:10]
+
+            # Собираем значения week_result для найденных записей
+            week_results = [record.week_result for record in lower_records] + [record.week_result for record in
+                                                                               higher_records]
+            # Вычисляем среднее значение week_result
+            if week_results:
+                # Вычисляем процент истинных значений в week_results
+                true_count = sum(1 for result in week_results if result)
+                average_week_result = true_count / len(week_results)
+                self.forecast_for_week = int(average_week_result * 100)  # Приводим к процентам
 
         # Вычисление значения группы на основе spo2_fio и rox только если они изменились
         if spo2_fio_changed and rox_changed and self.spo2_fio is not None and self.rox is not None:
