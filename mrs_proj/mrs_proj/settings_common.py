@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'easy_thumbnails', # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт
     'django.contrib.postgres',  # приложение для работы с базой postgresql
     'simple_history',  # приложение для истории(Clients)

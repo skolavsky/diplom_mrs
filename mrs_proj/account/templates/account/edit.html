@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load thumbnail %}
+
 {% block title %}Edit your account{% endblock %}
 
 {% block content %}
@@ -9,6 +11,17 @@
     {{ user_form.as_p }}
     {{ profile_form.as_p }}
     {% csrf_token %}
+
+    <!-- Проверяем, есть ли у пользователя аватарка -->
+    {% if request.user.profile.photo %}
+      <!-- Создаем уменьшенную версию изображения с обрезанием "smart" -->
+      {% thumbnail request.user.profile.photo "300x300" crop="smart" as im %}
+      <!-- Отображаем уменьшенную версию изображения -->
+      <img src="{{ im.url }}" alt="Your Avatar">
+    {% else %}
+      <p>No avatar uploaded yet.</p>
+    {% endif %}
+
     <p><input type="submit" value="Save changes"></p>
   </form>
 {% endblock %}

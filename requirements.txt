@@ -18,3 +18,4 @@ markdown
 psycopg2
 xlrd
 Pillow
+easy-thumbnails

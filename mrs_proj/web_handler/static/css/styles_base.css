@@ -15,6 +15,19 @@
     align-items: center;
 }
 
+.avatar-container {
+    display: flex;
+    align-items: center; /* Выравниваем содержимое по вертикали */
+}
+
+.avatar {
+    border-radius: 70%; /* Делаем изображение круглым */
+    width: 34px; /* Устанавливаем размеры изображения */
+    height: 34px;
+    margin-right: 7px; /* Добавляем небольшой отступ между изображением и текстом */
+}
+
+
 a {
     color: #FFF;
 }
@@ -25,7 +38,7 @@ a:hover {
 
 /* --- header --- */
 .header {
-    height: 60px;
+    height: 70px;
 
     background-color: #2B4141;
     color: #FFF;
@@ -144,4 +157,23 @@ ul.messages li a.close {
 
 .login-form {
     float: left;
+}
+
+.menu-button {
+    background-color: transparent; /* Убираем фон у кнопки */
+    border: none; /* Убираем границу */
+    color: #c61515; /* Цвет текста кнопки */
+    cursor: pointer; /* Делаем указатель при наведении */
+    font-size: 16px; /* Размер шрифта */
+    margin: 0; /* Убираем отступы */
+    padding: 0; /* Убираем внутренние отступы */
+}
+
+.menu-button:hover {
+    color: #1812d3; /* Изменяем цвет текста при наведении */
+}
+
+.logout-form {
+    display: inline-block; /* Размещаем форму в строку с другими элементами */
+    margin-left: 10px; /* Добавляем небольшой отступ между кнопкой и другими элементами */
 }
