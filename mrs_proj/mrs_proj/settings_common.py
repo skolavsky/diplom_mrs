@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'web_handler.apps.WebHandlerConfig',  # own application
     'clients.apps.ClientsConfig',  # own application
     'blog.apps.BlogConfig',  # own application
+    'account.apps.AccountConfig',  # own application
 
 ]
 
@@ -66,6 +67,21 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mrs_proj.urls'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 TEMPLATES = [
     {

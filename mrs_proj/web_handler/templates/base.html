@@ -31,6 +31,9 @@
                 <a href="{% url 'blog:post_list' %}">
                     <i class="fas fa-chart-bar"></i> Статьи и обновления
                 </a>
+                <a href="{% url 'account:edit' %}">
+                    <i class="fa-solid fa-user"></i> Аккаунт
+                </a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit"><i class="fas fa-sign-out-alt"></i> Выход</button>
