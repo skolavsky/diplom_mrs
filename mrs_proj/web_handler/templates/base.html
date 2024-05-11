@@ -37,13 +37,13 @@
             <div class="avatar-container">
                 {% if request.user.profile.photo %}
                     {% thumbnail request.user.profile.photo "32x32" crop="smart" as im %}
-                    <a href="{% url 'account:edit' %}">
+                    <a href="{% url 'account:account_edit' %}">
                         <img src="{{ im.url }}" alt="Your Avatar" class="avatar">
                     </a>
                 {% else %}
                     <p>No avatar uploaded yet.</p>
                 {% endif %}
-                <a href="{% url 'account:edit' %}" class="account-link"> Аккаунт </a>
+                <a href="{% url 'account:account_edit' %}" class="account-link"> Аккаунт </a>
             </div>
             <form action="{% url 'logout' %}" method="post" class="logout-form">
                 {% csrf_token %}

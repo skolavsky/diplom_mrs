@@ -39,6 +39,7 @@ AUTHENTICATION_BACKENDS = [
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',  # own application
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,7 +55,6 @@ INSTALLED_APPS = [
     'web_handler.apps.WebHandlerConfig',  # own application
     'clients.apps.ClientsConfig',  # own application
     'blog.apps.BlogConfig',  # own application
-    'account.apps.AccountConfig',  # own application
 
 ]
 

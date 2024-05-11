@@ -1,10 +1,10 @@
-from django.urls import path, include
-from django.contrib.auth import views as auth_views
-from . import views
+from django.urls import path
+
+from .views import CustomPasswordChangeView, EditProfileView
 
 app_name = 'account'
 
 urlpatterns = [
-
-    path('edit/', views.edit, name='edit'),
+    path('edit/', EditProfileView.as_view(), name='account_edit'),
+    path('password-change/', CustomPasswordChangeView.as_view(), name='password_change'),
 ]
