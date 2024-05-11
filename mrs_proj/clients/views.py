@@ -40,8 +40,6 @@ class ClientStatsView(View):
                 'active_clients': active_clients,
                 'ready_in_week': ready_in_week,
                 'percent_ready_in_week': percent_ready_in_week,
-
-                # Другие данные статистики...
             }
             return JsonResponse(stats_data)
         else:
