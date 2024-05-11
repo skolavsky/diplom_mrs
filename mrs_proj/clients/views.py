@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import HttpResponseBadRequest
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -16,6 +17,34 @@ from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
 
 LOGIN_URL = '/login/'
+
+
+class ClientStatsView(View):
+    def post(self, request):
+        # Проверяем, что метод запроса POST
+        if request.method == 'POST':
+            # Здесь логика для получения статистики клиентов
+            # Возвращаем статистику в формате JSON
+            total_clients = ClientData.objects.count()
+            active_clients = ClientData.objects.filter(result=0).count()
+            ready_in_week = ClientData.objects.filter(result=0, forecast_for_week__gte=80).count()
+
+            # Вычисляем процент клиентов, готовых в течение недели от общего числа активных клиентов
+            if active_clients != 0:
+                percent_ready_in_week = (ready_in_week / active_clients) * 100
+            else:
+                percent_ready_in_week = 0
+
+            stats_data = {
+                'total_clients': total_clients,  # Пример данных статистики
+                'active_clients': active_clients,
+                'ready_in_week': ready_in_week,
+                'percent_ready_in_week': percent_ready_in_week,
+            }
+            return JsonResponse(stats_data)
+        else:
+            # Если запрос не POST, вернуть ошибку
+            return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 class ClientListView(LoginRequiredMixin, View):
