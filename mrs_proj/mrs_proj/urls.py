@@ -15,6 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', LogoutView.as_view(next_page='web_handler:home'), name='logout'),
     path('clients/', include('clients.urls')),
+    path('account/', include('account.urls', namespace='account')),
     path('blog/', include('blog.urls', namespace='blog')),
     path('', include('web_handler.urls')),
 

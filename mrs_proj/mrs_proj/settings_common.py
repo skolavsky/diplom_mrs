@@ -31,9 +31,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # white-noise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'web_handler.authentication.EmailAuthBackend',
+]
+
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'account.apps.AccountConfig',  # own application
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'easy_thumbnails', # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт
     'django.contrib.postgres',  # приложение для работы с базой postgresql
     'simple_history',  # приложение для истории(Clients)
@@ -66,6 +73,22 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'mrs_proj.urls'
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
 
 TEMPLATES = [
     {
