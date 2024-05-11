@@ -212,7 +212,7 @@ function updateStatsSpoiler(statsData) {
     statsHTML += '<ul>';
     statsHTML += `<li>Всего записей: ${statsData.total_clients}</li>`;
     statsHTML += `<li>Активные записи: ${statsData.active_clients}</li>`;
-    statsHTML += `<li>Готовые в течении недели: ${statsData.ready_in_week}</li>`;
+    statsHTML += `<li>Готовые в течении недели: ${statsData.ready_in_week} (${statsData.percent_ready_in_week} % от всех активных записей)</li>`;
     // Другие данные статистики
     statsHTML += '</ul>';
 

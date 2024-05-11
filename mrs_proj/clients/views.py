@@ -1,5 +1,4 @@
 # views.py
-import random
 import secrets
 
 import requests
@@ -29,10 +28,19 @@ class ClientStatsView(View):
             total_clients = ClientData.objects.count()
             active_clients = ClientData.objects.filter(result=0).count()
             ready_in_week = ClientData.objects.filter(result=0, forecast_for_week__gte=80).count()
+
+            # Вычисляем процент клиентов, готовых в течение недели от общего числа активных клиентов
+            if active_clients != 0:
+                percent_ready_in_week = (ready_in_week / active_clients) * 100
+            else:
+                percent_ready_in_week = 0
+
             stats_data = {
                 'total_clients': total_clients,  # Пример данных статистики
                 'active_clients': active_clients,
                 'ready_in_week': ready_in_week,
+                'percent_ready_in_week': percent_ready_in_week,
+
                 # Другие данные статистики...
             }
             return JsonResponse(stats_data)
