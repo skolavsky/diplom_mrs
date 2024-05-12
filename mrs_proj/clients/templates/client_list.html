@@ -45,6 +45,10 @@
         <label><input type="checkbox" name="group_2"> Группа 2</label>
         <label><input type="checkbox" name="group_3"> Группа 3</label>
       </div>
+        <div class="filter-group">
+        <label><input type="checkbox" name="noted_1"> Показать отслеживаемые записи</label>
+        <label><input type="checkbox" name="noted_0"> Показать не отслеживаемые записи </label>
+      </div>
 
       <button type="submit">Применить фильтры</button>
     </form>
@@ -89,12 +93,17 @@
             <td class="cell_res">{{ client_data.get_result_display }}</td>
             <td class="cell_res">{{ client_data.group }}</td>
             <td class="cell_button">
-                <a href="{{ client_data.personal_info.get_absolute_url }}">
-                    <div class="button">
-                        Delete
-                    </div>
-                </a>
-            </td>
+    <a href="{{ client_data.personal_info.get_absolute_url }}">
+        <div class="button delete-button">
+            Удалить
+                </div>
+            </a>
+
+            {% include "clients/note_button.html" %}
+
+            </button>
+        </td>
+
         </tr>
     {% endfor %}
 {% else %}
@@ -157,12 +166,11 @@
 </div>
 
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
 
 {% block domready %}
 const url = '{% url "clients:client_stats" %}';
-const csrftoken = Cookies.get('csrftoken'); // Получаем CSRF-токен из куки
 
 // Создаем объект запроса
 const options = {
@@ -229,5 +237,7 @@ function updateStatsSpoiler(statsData) {
         statsSpoiler.style.display = 'block';
     }
 }
+
+{% include "clients/note_button.js" %}
 
 {% endblock %}

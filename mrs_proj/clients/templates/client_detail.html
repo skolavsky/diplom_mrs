@@ -79,6 +79,8 @@
 
     <h2>Действия</h2>
 
+{% include "clients/note_button.html" %}
+
     <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
 
     <form id="client_personal_edit" method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
@@ -128,5 +130,11 @@
 </main>
 
 <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
+
+{% endblock %}
+
+{% block domready %}
+
+{% include "clients/note_button.js" %}
 
 {% endblock %}

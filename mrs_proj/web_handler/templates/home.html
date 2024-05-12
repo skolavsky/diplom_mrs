@@ -18,8 +18,31 @@
 </ul>
 
 {% if more_than_five %}
-<p>Больше случаев без исхода <a href="{% url 'clients:client_list' %}">Показать весь список</a></p>
+<p>Больше случаев без исхода <a href="{% url 'clients:client_list' %}?sort_by=date_added&order=desc&result_0_1=1">Показать весь список</a></p>
 {% endif %}
+
+<hr>
+
+<h3>Отмеченные записи</h3>
+<ul class="list">
+    {% for noted in noted_clients %}
+    <li>
+        <a href="{% url 'clients:client_detail' id=noted.personal_info.id %}">
+            <div class="list_item">
+                {{ noted.personal_info }}
+            </div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% if noted_clients_more %}
+<p>Все ваши отмеченные записи <a href="{% url 'clients:client_list' %}?sort_by=date_added&order=desc&noted_1_1=1">Показать весь список</a></p>
+{% endif %}
+
+<hr>
+
 {% endblock %}
+
 
 

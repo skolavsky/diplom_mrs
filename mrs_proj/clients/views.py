@@ -1,6 +1,6 @@
 # views.py
 import secrets
-
+from django.contrib.auth.decorators import login_required
 import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from django.views.decorators.http import require_POST
 
 from .AI.serializers import ClientSerializer
 from .forms import PersonalInfoForm, ClientDataForm
@@ -62,11 +63,24 @@ class ClientListView(LoginRequiredMixin, View):
         # Фильтрация по результату
         result_filters = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('result_')]
         group_filter = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('group_')]
+        noted_filter = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('noted_')]
+
         if result_filters:
             clients_data = clients_data.filter(result__in=result_filters)
 
         if group_filter:
             clients_data = clients_data.filter(group__in=group_filter)
+
+        if noted_filter:
+            # Проверяем, есть ли значение 1 в списке фильтров для отслеживаемых записей
+            if 1 in noted_filter:
+                clients_data = clients_data.filter(users_note=request.user)
+            # Проверяем, есть ли значение 0 в списке фильтров для НЕ отслеживаемых записей
+            elif 0 in noted_filter:
+                clients_data = clients_data.exclude(users_note=request.user)
+        else:
+            # Если не переданы параметры фильтрации, используем исходные данные без фильтрации
+            pass
 
         if search_query:
             clients_data = clients_data.filter(
@@ -208,3 +222,25 @@ class ClientDetailView(View, LoginRequiredMixin):
                 return HttpResponseBadRequest("Invalid form submission")
         else:
             return HttpResponseBadRequest("Invalid action")
+
+
+@login_required
+@require_POST
+def client_noted(request):
+    if request.user.is_authenticated:
+        client_id = request.POST.get('id')
+        action = request.POST.get('action')
+        if client_id and action:
+            try:
+                client = ClientData.objects.get(id=client_id)
+                if action == 'note':
+                    if request.user in client.users_note.all():  # Проверка наличия пользователя в списке
+                        client.users_note.remove(request.user)  # Удаление пользователя из списка
+                    else:
+                        client.users_note.add(request.user)  # Добавление пользователя в список
+                    return JsonResponse({'status': 'ok'})
+            except ClientData.DoesNotExist:
+                pass
+    return JsonResponse({'status': 'error'})
+
+

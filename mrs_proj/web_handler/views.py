@@ -1,6 +1,7 @@
 from datetime import timedelta
-from django.contrib import messages
+
 from clients.models import ClientData
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
@@ -36,9 +37,22 @@ class HomeView(LoginRequiredMixin, View):
             no_results_clients = no_results_clients[:5]
             messages.info(request, 'Много записей без результатов')
 
+        # Получаем отмеченные записи текущего пользователя
+        noted_clients = ClientData.objects.filter(users_note=request.user)[:3]
+        noted_clients_more = 'False'
+
+        # Проверяем, есть ли у текущего пользователя отмеченные записи
+        if noted_clients:
+            # Отправляем сообщение, если у пользователя больше 3 отмеченных записей
+            if noted_clients.count() > 3:
+                noted_clients_more = 'True'
+                messages.info(request, 'У вас больше трёх отмеченных записей')
+
         context = {
             'no_results_clients': no_results_clients,
             'more_than_five': more_than_five,
+            'noted_clients': noted_clients,
+            'noted_clients_more': noted_clients_more,
         }
 
         return render(request, 'home.html', context)

@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import ClientListView, ClientDetailView, ClientStatsView
+
+from .views import ClientListView, ClientDetailView, ClientStatsView, client_noted
 
 app_name = 'clients'
 
@@ -8,4 +9,6 @@ urlpatterns = [
     path('clients-list', ClientListView.as_view(), name='client_list'),
     path('clients-stat', ClientStatsView.as_view(), name='client_stats'),
     path('client-detail/<str:id>/', ClientDetailView.as_view(), name='client_detail'),
+    path('note/', client_noted, name='note'),
+
 ]
