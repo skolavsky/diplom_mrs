@@ -29,10 +29,11 @@ $(document).ready(function () {
             .then(data => {
                 if (data.status === 'ok') {
                     // Обновите интерфейс или выполните другие действия
-                    if (button.text() === 'Отслеживать') {
-                        button.text('Не отслеживать');
+                    var buttonText = button.text().trim();
+                    if (buttonText === 'Сделать заметку') {
+                        button.text('Удалить заметку');
                     } else {
-                        button.text('Отслеживать');
+                        button.text('Сделать заметку');
                     }
                 } else {
                 }
@@ -43,3 +44,4 @@ $(document).ready(function () {
             });
     });
 });
+
