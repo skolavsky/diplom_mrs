@@ -1,6 +1,6 @@
 import uuid
 from datetime import date
-
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import BooleanField
@@ -82,6 +82,10 @@ class ClientData(models.Model):
     daystoresult = models.IntegerField(null=True, blank=True)
     week_result = models.BooleanField(default=False, blank=True)
     forecast_for_week = models.IntegerField(null=True, blank=True, validators=[validate_forecast])
+
+    users_note = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                        related_name='clients_noted',
+                                        blank=True)
 
     history = HistoricalRecords(inherit=True)
 

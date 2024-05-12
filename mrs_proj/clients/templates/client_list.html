@@ -89,12 +89,20 @@
             <td class="cell_res">{{ client_data.get_result_display }}</td>
             <td class="cell_res">{{ client_data.group }}</td>
             <td class="cell_button">
-                <a href="{{ client_data.personal_info.get_absolute_url }}">
-                    <div class="button">
-                        Delete
-                    </div>
-                </a>
-            </td>
+    <a href="{{ client_data.personal_info.get_absolute_url }}">
+        <div class="button delete-button">
+            Удалить
+                </div>
+            </a>
+             <button class="button note-button" data-client-id="{{ client_data.id }}">
+                {% if request.user in client_data.users_note.all %}
+                    Забыть
+                {% else %}
+                    Отметить
+                {% endif %}
+            </button>
+        </td>
+
         </tr>
     {% endfor %}
 {% else %}
@@ -157,7 +165,7 @@
 </div>
 
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
 
 {% block domready %}
@@ -229,5 +237,40 @@ function updateStatsSpoiler(statsData) {
         statsSpoiler.style.display = 'block';
     }
 }
+
+$(document).ready(function() {
+    $(document).on('click', '.note-button', function() {
+        var button = $(this);
+        var clientId = button.data('client-id');
+        var action = 'note'; // Заметить клиента
+        $.ajax({
+            url: '{% url "clients:note" %}',
+            type: 'POST',
+            data: {
+                'id': clientId,
+                'action': action,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.status === 'ok') {
+                    // Обновите интерфейс или выполните другие действия
+                    if (button.text() === 'Отметить') {
+                        button.text('Забыть');
+                    } else {
+                        button.text('Отметить');
+                    }
+                    alert('Client noted successfully');
+                } else {
+                    alert('Error occurred while noting client');
+                }
+            },
+            error: function() {
+                alert('Error occurred while noting client');
+            }
+        });
+    });
+});
+
 
 {% endblock %}
