@@ -29,10 +29,10 @@ $(document).ready(function () {
             .then(data => {
                 if (data.status === 'ok') {
                     // Обновите интерфейс или выполните другие действия
-                    if (button.text() === 'Забыть') {
-                        button.text('Отметить');
+                    if (button.text() === 'Отслеживать') {
+                        button.text('Не отслеживать');
                     } else {
-                        button.text('Забыть');
+                        button.text('Отслеживать');
                     }
                 } else {
                 }
