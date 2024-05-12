@@ -63,11 +63,24 @@ class ClientListView(LoginRequiredMixin, View):
         # Фильтрация по результату
         result_filters = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('result_')]
         group_filter = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('group_')]
+        noted_filter = [int(key.split('_')[1]) for key in request.GET.keys() if key.startswith('noted_')]
+
         if result_filters:
             clients_data = clients_data.filter(result__in=result_filters)
 
         if group_filter:
             clients_data = clients_data.filter(group__in=group_filter)
+
+        if noted_filter:
+            # Проверяем, есть ли значение 1 в списке фильтров для отслеживаемых записей
+            if 1 in noted_filter:
+                clients_data = clients_data.filter(users_note=request.user)
+            # Проверяем, есть ли значение 0 в списке фильтров для НЕ отслеживаемых записей
+            elif 0 in noted_filter:
+                clients_data = clients_data.exclude(users_note=request.user)
+        else:
+            # Если не переданы параметры фильтрации, используем исходные данные без фильтрации
+            pass
 
         if search_query:
             clients_data = clients_data.filter(
