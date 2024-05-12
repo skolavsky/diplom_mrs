@@ -79,6 +79,13 @@
 
     <h2>Действия</h2>
 
+{% if request.user in client_data.users_note.all %}
+                    Отслеживается
+                {% else %}
+                    Не отслеживается
+                {% endif %}
+
+
     <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
 
     <form id="client_personal_edit" method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
