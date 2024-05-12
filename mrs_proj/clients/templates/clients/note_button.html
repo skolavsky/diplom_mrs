@@ -1,0 +1,7 @@
+<button class="button note-button" data-client-id="{{ client_data.id }}">
+    {% if request.user in client_data.users_note.all %}
+        Не отслеживать
+    {% else %}
+        Отслеживать
+    {% endif %}
+</button>

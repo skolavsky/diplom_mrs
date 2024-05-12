@@ -79,12 +79,7 @@
 
     <h2>Действия</h2>
 
-{% if request.user in client_data.users_note.all %}
-                    Отслеживается
-                {% else %}
-                    Не отслеживается
-                {% endif %}
-
+{% include "clients/note_button.html" %}
 
     <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
 
@@ -135,5 +130,11 @@
 </main>
 
 <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
+
+{% endblock %}
+
+{% block domready %}
+
+{% include "clients/note_button.js" %}
 
 {% endblock %}
