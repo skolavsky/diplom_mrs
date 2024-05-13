@@ -68,6 +68,7 @@ class ClientData(models.Model):
     dayshome = models.IntegerField(null=True, blank=True)
     f_test_ex = models.IntegerField(null=True, blank=True)
     f_test_in = models.IntegerField(null=True, blank=True)
+    ventilation_reserve = models.FloatField(null=True, blank=True)
     comorb_ccc = models.BooleanField(default=False, blank=True)
     comorb_bl = models.BooleanField(default=False, blank=True)
     cd_ozhir = models.BooleanField(default=False, blank=True)
