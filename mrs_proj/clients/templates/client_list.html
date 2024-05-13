@@ -25,8 +25,11 @@
     <button id="statsToggleBtn" class="button">Показать статистику</button>
     <div id="statsSpoiler" class="spoiler" style="display: none;">
         <!-- Здесь будет ваша статистика -->
+        <input type="number" id="percentInput" placeholder="Введите процент">
+        <button id="submitPercentBtn" class="button">Отправить процент</button>
     </div>
 </div>
+
 
 <div class="filters">
   <details>
@@ -65,6 +68,7 @@
         <th {% if sort_by == 'body_mass_index' %} class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
         <th {% if sort_by == 'spo2_fio' %} class="active"{% endif %}><a href="?sort=spo2_fio&order={{ next_order }}">SPO2/FIO</a></th>
         <th {% if sort_by == 'rox' %} class="active"{% endif %}><a href="?sort=rox&order={{ next_order }}">ROX</a></th>
+        <th {% if sort_by == 'ventilation_reserve' %} class="active"{% endif %}><a href="?sort=ventilation_reserve&order={{ next_order }}">Вентиляционный резерв</a></th>
         <th {% if sort_by == 'admission_date' %} class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
         <th {% if sort_by == 'result' %} class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
         <th {% if sort_by == 'group' %} class="active"{% endif %}><a href="?sort=group&order={{ next_order }}">Группа</a></th>
@@ -89,6 +93,7 @@
             <td class="cell_imt">{{ client_data.body_mass_index|floatformat:3 }}</td>
             <td class="cell_spo2_fio">{{ client_data.spo2_fio|floatformat:3 }}</td>
             <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
+            <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>
             <td class="cell_date">{{ client_data.admission_date|date:"d.m.Y" }}</td>
             <td class="cell_res">{{ client_data.get_result_display }}</td>
             <td class="cell_res">{{ client_data.group }}</td>
@@ -175,5 +180,6 @@ const url = '{% url "clients:client_stats" %}';
 {% include "clients/stats_ajax_scripts.js" %}
 
 {% include "clients/note_button.js" %}
+
 
 {% endblock %}

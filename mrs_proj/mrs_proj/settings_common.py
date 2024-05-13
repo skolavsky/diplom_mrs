@@ -9,6 +9,11 @@ FIO_MAX_LENGTH = 100
 MAX_PRECISION_TO_FIELDS = 3
 START_ADMISSION_DATE = 2023
 
+MAX_USER_PASSWORD_AGE = 30  # в днях. срок годности пароля
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # получать письма в консоль
+
+
 SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
 
 LOGIN_REDIRECT_URL = 'home'
@@ -47,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'easy_thumbnails', # приложение для создания миниатюр изображений
+    'easy_thumbnails',  # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт
     'django.contrib.postgres',  # приложение для работы с базой postgresql
     'simple_history',  # приложение для истории(Clients)
@@ -88,7 +93,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 TEMPLATES = [
     {

@@ -1,17 +1,18 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import View
+from django.views import View
 
 from .forms import UserEditForm, ProfileEditForm
 
 
 class CustomPasswordChangeView(PasswordChangeView, LoginRequiredMixin):
     template_name = 'account/password_change_form.html'  # Указываете путь к вашему шаблону
-    success_url = reverse_lazy('account:account_edit')  # Указываете URL, на который будет перенаправлен пользователь после успешного изменения пароля
+    success_url = reverse_lazy(
+        'account-edit')  # Указываете URL, на который будет перенаправлен пользователь после успешного изменения пароля
 
 
 class EditProfileView(LoginRequiredMixin, View):
@@ -33,4 +34,3 @@ class EditProfileView(LoginRequiredMixin, View):
         else:
             messages.error(request, 'Error updating your profile')
             return render(request, 'account/edit.html', {'user_form': user_form, 'profile_form': profile_form})
-

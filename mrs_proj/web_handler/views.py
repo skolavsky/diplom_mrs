@@ -1,6 +1,7 @@
 from datetime import timedelta
-
+from django.shortcuts import redirect, reverse
 from clients.models import ClientData
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +10,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
+from django.contrib.auth.tokens import default_token_generator
 
 LOGIN_URL = '/login/'
 
@@ -75,7 +77,6 @@ class LoginView(View):
         print(request.POST)
 
         if action == 'login':
-
             username = request.POST.get('username', '')
             password = request.POST.get('password', '')
 
@@ -83,6 +84,18 @@ class LoginView(View):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
+                # Check if the password needs to be changed
+                delta = timezone.now() - user.profile.password_changed_at
+                delta_days = delta.days
+                if delta_days > settings.MAX_USER_PASSWORD_AGE:
+                    # Password expired, redirect to password change page
+                    messages.warning(request, 'Ваш пароль истек. Пожалуйста, измените его.')
+
+                    return redirect('/account/password-reset/')
+                elif delta_days < 3:
+                    # Warn user that password will expire soon
+                    messages.info(request, 'Ваш пароль скоро истечет. Пожалуйста, подготовьтесь к его изменению.')
+
                 # Authentication successful, log in the user
                 login(request, user)
                 return redirect('web_handler:home')  # Redirect to the home page

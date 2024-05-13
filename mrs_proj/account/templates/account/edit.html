@@ -6,7 +6,7 @@
 
 {% block content %}
   <h1>Edit your account</h1>
-<a href="{% url 'account:password_change' %}"><i class="fas fa-home"></i> Сменить пароль </a>
+<a href="{% url 'password_change' %}"><i class="fas fa-home"></i> Сменить пароль </a>
   <p>You can edit your account using the following form:</p>
   <form method="post" enctype="multipart/form-data">
     {{ user_form.as_p }}

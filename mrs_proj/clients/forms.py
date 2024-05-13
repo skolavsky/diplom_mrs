@@ -100,7 +100,8 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
     class Meta:
         model = ClientData
         fields = ['age', 'admission_date', 'spo2', 'body_mass_index', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
-                  'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d', 'daystoresult', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all',
+                  'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d', 'ventilation_reserve', 'daystoresult', 'comorb_ccc',
+                  'comorb_bl', 'cd_ozhir', 'comorb_all',
                   'week_result']
 
         labels = {
@@ -108,6 +109,7 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'age': 'Возраст',
             'spo2': 'SPO2',
             'body_mass_index': 'ИМТ',
+            'ventilation_reserve': 'Вентиляционный резерв',
             'result': 'Результат',
             'ch_d': 'Частота дыхания',
             'cd_ozhir': 'Сахарный диабет или ожирение',
@@ -127,13 +129,14 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
 
         widgets = {
             'age': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 120}),
-            'admission_date': forms.DateInput(attrs={'type': 'date'}),
+            'admission_date': forms.DateInput(attrs={'required': False, 'type': 'date'}),
             'body_mass_index': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
             'spo2': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 100}),
             'dayshome': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50}),
             'daystoresult': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 30}),
             'rox': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
             'lf': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
+            'ventilation_reserve': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 15.0}),
             'f_test_in': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 200}),
             'f_test_ex': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 200}),
             'spo2_fio': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 600.0}),
@@ -154,9 +157,25 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             # Проверка на кол-во и наличие
             if daystoresult < 0 or daystoresult > 30:
                 raise forms.ValidationError(
-                    f"Значение {self.fields['dayshome'].label} должно быть в пределах от 0 до 30.")
+                    f"Значение {self.fields['daystoresult'].label} должно быть в пределах от 0 до 30.")
                 # Проверка на количество знаков после запятой (не более 3)
         return daystoresult
+
+    def clean_ventilation_reserve(self):
+        ventilation_reserve = self.cleaned_data.get('ventilation_reserve')
+
+        if ventilation_reserve is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(ventilation_reserve, float, 'ventilation_reserve')
+
+            # Проверка на кол-во и наличие
+            if ventilation_reserve < 0 or ventilation_reserve > 30:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['ventilation_reserve'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+            self.validate_decimal_precision(value=ventilation_reserve, field_name='ventilation_reserve')
+        return ventilation_reserve
 
     def clean_dayshome(self):
         dayshome = self.cleaned_data.get('dayshome')
