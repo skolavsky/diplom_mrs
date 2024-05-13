@@ -99,9 +99,9 @@ class PersonalInfoForm(forms.ModelForm, ValidationMixin):
 class ClientDataForm(forms.ModelForm, ValidationMixin):
     class Meta:
         model = ClientData
-        fields = ['age', 'body_mass_index', 'spo2', 'admission_date', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
-                  'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all', 'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d',
-                  'measurementday', 'daystoresult', 'week_result']
+        fields = ['age', 'admission_date', 'spo2', 'body_mass_index', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
+                  'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d', 'daystoresult', 'comorb_ccc', 'comorb_bl', 'cd_ozhir', 'comorb_all',
+                  'week_result']
 
         labels = {
             'admission_date': 'Дата поступления',
@@ -111,21 +111,35 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'result': 'Результат',
             'ch_d': 'Частота дыхания',
             'cd_ozhir': 'Сахарный диабет или ожирение',
-            'spo2_fio': 'Fraction of inspired oxygen',
-            'rox': 'Rox-?',
-            'lf': 'Lung function',
-            'l_109': 'Level_109',
-            'comorb_all': 'аллергии?',
-            'comorb_ccc': 'comorb_ccc?',
-            'f_test_in': 'внутренний',
-            'f_test_ex': 'внешний',
-            'comorb_bl': 'коморбидность',
-            'dayshome': 'дней дома',
-            'week_result': 'больше недели или нет',
+            'spo2_fio': 'Доля вдыхаемого кислорода',
+            'rox': 'ROX',
+            'daystoresult': 'Общее кол-во дней',
+            'dayshome': 'Кол-во дней дома',
+            'lf': 'Функция легких',
+            'l_109': 'Уровень_109',
+            'comorb_all': 'Аллергии?',
+            'comorb_ccc': 'Comorb_ccc?',
+            'f_test_in': 'Внутренний',
+            'f_test_ex': 'Внешний',
+            'comorb_bl': 'Коморбидность',
+            'week_result': 'Больше недели или нет',
         }
 
         widgets = {
-            'admission_date': forms.SelectDateWidget(),
+            'age': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 120}),
+            'admission_date': forms.DateInput(attrs={'type': 'date'}),
+            'body_mass_index': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
+            'spo2': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 100}),
+            'dayshome': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50}),
+            'daystoresult': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 30}),
+            'rox': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
+            'lf': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
+            'f_test_in': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 200}),
+            'f_test_ex': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 200}),
+            'spo2_fio': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 600.0}),
+            'l_109': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
+            'ch_d': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 150}),
+            'measurementday': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 30}),
             'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
         }
 
