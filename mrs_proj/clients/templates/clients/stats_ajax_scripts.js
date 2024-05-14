@@ -68,26 +68,90 @@ function updateStatsSpoiler(statsData) {
         alert("Введённый процент: " + percentValue);
         param_url = url + '?percent=' + encodeURIComponent(percentValue);
         fetch(param_url, options)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-        .then(data => {
-            if ('ready_in_week' in data) {
-                alert('Ready in week: ' + data.ready_in_week);
-                statsHTML += `<li>Выпишутся: ${data.ready_in_week}</li>`; // Обновляем HTML содержимое только здесь
-                statsSpoiler.innerHTML = statsHTML;
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if ('ready_in_week' in data) {
+                    alert('Ready in week: ' + data.ready_in_week);
+                    statsHTML += `<li>Выпишутся: ${data.ready_in_week}</li>`; // Обновляем HTML содержимое только здесь
+                    statsSpoiler.innerHTML = statsHTML;
 
-            } else {
-                alert('Ready in week не найден в ответе от сервера');
-            }
-        })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
+                } else {
+                    alert('Ready in week не найден в ответе от сервера');
+                }
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
 
 
     });
 }
+
+var page = 1;
+var emptyPage = false;
+var blockRequest = false;
+
+function updateTable() {
+    const m_url = page_url + '?table_only=1&page=' + page; // Формирование URL с учётом номера страницы
+    fetch(m_url)
+        .then(response => response.text())
+        .then(html => {
+            if (html === '') {
+                emptyPage = true;
+            } else {
+                blockRequest = false;
+                const externalTableWrapper = document.getElementById('clientTableWrapper');
+                externalTableWrapper.innerHTML = html;
+
+                // Удаляем предыдущие обработчики событий для кнопок пагинации
+                document.querySelectorAll('.pagination a').forEach(link => {
+                    link.removeEventListener('click', handlePaginationClick);
+                });
+
+                // Устанавливаем обработчики событий для кнопок пагинации заново
+                document.querySelectorAll('.pagination a').forEach(link => {
+                    link.addEventListener('click', handlePaginationClick);
+                });
+            }
+
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке данных:', error);
+        });
+}
+
+// Функция для обработки клика по кнопкам пагинации
+function handlePaginationClick(event) {
+    const isBackButton = this.classList.contains('btn-back');
+    const isForwardButton = this.classList.contains('btn-forward');
+    const isLastFirst = this.classList.contains('btn-first');
+
+    if (isBackButton) {
+        page -= 1;
+    }
+    else if (isForwardButton) {
+        page += 1;
+    }
+    else if(isLastFirst)
+    {
+        page = 1;
+    }
+    else {
+        page = last_page_number;
+    }
+    event.preventDefault();
+    blockRequest = true;
+    updateTable(); // Вызываем функцию обновления таблицы для новой ссылки и страницы
+}
+
+// Устанавливаем обработчики событий для кнопок пагинации
+document.querySelectorAll('.pagination a').forEach(link => {
+    link.addEventListener('click', handlePaginationClick);
+
+});
+

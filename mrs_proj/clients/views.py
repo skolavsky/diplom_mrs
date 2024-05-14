@@ -53,6 +53,7 @@ class ClientStatsView(View):
 class ClientListView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
     template_name = 'client_list.html'
+    table_template_name = 'client_table.html'
 
     def get(self, request):
         clients_per_page = 10
@@ -101,16 +102,12 @@ class ClientListView(LoginRequiredMixin, View):
         paginator = Paginator(clients_data, clients_per_page)
         page_number = int(request.GET.get('page', 1))
         page = paginator.get_page(page_number)
-        try:
-            posts = paginator.page(page_number)
-        except PageNotAnInteger:
-            # Если page_number не целое число, то
-            # выдать первую страницу
-            posts = paginator.page(1)
-        except EmptyPage:
-            # Если page_number находится вне диапазона, то
-            # выдать последнюю страницу
-            posts = paginator.page(paginator.num_pages)
+
+        if 'table_only' in request.GET:
+            # Если указан параметр 'table_only', возвращаем только HTML-таблицу
+            return render(request, self.table_template_name, {'clients_data': page})
+
+        # В противном случае возвращаем полный HTML-шаблон страницы
         client_data_form = ClientDataForm()
         personal_info_form = PersonalInfoForm()
 
