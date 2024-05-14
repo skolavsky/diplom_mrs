@@ -89,12 +89,12 @@ class LoginView(View):
                 delta_days = delta.days
                 if delta_days > settings.MAX_USER_PASSWORD_AGE:
                     # Password expired, redirect to password change page
-                    messages.warning(request, 'Ваш пароль истек. Пожалуйста, измените его.')
+                    messages.warning(request, 'Ваш пароль истёк. Пожалуйста, измените его.')
 
                     return redirect('/account/password-reset/')
                 elif delta_days < 3:
                     # Warn user that password will expire soon
-                    messages.info(request, 'Ваш пароль скоро истечет. Пожалуйста, подготовьтесь к его изменению.')
+                    messages.info(request, 'Ваш пароль скоро истечёт. Вы можете изменить его самостоятельно в своём профиле.')
 
                 # Authentication successful, log in the user
                 login(request, user)

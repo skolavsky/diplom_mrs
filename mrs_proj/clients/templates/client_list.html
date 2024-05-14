@@ -30,7 +30,6 @@
     </div>
 </div>
 
-
 <div class="filters">
   <details>
     <summary>Фильтры</summary>
@@ -63,15 +62,10 @@
 <thead>
     <tr class="table">
         <th {% if sort_by == 'personal_info__last_name' %} class="active"{% endif %}><a href="?sort=personal_info__last_name&order={{ next_order }}">ФИО</a></th>
-        <th {% if sort_by == 'personal_info__gender' %} class="active"{% endif %}><a href="?sort=personal_info__gender&order={{ next_order }}">Пол</a></th>
-        <th {% if sort_by == 'age' %} class="active"{% endif %}><a href="?sort=age&order={{ next_order }}">Возраст</a></th>
-        <th {% if sort_by == 'body_mass_index' %} class="active"{% endif %}><a href="?sort=body_mass_index&order={{ next_order }}">ИМТ</a></th>
         <th {% if sort_by == 'spo2_fio' %} class="active"{% endif %}><a href="?sort=spo2_fio&order={{ next_order }}">SPO2/FIO</a></th>
         <th {% if sort_by == 'rox' %} class="active"{% endif %}><a href="?sort=rox&order={{ next_order }}">ROX</a></th>
         <th {% if sort_by == 'ventilation_reserve' %} class="active"{% endif %}><a href="?sort=ventilation_reserve&order={{ next_order }}">Вентиляционный резерв</a></th>
-        <th {% if sort_by == 'admission_date' %} class="active"{% endif %}><a href="?sort=admission_date&order={{ next_order }}">Дата поступления</a></th>
         <th {% if sort_by == 'result' %} class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
-        <th {% if sort_by == 'group' %} class="active"{% endif %}><a href="?sort=group&order={{ next_order }}">Группа</a></th>
         <th>Действия</th>
     </tr>
 </thead>
@@ -84,19 +78,15 @@
                     {{ client_data.personal_info }}
                 </a>
             </td>
-            <td class="cell_gender"> {% if client_data.personal_info.gender %}
-                Мужской
-                {% else %}
-                Женский
-                {% endif %}</td>
-            <td class="cell_age">{{ client_data.age }}</td>
-            <td class="cell_imt">{{ client_data.body_mass_index|floatformat:3 }}</td>
             <td class="cell_spo2_fio">{{ client_data.spo2_fio|floatformat:3 }}</td>
             <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
             <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>
-            <td class="cell_date">{{ client_data.admission_date|date:"d.m.Y" }}</td>
-            <td class="cell_res">{{ client_data.get_result_display }}</td>
-            <td class="cell_res">{{ client_data.group }}</td>
+            <td class="cell_res">{% if client_data.result == 0 %}
+   без исхода (прогноз на выписку в течении недели ({{ client_data.forecast_for_week }}%))
+{% else %}
+    {{ client_data.get_result_display }}
+{% endif %}
+</td>
             <td class="cell_button">
     <a href="{{ client_data.personal_info.get_absolute_url }}">
         <div class="button delete-button">
