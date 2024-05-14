@@ -58,9 +58,6 @@ input, textarea, button, select {
     background-color: transparent;
 }
 
-input[type='checkbox'] {
-    display: none;
-}
 
 input::-ms-clear {
     display: none;

@@ -28,17 +28,6 @@ function cancelAddClient() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const resetSortingButton = document.getElementById('resetSortingButton');
-
-    resetSortingButton.addEventListener('click', function () {
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.delete('sort');  // Remove the 'sort' parameter
-        currentUrl.searchParams.delete('search');  // Remove the 'search' parameter
-        window.location.href = currentUrl.toString();
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('searchInput');
 
     // Event listener to enlarge the input field when typing
@@ -50,85 +39,74 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    const resetSortingButton = document.getElementById('resetSortingButton');
 
-    resetSortingButton.addEventListener('click', function () {
-        const currentUrl = new URL(window.location.href);
-        const searchParamIndex = currentUrl.href.indexOf('?search');
+    const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
 
-        if (searchParamIndex !== -1) {
-            const baseUrl = currentUrl.href.substring(0, searchParamIndex);
-            window.location.href = baseUrl;
-        }
-    });
-});
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form[method="get"]');
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        const submitButton = form.querySelector('button[type="submit"]');
 
-
-const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form[method="get"]');
-    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-    const submitButton = form.querySelector('button[type="submit"]');
-
-    // Обработчик события клика на кнопку "Применить фильтры"
-    submitButton.addEventListener('click', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное действие кнопки
-        const checkedValues = Array.from(checkboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.name + '_1');
-        const queryParams = new URLSearchParams(window.location.search);
-        checkedValues.forEach(value => {
-            queryParams.append(value, '1');
+        // Обработчик события клика на кнопку "Применить фильтры"
+        submitButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Предотвращаем стандартное действие кнопки
+            const checkedValues = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.name + '_1');
+            const queryParams = new URLSearchParams(); // Создаем новый объект URLSearchParams
+            checkedValues.forEach(value => {
+                queryParams.append(value, '1');
+            });
+            window.location.href = window.location.pathname + '?' + queryParams.toString();
         });
-        window.location.href = window.location.pathname + '?' + queryParams.toString();
     });
-});
+
 
 // Получаем все ссылки в таблице
-const tableLinks = document.querySelectorAll('.table a');
+    const tableLinks = document.querySelectorAll('.table a');
 
 // Добавляем обработчик клика на каждую ссылку
 // Получаем кнопки управления сортировкой
-const sortButtons = document.querySelectorAll('.table th a');
+    const sortButtons = document.querySelectorAll('.table th a');
 
 // Добавляем обработчик клика на каждую кнопку сортировки
-sortButtons.forEach(button => {
-    button.addEventListener('click', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное действие ссылки
-        const urlParams = new URLSearchParams(window.location.search);
-        const sortParam = this.getAttribute('href').split('?')[1]; // Получаем параметры сортировки из ссылки
-        const sortParamParts = sortParam.split('&');
-        const sortValue = sortParamParts[0].split('=')[1];
-        const orderValue = sortParamParts[1].split('=')[1];
-        // Сохраняем текущие параметры фильтрации
-        const filterParams = [];
-        document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
-            filterParams.push(checkbox.name + '=1');
+    sortButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault(); // Предотвращаем стандартное действие ссылки
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortParam = this.getAttribute('href').split('?')[1]; // Получаем параметры сортировки из ссылки
+            const sortParamParts = sortParam.split('&');
+            const sortValue = sortParamParts[0].split('=')[1];
+            const orderValue = sortParamParts[1].split('=')[1];
+            // Сохраняем текущие параметры фильтрации
+            const filterParams = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                filterParams.push(checkbox.name + '=1');
+            });
+            // Устанавливаем параметры сортировки
+            urlParams.set('sort', sortValue);
+            urlParams.set('order', orderValue);
+            // Добавляем параметры фильтрации обратно
+            filterParams.forEach(filter => {
+                urlParams.append(filter.split('=')[0], filter.split('=')[1]);
+            });
+            // Обновляем URL страницы с новыми параметрами сортировки и фильтрации
+            window.location.href = '?' + urlParams.toString();
         });
-        // Устанавливаем параметры сортировки
-        urlParams.set('sort', sortValue);
-        urlParams.set('order', orderValue);
-        // Добавляем параметры фильтрации обратно
-        filterParams.forEach(filter => {
-            urlParams.append(filter.split('=')[0], filter.split('=')[1]);
-        });
-        // Обновляем URL страницы с новыми параметрами сортировки и фильтрации
-        window.location.href = '?' + urlParams.toString();
     });
-});
 
 
-function goToPage() {
-    const pageNumber = document.getElementById('page-input').value;
-    const currentPageUrl = window.location.href;
+    function goToPage() {
+        const pageNumber = document.getElementById('page-input').value;
+        const currentPageUrl = window.location.href;
 
-    // Создаем новый URL объект на основе текущего URL
-    const url = new URL(currentPageUrl);
+        // Создаем новый URL объект на основе текущего URL
+        const url = new URL(currentPageUrl);
 
-    // Устанавливаем параметр 'page' равным номеру страницы
-    url.searchParams.set('page', pageNumber);
+        // Устанавливаем параметр 'page' равным номеру страницы
+        url.searchParams.set('page', pageNumber);
 
-    // Перенаправляем на новый URL
-    window.location.href = url.toString();
-}
+        // Перенаправляем на новый URL
+        window.location.href = url.toString();
+    }
+})

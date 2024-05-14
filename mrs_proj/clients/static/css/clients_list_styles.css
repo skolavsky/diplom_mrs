@@ -1,10 +1,39 @@
-/* Стили для чекбоксов */
-details input[type="checkbox"] {
-    margin-right: 5px; /* Добавляем отступ справа для чекбоксов */
-    appearance: none; /* Отключаем стандартные стили браузера для чекбоксов */
-    -webkit-appearance: none; /* Для поддержки вебкитовских браузеров */
-    -moz-appearance: none; /* Для поддержки Firefox */
+input[type="checkbox"] {
+    /* Отключаем стандартные стили браузера */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Устанавливаем желаемый размер кастомного чекбокса */
+    width: 20px;
+    height: 20px;
+    /* Устанавливаем кастомный фон для отмеченного и неотмеченного состояния */
+    background-color: #fff;
+    border: 1px solid #ccc; /* Устанавливаем границу для чекбокса */
+    border-radius: 3px; /* Закругляем углы */
+    /* При отмеченном состоянии меняем цвет фона */
+    &:checked {
+        background-color: #2B4141;
+    }
 }
+
+/* Стили для кастомного визуального отображения чекбокса */
+input[type="checkbox"]::before {
+    content: ''; /* Создаем псевдоэлемент для кастомного отображения */
+    display: inline-block;
+    width: 10px; /* Задаем размер кастомной отметки */
+    height: 10px;
+    border-radius: 2px; /* Закругляем углы отметки */
+    background-color: #fff; /* Устанавливаем цвет отметки */
+    position: relative;
+    top: -1px; /* Смещаем отметку вверх, чтобы она выровнялась по центру чекбокса */
+}
+
+/* Стили для кастомного визуального отображения чекбокса в отмеченном состоянии */
+input[type="checkbox"]:checked::before {
+    background-color: #2B4141; /* Изменяем цвет отметки при отмеченном состоянии */
+}
+
+
 
 .filters {
   display: grid;
@@ -15,24 +44,6 @@ details input[type="checkbox"] {
 .filter-group {
   display: flex;
   flex-direction: column;
-}
-
-
-/* Стили для кастомных чекбоксов */
-details input[type="checkbox"] + label::before {
-    content: ""; /* Добавляем пустой контент */
-    display: inline-block; /* Делаем элемент блочным */
-    width: 12px; /* Задаем ширину квадратной области для отметки */
-    height: 12px; /* Задаем высоту квадратной области для отметки */
-    border: 1px solid #999; /* Задаем границу квадратной области */
-    margin-right: 5px; /* Добавляем небольшой отступ между чекбоксом и текстом */
-    position: relative; /* Позиционируем элемент относительно его обычного положения */
-    top: 2px; /* Смещаем чекбокс немного вниз, чтобы он был выровнен с текстом */
-}
-
-/* Стили для кастомных чекбоксов, когда они отмечены */
-details input[type="checkbox"]:checked + label::before {
-    background-color: #007bff; /* Цвет заливки квадратной области при отметке */
 }
 
 .filters {
@@ -191,17 +202,6 @@ details input[type="checkbox"]:checked + label::before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.button_box {
-    height: 40px;
-
-    display: flex;
-    justify-content: end;
-}
-
-.button_box button {
-    border-color: #000;
 }
 
 .name_input {
