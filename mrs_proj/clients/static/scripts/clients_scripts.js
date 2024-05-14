@@ -2,21 +2,6 @@ document.getElementById('toggleFormBtn').addEventListener('click', function () {
     document.getElementById('addClientForm').style.display = 'block';
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const searchButton = document.getElementById('searchButton');
-
-    searchButton.addEventListener('click', function () {
-        const searchInput = document.getElementById('searchInput');
-        const searchQuery = searchInput.value.trim();  // Trim to remove leading/trailing spaces
-
-        if (searchQuery !== '') {
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set('search', searchQuery);
-            window.location.href = currentUrl.toString();
-        }
-    });
-});
-
 function toggleForm() {
     let form = document.getElementById('addClientForm');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
@@ -40,30 +25,30 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    const filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+    let filterCheckboxes = document.querySelectorAll('input[type="checkbox"]');
 
     document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('form[method="get"]');
-        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-        const submitButton = form.querySelector('button[type="submit"]');
+        const filterForm = document.querySelector('.filter-form'); // Получаем форму фильтров
+        const filterButton = filterForm.querySelector('.btn-filter'); // Получаем кнопку "Применить фильтры"
 
         // Обработчик события клика на кнопку "Применить фильтры"
-        submitButton.addEventListener('click', function (event) {
+        filterButton.addEventListener('click', function (event) {
             event.preventDefault(); // Предотвращаем стандартное действие кнопки
-            const checkedValues = Array.from(checkboxes)
-                .filter(checkbox => checkbox.checked)
-                .map(checkbox => checkbox.name + '_1');
-            const queryParams = new URLSearchParams(); // Создаем новый объект URLSearchParams
-            checkedValues.forEach(value => {
-                queryParams.append(value, '1');
+
+            filterCheckboxes = []; // Создаем пустой массив для хранения выбранных фильтров
+
+            // Получаем все выбранные фильтры чекбоксов
+            filterForm.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                filterCheckboxes.push(checkbox.name); // Добавляем имя выбранного фильтра в массив
             });
-            window.location.href = window.location.pathname + '?' + queryParams.toString();
+
+            // Теперь можно использовать массив filterCheckboxes, который содержит имена выбранных фильтров
+            console.log(filterCheckboxes);
         });
     });
 
-
-// Получаем все ссылки в таблице
     const tableLinks = document.querySelectorAll('.table a');
+// Получаем все ссылки в таблице
 
 // Добавляем обработчик клика на каждую ссылку
 // Получаем кнопки управления сортировкой

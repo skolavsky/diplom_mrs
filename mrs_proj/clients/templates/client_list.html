@@ -12,7 +12,7 @@
     <div class="search_box">
         <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
         <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-<a href="{% url 'clients:client_list' %}"><i class="fas fa-undo"></i> Сброс сортировок и поиска </a>
+<button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска </button>
     </div>
 
     <div class="">
@@ -52,7 +52,7 @@
         <label><input type="checkbox" name="noted_0"> Показать не отслеживаемые записи </label>
       </div>
 
-      <button type="submit">Применить фильтры</button>
+      <button type="submit" class="btn-filter">Применить фильтры</button>
     </form>
   </details>
 </div>
@@ -97,6 +97,7 @@ const url = '{% url "clients:client_stats" %}';
 const page_url = '{% url "clients:client_list" %}';
 
 {% include "clients/stats_ajax_scripts.js" %}
+{% include "clients/pagination_ajax_scripts.js" %}
 
 {% include "clients/note_button.js" %}
 
