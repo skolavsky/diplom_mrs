@@ -92,7 +92,7 @@ document.querySelectorAll('.btn-filter').forEach(link => {
         const filterCheckboxes = document.querySelectorAll('.filter-group input[type="checkbox"]:checked');
         filters = Array.from(filterCheckboxes).map(checkbox => checkbox.name + '=1').join('&');
         // Теперь у вас есть строка параметров с выбранными значениями чекбоксов
-        filters += '&'+ 'search='+document.getElementById('searchInput').value;
+        filters += '&' + 'search=' + document.getElementById('searchInput').value;
         console.log(filters); // Пример вывода в консоль для проверки
 
         updateTable()
@@ -116,12 +116,12 @@ resetButton.addEventListener('click', function (event) {
 
 
 const searchButton = document.getElementById('searchButton');
-searchButton.addEventListener('click', function(event) {
+searchButton.addEventListener('click', function (event) {
     // Предотвращаем стандартное действие кнопки
     event.preventDefault();
 
     // Получаем значение из поля ввода
-    filters += '&'+ 'search='+document.getElementById('searchInput').value;
+    filters += '&' + 'search=' + document.getElementById('searchInput').value;
 
     // Теперь у вас есть значение из поля ввода, которое можно использовать
     updateTable()
@@ -129,7 +129,7 @@ searchButton.addEventListener('click', function(event) {
 
 const tableHeaders = document.querySelectorAll('.table th');
 document.querySelectorAll('.table th a').forEach(link => {
-    link.onclick = function(event) {
+    link.onclick = function (event) {
         event.preventDefault(); // Предотвращаем стандартное действие ссылки
         const href = this.getAttribute('href'); // Получаем URL-адрес из атрибута href
         const urlParams = new URLSearchParams(href.split('?')[1]); // Получаем параметры из URL-адреса
@@ -142,4 +142,55 @@ document.querySelectorAll('.table th a').forEach(link => {
         // Возвращаем false, чтобы предотвратить переход по ссылке
         return false;
     };
+});
+
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('show-spoiler-button')) {
+        const button = event.target;
+        const clientUrl = button.dataset.clientUrl;
+        const clientId = clientUrl.split('/')[1];
+        const clientDataDiv = document.getElementById(clientId);
+
+        if (clientDataDiv.style.display === 'block') {
+            // Если спойлер открыт, закрываем его
+            clientDataDiv.style.display = 'none';
+        } else {
+            // Если спойлер закрыт, отправляем запрос на сервер для получения данных
+            fetch(clientUrl, {
+                method: 'GET',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => response.text())
+                .then(html => {
+                    // Вставляем полученный HTML внутрь div для клиента
+                    clientDataDiv.innerHTML = html;
+
+                    // Показываем спойлер с данными
+                    clientDataDiv.style.display = 'block';
+                })
+                .catch(error => console.error('Ошибка при отправке запроса:', error));
+        }
+    }
+});
+
+
+
+function extractClientId(href) {
+    // Регулярное выражение для извлечения UUID из URL
+    const regex = /\/([^/]+)\/$/;
+    const match = regex.exec(href);
+    return match ? match[1] : null;
+}
+
+document.addEventListener('click', function (event) {
+    const saveButton = document.querySelector('button[name="action"][value="update_client"]');
+
+    if (saveButton) {
+        saveButton.addEventListener('click', function(event) {
+            updateTable(false)
+        });
+    }
 });

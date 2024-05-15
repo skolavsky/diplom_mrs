@@ -15,11 +15,16 @@
 {% if clients_data %}
     {% for client_data in clients_data %}
         <tr class="table">
-            <td class="cell_name">
-                <a href="{{ client_data.personal_info.get_absolute_url }}">
-                    {{ client_data.personal_info }}
-                </a>
-            </td>
+<td class="cell_name">
+    <a href="{{ client_data.personal_info.get_absolute_url }}">
+        {{ client_data.personal_info }}
+    </a>
+    <button class="show-spoiler-button" data-client-url="client-data/{{ client_data.personal_info.id }}/">
+        Показать дополнительную информацию
+    </button>
+    <div class="client-data" id="{{ client_data.personal_info.id }}" style="display: none;"></div>
+</td>
+
             <td class="cell_spo2_fio">{{ client_data.spo2_fio|floatformat:3 }}</td>
             <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
             <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>

@@ -1,0 +1,9 @@
+<div id="client-data-spoiler">
+    <div id="data-edit">
+        <form method="post" action="{% url 'clients:client_data_update' id=client_data.personal_info.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" name="action" value="update_client">Сохранить</button>
+        </form>
+    </div>
+</div>
