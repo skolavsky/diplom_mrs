@@ -92,7 +92,9 @@ document.querySelectorAll('.btn-filter').forEach(link => {
         const filterCheckboxes = document.querySelectorAll('.filter-group input[type="checkbox"]:checked');
         filters = Array.from(filterCheckboxes).map(checkbox => checkbox.name + '=1').join('&');
         // Теперь у вас есть строка параметров с выбранными значениями чекбоксов
+        filters += '&'+ 'search='+document.getElementById('searchInput').value;
         console.log(filters); // Пример вывода в консоль для проверки
+
         updateTable()
         // Здесь можете добавить код для использования переменной filters
     });
@@ -103,7 +105,7 @@ const resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', function (event) {
     event.preventDefault(); // Предотвращаем стандартное действие кнопки
     const checkboxes = document.querySelectorAll('.filter-group input[type="checkbox"]');
-
+    filters = ''
     // Снимаем галки с каждого чекбокса
     checkboxes.forEach(checkbox => {
         checkbox.checked = false;
@@ -119,8 +121,25 @@ searchButton.addEventListener('click', function(event) {
     event.preventDefault();
 
     // Получаем значение из поля ввода
-    filters += 'search='+document.getElementById('searchInput').value;
+    filters += '&'+ 'search='+document.getElementById('searchInput').value;
 
     // Теперь у вас есть значение из поля ввода, которое можно использовать
     updateTable()
+});
+
+const tableHeaders = document.querySelectorAll('.table th');
+document.querySelectorAll('.table th a').forEach(link => {
+    link.onclick = function(event) {
+        event.preventDefault(); // Предотвращаем стандартное действие ссылки
+        const href = this.getAttribute('href'); // Получаем URL-адрес из атрибута href
+        const urlParams = new URLSearchParams(href.split('?')[1]); // Получаем параметры из URL-адреса
+        const sortValue = urlParams.get('sort'); // Получаем значение параметра sort
+        const orderValue = urlParams.get('order'); // Получаем значение параметра order
+        const currentSortOrder = `sort=${sortValue}&order=${orderValue}`; // Формируем текущую сортировку и порядок
+        filters += '&' + currentSortOrder;
+        updateTable();
+
+        // Возвращаем false, чтобы предотвратить переход по ссылке
+        return false;
+    };
 });

@@ -85,12 +85,6 @@ class ClientListView(LoginRequiredMixin, View):
             # Если не переданы параметры фильтрации, используем исходные данные без фильтрации
             pass
 
-        if search_query:
-            clients_data = clients_data.filter(
-                Q(personal_info__first_name__icontains=search_query) |
-                Q(personal_info__last_name__icontains=search_query) |
-                Q(personal_info__patronymic__icontains=search_query)
-            )
 
         next_order = 'desc' if order == 'asc' else 'asc'
 
@@ -98,6 +92,13 @@ class ClientListView(LoginRequiredMixin, View):
             clients_data = clients_data.order_by(f'{sort_by}')
         else:
             clients_data = clients_data.order_by(f'-{sort_by}')
+
+        if search_query:
+            clients_data = clients_data.filter(
+                Q(personal_info__first_name__icontains=search_query) |
+                Q(personal_info__last_name__icontains=search_query) |
+                Q(personal_info__patronymic__icontains=search_query)
+            )
 
         paginator = Paginator(clients_data, clients_per_page)
         page_number = int(request.GET.get('page', 1))

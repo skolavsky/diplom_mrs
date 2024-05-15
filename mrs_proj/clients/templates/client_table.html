@@ -3,7 +3,7 @@
     <caption></caption>
 <thead>
     <tr class="table">
-        <th {% if sort_by == 'personal_info__last_name' %} class="active"{% endif %}><a href="?sort=personal_info__last_name&order={{ next_order }}">ФИО</a></th>
+        <th data-sort="personal_info__last_name" data-order="asc"><a href="?sort=personal_info__last_name&order={{ next_order }}">ФИО</a></th>
         <th {% if sort_by == 'spo2_fio' %} class="active"{% endif %}><a href="?sort=spo2_fio&order={{ next_order }}">SPO2/FIO</a></th>
         <th {% if sort_by == 'rox' %} class="active"{% endif %}><a href="?sort=rox&order={{ next_order }}">ROX</a></th>
         <th {% if sort_by == 'ventilation_reserve' %} class="active"{% endif %}><a href="?sort=ventilation_reserve&order={{ next_order }}">Вентиляционный резерв</a></th>
@@ -24,7 +24,7 @@
             <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
             <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>
             <td class="cell_res">{% if client_data.result == 0 %}
-   без исхода (прогноз на выписку в течении недели ({{ client_data.forecast_for_week }}%))
+   без исхода (прогноз на выписку в течение недели ({{ client_data.forecast_for_week }}%))
 {% else %}
     {{ client_data.get_result_display }}
 {% endif %}
