@@ -1,8 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-import models, schema
-
+from models.user import User
+import schemas.user_schema as schema
+from crypto.argon2 import password_handler
 
 async def get_user(db: Session, user_id: int):
     user = await db.execute(select(models.User).filter(models.User.id == user_id))
@@ -17,7 +18,7 @@ async def get_users(db: Session, skip: int = 0, limit: int = 100):
     return users.scalars().all()
 
 async def create_user(db: AsyncSession, user: schema.UserCreate):
-    fake_hashed_password = user.hashed_password + "notreallyhashed"
+    hashed_password = password_handler.hash(user.hashed_password)
     db_user = models.User(email=user.email, hashed_password=user.hashed_password)
     db.add(db_user)
     await db.commit()

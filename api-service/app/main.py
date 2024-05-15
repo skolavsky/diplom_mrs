@@ -1,29 +1,28 @@
-import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-import crud, models, schema
+import schemas.user_schema as schema
 
-from database import SessionLocal, engine, Base
+from cruds import user_crud as crud
+
+from dependencies import get_db
 
 app = FastAPI()
-
-
-# Dependency
-async def get_db():
-    async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        await db.close()
 
 
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+@app.get("/test/{data}")
+async def test(data: float):
+    result = 0.0125*data*data-0.2017*data+1.2955
+    if result < 0.1:
+        result = 0.1
+    elif result > 0.9:
+        result = 0.9
+    return {"result": 1 - result}
 
 @app.post("/create-user/", response_model=schema.User)
 async def create_user(user: schema.UserCreate, db: AsyncSession = Depends(get_db)):

@@ -2,7 +2,7 @@ import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncAttrs
 
 from dotenv import load_dotenv
 
@@ -21,5 +21,5 @@ SessionLocal = async_sessionmaker(
     bind=engine
 )
 
-class Base(DeclarativeBase):
+class Base(AsyncAttrs, DeclarativeBase):
     pass
