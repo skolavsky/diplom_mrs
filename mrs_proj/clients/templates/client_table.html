@@ -33,6 +33,9 @@
 {% else %}
     {{ client_data.get_result_display }}
 {% endif %}
+{% if client_data.group %}
+            группа: ({{client_data.group }})
+    {% endif %}
 </td>
             <td class="cell_button">
     <a href="{{ client_data.personal_info.get_absolute_url }}">

@@ -1,10 +1,11 @@
 import uuid
 from datetime import date
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import BooleanField
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
@@ -90,61 +91,49 @@ class ClientData(models.Model):
 
     history = HistoricalRecords(inherit=True)
 
-    def save(self, *args, **kwargs):
-        # Проверка наличия записи перед получением значений полей
-        if self.pk is not None:
-            previous_record = self.__class__.objects.filter(pk=self.pk).first()
-            if previous_record:
-                previous_spo2_fio = previous_record.spo2_fio
-                previous_rox = previous_record.rox
-            else:
-                previous_spo2_fio = None
-                previous_rox = None
-        else:
-            previous_spo2_fio = None
-            previous_rox = None
+    def spo2_fio_changed(self):
+        """
+        Проверяет, изменилось ли значение spo2_fio.
+        """
+        try:
+            old_instance = ClientData.objects.get(pk=self.pk)
+            return True if old_instance.spo2_fio != self.spo2_fio else False
+        except ClientData.DoesNotExist:
+            return False
 
-        # Проверка, изменились ли поля spo2_fio и rox
-        spo2_fio_changed = self.spo2_fio != previous_spo2_fio if previous_spo2_fio is not None else True
-        rox_changed = self.rox != previous_rox if previous_rox is not None else True
-
-        if rox_changed and self.rox is not None and self.result in [0, 'in progress']:
-            # Получаем ближайшие 10 записей с rox меньше или равным введенному значению, исключая записи с результатом 0 "in progress"
-            lower_records = ClientData.objects.filter(rox__lte=self.rox, result__in=[1, 2, 3]).exclude(
-                result=0).order_by('-rox')[:10]
-            # Получаем ближайшие 10 записей с rox больше введенного значения, исключая записи с результатом 0 "in progress"
-            higher_records = ClientData.objects.filter(rox__gt=self.rox, result__in=[1, 2, 3]).exclude(
-                result=0).order_by('rox')[:10]
-
-            # Собираем значения week_result для найденных записей
-            week_results = [record.week_result for record in lower_records] + [record.week_result for record in
-                                                                               higher_records]
-            # Вычисляем среднее значение week_result
-            if week_results:
-                # Вычисляем процент истинных значений в week_results
-                true_count = sum(1 for result in week_results if result)
-                average_week_result = true_count / len(week_results)
-                self.forecast_for_week = int(average_week_result * 100)  # Приводим к процентам
-
-        # Вычисление значения группы на основе spo2_fio и rox только если они изменились
-        if spo2_fio_changed and rox_changed and self.spo2_fio is not None and self.rox is not None:
-            if self.spo2_fio >= 280 and self.rox >= 15:
-                self.group = 1
-            elif self.spo2_fio < 315 and self.rox < 15:
-                self.group = 2
-            elif 230 <= self.spo2_fio < 315 and 11 <= self.rox < 15:
-                self.group = 3
-            elif self.spo2_fio < 280 and self.rox < 15:
-                self.group = 4
-            else:
-                self.group = 0  # Группа для записей без spo2_fio и rox
-
-        # Вызов метода save родительского класса для сохранения модели
-        super().save(*args, **kwargs)
+    def rox_changed(self):
+        """
+        Проверяет, изменилось ли значение rox.
+        """
+        try:
+            old_instance = ClientData.objects.get(pk=self.pk)
+            print(old_instance)
+            print(ClientData.objects.get(pk=self.pk))
+            return True if old_instance.rox != self.rox else False
+        except ClientData.DoesNotExist:
+            return False
 
     @property
     def has_personal_info(self):
         return self.personal_info is not None
+
+
+@receiver(pre_save, sender=ClientData)
+def update_group(sender, instance, **kwargs):
+    if instance.spo2_fio is not None and instance.rox is not None:
+        if instance.spo2_fio >= 280 and instance.rox >= 15:
+            instance.group = 1
+        elif instance.spo2_fio < 315 and instance.rox < 15:
+            instance.group = 2
+        elif 230 <= instance.spo2_fio < 315 and 11 <= instance.rox < 15:
+            instance.group = 3
+        elif instance.spo2_fio < 280 and instance.rox < 15:
+            instance.group = 4
+        else:
+            instance.group = 0  # Группа для записей без spo2_fio и rox
+    else:
+        instance.group = None  # или другое значение, обозначающее отсутствие данных
+
 
 
 @receiver(post_save, sender=ClientData)
