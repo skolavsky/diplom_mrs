@@ -177,7 +177,6 @@ document.addEventListener('click', function (event) {
 });
 
 
-
 function extractClientId(href) {
     // Регулярное выражение для извлечения UUID из URL
     const regex = /\/([^/]+)\/$/;
@@ -189,7 +188,7 @@ document.addEventListener('click', function (event) {
     const saveButton = document.querySelector('button[name="action"][value="update_client"]');
 
     if (saveButton) {
-        saveButton.addEventListener('click', function(event) {
+        saveButton.addEventListener('click', function (event) {
             updateTable(false)
         });
     }

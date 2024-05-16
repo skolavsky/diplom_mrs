@@ -133,15 +133,11 @@ function handlePaginationClick(event) {
 
     if (isBackButton) {
         page -= 1;
-    }
-    else if (isForwardButton) {
+    } else if (isForwardButton) {
         page += 1;
-    }
-    else if(isLastFirst)
-    {
+    } else if (isLastFirst) {
         page = 1;
-    }
-    else {
+    } else {
         page = last_page_number;
     }
     event.preventDefault();
