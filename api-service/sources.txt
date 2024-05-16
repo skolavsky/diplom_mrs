@@ -1,3 +1,4 @@
 https://github.com/tiangolo/full-stack-fastapi-template
 https://github.com/nsidnev/fastapi-realworld-example-app
 https://docs.authlib.org/en/latest/jose/jwt.html
+https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf
