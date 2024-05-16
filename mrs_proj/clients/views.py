@@ -5,14 +5,14 @@ import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views import View
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
 from .AI.serializers import ClientSerializer
 from .forms import PersonalInfoForm, ClientDataForm
@@ -53,6 +53,7 @@ class ClientStatsView(View):
 class ClientListView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
     template_name = 'client_list.html'
+    table_template_name = 'client_table.html'
 
     def get(self, request):
         clients_per_page = 10
@@ -84,13 +85,6 @@ class ClientListView(LoginRequiredMixin, View):
             # Если не переданы параметры фильтрации, используем исходные данные без фильтрации
             pass
 
-        if search_query:
-            clients_data = clients_data.filter(
-                Q(personal_info__first_name__icontains=search_query) |
-                Q(personal_info__last_name__icontains=search_query) |
-                Q(personal_info__patronymic__icontains=search_query)
-            )
-
         next_order = 'desc' if order == 'asc' else 'asc'
 
         if order == 'asc':
@@ -98,19 +92,22 @@ class ClientListView(LoginRequiredMixin, View):
         else:
             clients_data = clients_data.order_by(f'-{sort_by}')
 
+        if search_query:
+            clients_data = clients_data.filter(
+                Q(personal_info__first_name__icontains=search_query) |
+                Q(personal_info__last_name__icontains=search_query) |
+                Q(personal_info__patronymic__icontains=search_query)
+            )
+
         paginator = Paginator(clients_data, clients_per_page)
         page_number = int(request.GET.get('page', 1))
         page = paginator.get_page(page_number)
-        try:
-            posts = paginator.page(page_number)
-        except PageNotAnInteger:
-            # Если page_number не целое число, то
-            # выдать первую страницу
-            posts = paginator.page(1)
-        except EmptyPage:
-            # Если page_number находится вне диапазона, то
-            # выдать последнюю страницу
-            posts = paginator.page(paginator.num_pages)
+
+        if 'table_only' in request.GET:
+            # Если указан параметр 'table_only', возвращаем только HTML-таблицу
+            return render(request, self.table_template_name, {'clients_data': page})
+
+        # В противном случае возвращаем полный HTML-шаблон страницы
         client_data_form = ClientDataForm()
         personal_info_form = PersonalInfoForm()
 
@@ -244,3 +241,32 @@ def client_noted(request):
             except ClientData.DoesNotExist:
                 pass
     return JsonResponse({'status': 'error'})
+
+
+@login_required
+@require_GET
+def client_data(request, id):
+    if request.user.is_authenticated:
+        client_data = get_object_or_404(ClientData, personal_info__id=id)
+        form = ClientDataForm(instance=client_data)
+        context = {'client_data': client_data, 'form': form}
+        print(context)
+        return render(request, 'spoiler_form.html', context=context)
+        # Генерируем случайное число от 1 до 20
+    return JsonResponse({'status': 'error'})
+
+
+@login_required
+@require_POST
+def client_data_update(request, id):
+    action = request.POST.get('action', '')
+    if request.user.is_authenticated:
+        if action == 'update_client':
+            client_data = get_object_or_404(ClientData, personal_info__id=id)
+            form = ClientDataForm(request.POST, instance=client_data)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f'Запись успешно обновлена')
+                return HttpResponse(status=204)
+            else:
+                return JsonResponse({'status': 'error_data'})
