@@ -1,6 +1,6 @@
 import uuid
 from datetime import date
-
+import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -9,6 +9,8 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from simple_history.models import HistoricalRecords
+
+from mrs_proj.settings_common import FORECAST_URL
 
 
 class PersonalInfo(models.Model):
@@ -116,6 +118,31 @@ class ClientData(models.Model):
     @property
     def has_personal_info(self):
         return self.personal_info is not None
+
+@receiver(pre_save, sender=ClientData)
+def update_forecast(sender, instance, **kwargs):
+    try:
+        previous_instance = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        # Если экземпляр создается впервые, нет необходимости в обновлении прогноза
+        return
+
+    if instance.ventilation_reserve != previous_instance.ventilation_reserve and instance.ventilation_reserve != 0:
+        url = FORECAST_URL + str(instance.ventilation_reserve)
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                result = response.json().get('result')
+                # Преобразование значения в проценты
+                percent_value = max(min((result * 100), 90), 10)
+                instance.forecast_for_week = percent_value
+            else:
+                # Оставляем старое значение, если запрос завершился неудачно
+                instance.forecast_for_week = previous_instance.forecast_for_week
+        except requests.RequestException as e:
+            # Оставляем старое значение в случае ошибки запроса
+            instance.forecast_for_week = previous_instance.forecast_for_week
+            print(f"Error fetching data from {url}: {e}")
 
 
 @receiver(pre_save, sender=ClientData)

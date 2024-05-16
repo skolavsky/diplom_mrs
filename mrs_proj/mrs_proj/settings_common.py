@@ -1,6 +1,6 @@
 # settings_common.py
 from pathlib import Path
-
+import os
 from decouple import config
 
 # Глобальные переменные в приложении
@@ -12,6 +12,9 @@ START_ADMISSION_DATE = 2023
 MAX_USER_PASSWORD_AGE = 30  # в днях. срок годности пароля
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # получать письма в консоль
+
+# доступ к микросервису
+FORECAST_URL  = os.environ.get('FORECAST_URL', 'http://localhost:8888/test/')
 
 
 SITE_ID = 1  # нужно для карты сайтов. admin/sites/site

@@ -1,9 +1,14 @@
+{% load thumbnail %}
 {% load blog_tags %}
 {% for post in posts %}
     <h2>
         <a href="{{ post.get_absolute_url }}">
             {{ post.title }}
         </a>
+        {% if post.preview %}
+                 {% thumbnail post.preview "300x300" crop="smart" as im %}
+                        <img src="{{ im.url }}" alt="preview" class="preview">
+        {% endif %}
     </h2>
     <p class="tags">
         Tags:
