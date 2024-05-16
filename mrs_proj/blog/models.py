@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from easy_thumbnails.fields import ThumbnailerImageField
 from taggit.managers import TaggableManager
 
 
@@ -26,6 +27,8 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.DRAFT)
+    preview = ThumbnailerImageField(upload_to='previews/%Y/%m/%d/', blank=True, null=True)
+
 
     objects = models.Manager()  # The default manager.
     published = PublishedManager()  # Our custom manager.

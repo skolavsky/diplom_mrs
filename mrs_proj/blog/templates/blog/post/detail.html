@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
+
+
 {% load blog_tags %}
 
 {% block title %}{{ post.title }}{% endblock %}
@@ -8,6 +11,10 @@
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
+        {% if post.preview %}
+                 {% thumbnail post.preview "300x300" crop="smart" as im %}
+                        <img src="{{ im.url }}" alt="preview" class="preview">
+        {% endif %}
     {{ post.body|markdown }}
 
     <h2>Similar posts</h2>
