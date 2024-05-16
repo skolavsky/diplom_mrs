@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
 {% load blog_tags %}
-
+{% load static %}
 {% block title %}My Blog{% endblock %}
 
 {% block content %}
-    <h1>My Blog</h1>
-    Всего статей: {% total_posts %}.
+    <main>
+        <h1>My Blog</h1>
+        Всего статей: {% total_posts %}.
 
-    <p>
-        <a id="copyButton" href="{% url 'blog:post_feed' %}">
-            Подписка на RSS.
-        </a>
-    </p>
+        <p>
+            <a id="copyButton" href="{% url 'blog:post_feed' %}">
+                Подписка на RSS.
+            </a>
+        </p>
 
-    {% if tag %}
-        <h2>Posts tagged with "{{ tag.name }}"</h2>
-    {% endif %}
+        {% if tag %}
+            <h2>Posts tagged with "{{ tag.name }}"</h2>
+        {% endif %}
 
-    <div id="posts-list">
+        <div id="posts-list">
 
 
-        {% include "blog/posts.html" with posts=posts %}
+            {% include "blog/posts.html" with posts=posts %}
 
-    </div>
+        </div>
+    </main>
 
 
     <script>
@@ -42,29 +44,8 @@
 {% endblock %}
 
 {% block domready %}
-var page = 1;
-var emptyPage = false;
-var blockRequest = false;
-window.addEventListener('scroll', function(e) {
-    var margin = document.body.clientHeight - window.innerHeight - 100;
-    if(window.pageYOffset > margin && !emptyPage && !blockRequest) {
-        blockRequest = true;
-        page += 1;
-        fetch('?posts_only=1&page=' + page)
-            .then(response => response.text())
-            .then(html => {
-                if (html === '') {
-                    emptyPage = true;
-                } else {
-                    var postsList = document.getElementById('posts-list');
-                    postsList.insertAdjacentHTML('beforeEnd', html);
-                }
-                blockRequest = false;
-            });
-    }
-});
-// Запустить события прокрутки
-const scrollEvent = new Event('scroll');
-window.dispatchEvent(scrollEvent);
+
+    {% include 'blog/ajax_articles_get.js' %}
+
 
 {% endblock %}
