@@ -119,11 +119,11 @@ class LoginViewTests(TestCase):
 
     def test_failed_login_button(self):
         '''
-        Проверка на наличие кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        Проверка на наличие кнопки с текстом "Войти" в ответе
         :return:
         '''
         response = self.client.get(reverse('web_handler:login'))
-        self.assertContains(response, '<button type="submit" class="button_open">ВХОД</button>')
+        self.assertContains(response, '<button type="submit">Войти</button>')
 
     def test_failed_login_header(self):
         '''
@@ -131,7 +131,7 @@ class LoginViewTests(TestCase):
         :return:
         '''
         response = self.client.get(reverse('web_handler:login'))
-        self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
+        self.assertContains(response, '<h1>MRS</h1>')
 
     def test_login_title(self):
         '''
@@ -139,7 +139,7 @@ class LoginViewTests(TestCase):
         :return:
         '''
         response = self.client.get(reverse('web_handler:login'))
-        self.assertContains(response, '<title>Вход в систему</title>')
+        self.assertContains(response, '<title>Вход</title>')
 
     def test_failed_login_password_wrong_type(self):
         '''
