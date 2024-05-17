@@ -1,5 +1,5 @@
 html {
-    font-size: 16px; /* базовый размер шрифта */
+    font-size: 18px; /* базовый размер шрифта */
 }
 
 body {
@@ -7,7 +7,7 @@ body {
     overflow: hidden;
 
     background-color: #046C7A1A;
-    color: #2a92c0;
+    color: #5a5a5a;
 }
 
 .mrs h1 {
@@ -17,9 +17,8 @@ body {
     justify-content: center;
     flex-grow: initial;
     text-align: center;
-    /*padding: 35px;
     font-size: 2rem; /* 32px, если базовый размер шрифта 16px */
-
+    padding: 30px; /* отступ сверху и снизу */
 }
 
 .main h1 {
@@ -31,8 +30,26 @@ body {
 
 }
 
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 60px; /* Расположение подсказки над элементом */
+    background-color: rgb(42, 146, 192);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+[data-tooltip]:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
 .main {
-    height: 91%;
+    height: 82%;
 
     display: flex;
     align-items: center;
@@ -74,7 +91,7 @@ body {
 }
 
 .input_margin_bottom {
-    margin-bottom: 28px;
+    margin-bottom: 22px; /* расстояние между полями ввода*/
 }
 
 .input_box input {
@@ -87,12 +104,8 @@ body {
     outline: none;
 }
 
-.input_box input:-webkit-autofill {
-    transition: all 5000s ease-in-out 0s;
-}
-
 .input_box input::placeholder {
-    font: italic 400 14px/19.6px 'Inter', sans-serif;
+    font: 400 15px/19.6px 'Arial', sans-serif;
     color: #9BA3AC;
 }
 
@@ -112,7 +125,7 @@ body {
     color: #6F7881;
 }
 
-.checkbox {
+.reset-password {
     width: 360px;
     height: 24px;
 
@@ -122,29 +135,14 @@ body {
     justify-content: space-between;
 }
 
-.checkbox .group {
+.reset-password .group {
     display: flex;
 
 }
 
-.checkbox_custom + label::before {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    flex-shrink: 0;
-    flex-grow: 0;
-    border: 1px solid #C2C5C8;
-    border-radius: 0.25em;
-    margin-right: 0.5em;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: 50% 50%;
-}
 
-
-.checkbox a {
-    font: 400 14px/24px "Roboto", sans-serif;
+.reset-password a {
+    font: 400 14px/24px "Arial", sans-serif;
     color: #2a92c0;
 }
 
@@ -169,13 +167,13 @@ body {
 }
 
 .error {
-    font: 400 14px/19.6px 'Inter', sans-serif;
+    font: 400 14px/19.6px 'Arial', sans-serif;
     text-align: center;
     color: #ff0000;
 }
 
 .footer {
-    height: 8%;
+    height: 7%;
     position: relative;
 
     display: flex;
@@ -188,7 +186,7 @@ body {
     width: 300px;
     height: 40px;
 
-    font: 400 12px/22px "Roboto", sans-serif;
+    font: 400 12px/22px "Arial", sans-serif;
     color: #171C2673;
     text-align: center;
 }
