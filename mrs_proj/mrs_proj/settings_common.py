@@ -1,7 +1,16 @@
 # settings_common.py
-from pathlib import Path
 import os
+from pathlib import Path
+
 from decouple import config
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 
 # Глобальные переменные в приложении
 FIO_RE_VALIDATION = "^[A-Za-zА-Яа-яЁё' -]+$"
@@ -11,11 +20,10 @@ START_ADMISSION_DATE = 2023
 
 MAX_USER_PASSWORD_AGE = 30  # в днях. срок годности пароля
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # получать письма в консоль
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # получать письма в консоль
 
 # доступ к микросервису
-FORECAST_URL  = os.environ.get('FORECAST_URL', 'http://localhost:8888/test/')
-
+FORECAST_URL = os.environ.get('FORECAST_URL', 'http://localhost:8888/test/')
 
 SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
 
@@ -23,8 +31,6 @@ LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -54,6 +60,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',  # приложение для редактирования текста
+    'ckeditor_uploader',
     'rest_framework',
     'easy_thumbnails',  # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт
