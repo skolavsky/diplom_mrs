@@ -5,7 +5,7 @@ __pycache__/
 # добавил пока сюда миграции, чтобы не складировать их на гит
 migrations/
 
-mrs_proj/users/
+mrs_proj/media/users/
 users/
 
 # Python virtual environment
@@ -62,6 +62,6 @@ node_modules/
 bower_components/
 jspm_packages/
 node_modules/
-/mrs_proj/users/
+/mrs_proj/media/users/
 /mrs_proj/previews/
 /mrs_proj/media/

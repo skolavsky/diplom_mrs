@@ -1,6 +1,7 @@
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 
 from .models import Post
 
@@ -14,7 +15,7 @@ class PostAdminForm(forms.ModelForm):
 
 
 @admin.register(Post)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(ModelAdmin):
     form = PostAdminForm
     list_display = ['title', 'slug', 'author', 'publish', 'status']
     list_filter = ['status', 'created', 'publish', 'author']

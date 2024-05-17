@@ -20,3 +20,4 @@ xlrd
 Pillow
 easy-thumbnails
 django-ckeditor
+django-unfold

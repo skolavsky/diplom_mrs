@@ -14,7 +14,7 @@ sitemaps = {
 
 # url's проекта
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),  # admin site
     path('logout/', LogoutView.as_view(next_page='web_handler:home'), name='logout'),
     path('clients/', include('clients.urls')),
     path('account/', include('account.urls')),
