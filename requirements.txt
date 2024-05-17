@@ -19,3 +19,4 @@ psycopg2
 xlrd
 Pillow
 easy-thumbnails
+django-ckeditor
