@@ -1,14 +1,13 @@
 {% load thumbnail %}
 {% load blog_tags %}
 {% for post in posts %}
-    <article>
-
+<article>
     <h2>
         <a href="{{ post.get_absolute_url }}">
             {{ post.title }}
         </a>
         {% if post.preview %}
-            {% thumbnail post.preview "300x300" crop="smart" as im %}
+            {% thumbnail post.preview "450x300" crop="smart" as im %}
             <img src="{{ im.url }}" alt="preview" class="preview">
         {% endif %}
     </h2>
@@ -24,6 +23,7 @@
     <p class="date">
         Published {{ post.publish }} by {{ post.author }}
     </p>
-    {{ post.body|markdown|truncatewords_html:30 }}
-{% endfor %}
+    {{ post.body|truncatechars_html:300 }}
+    <a href="{{ post.get_absolute_url }}">Читать далее...</a>
 </article>
+{% endfor %}
