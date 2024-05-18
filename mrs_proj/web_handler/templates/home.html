@@ -10,6 +10,7 @@
     <li>
         <a href="{% url 'clients:client_detail' id=client.personal_info.id %}">
             <div class="list_item">
+                <i class="fa fa-user"></i>
                 {{ client.personal_info }}
             </div>
         </a>
@@ -29,6 +30,7 @@
     <li>
         <a href="{% url 'clients:client_detail' id=noted.personal_info.id %}">
             <div class="list_item">
+                <i class="fa fa-star"></i>
                 {{ noted.personal_info }}
             </div>
         </a>
@@ -43,6 +45,3 @@
 <hr>
 
 {% endblock %}
-
-
-

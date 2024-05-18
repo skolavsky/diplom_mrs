@@ -1,51 +1,45 @@
 {% extends 'base.html' %}
 {% load blog_tags %}
 {% load static %}
-{% block title %}My Blog{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/posts_styles.css' %}">
+{% endblock %}{% block title %}My Blog{% endblock %}
 
 {% block content %}
-    <main>
-        <h1>My Blog</h1>
-        Всего статей: {% total_posts %}.
+<main>
+    <h1>My Blog</h1>
+    Всего статей: {% total_posts %}.
 
-        <p>
-            <a id="copyButton" href="{% url 'blog:post_feed' %}">
-                Подписка на RSS.
-            </a>
-        </p>
+    <p>
+        <a id="copyButton" href="{% url 'blog:post_feed' %}">
+            Подписка на RSS.
+        </a>
+    </p>
 
-        {% if tag %}
-            <h2>Posts tagged with "{{ tag.name }}"</h2>
-        {% endif %}
+    {% if tag %}
+        <h2>Posts tagged with "{{ tag.name }}"</h2>
+    {% endif %}
 
-        <div id="posts-list">
+    <div id="posts-list">
+        {% include "blog/posts.html" with posts=posts %}
+    </div>
+</main>
 
-
-            {% include "blog/posts.html" with posts=posts %}
-
-        </div>
-    </main>
-
-
-    <script>
-        document.getElementById('copyButton').addEventListener('click', function (event) {
-            event.preventDefault(); // Отменяем стандартное действие перехода по ссылке
-            var link = this.getAttribute('href'); // Получаем ссылку из атрибута href
-            navigator.clipboard.writeText(link) // Копируем ссылку в буфер обмена
-                .then(function () {
-                    alert('Ссылка скопирована в буфер обмена');
-                })
-                .catch(function (error) {
-                    console.error('Не удалось скопировать ссылку: ', error);
-                });
-        });
-    </script>
-
+<script>
+    document.getElementById('copyButton').addEventListener('click', function (event) {
+        event.preventDefault(); // Отменяем стандартное действие перехода по ссылке
+        var link = this.getAttribute('href'); // Получаем ссылку из атрибута href
+        navigator.clipboard.writeText(link) // Копируем ссылку в буфер обмена
+            .then(function () {
+                alert('Ссылка скопирована в буфер обмена');
+            })
+            .catch(function (error) {
+                console.error('Не удалось скопировать ссылку: ', error);
+            });
+    });
+</script>
 {% endblock %}
 
 {% block domready %}
-
     {% include 'blog/ajax_articles_get.js' %}
-
-
 {% endblock %}
