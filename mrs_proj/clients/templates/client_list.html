@@ -73,17 +73,16 @@
     </div>
 </form>
 
-<!-- Модальное окно для ввода номера страницы -->
-<div id="goToPageModal" class="modal">
+<!-- Модальное окно -->
+<div id="modal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeGoToPageModal()">&times;</span>
-        <form id="goToPageForm">
-            <label for="page-input">К странице номер:</label>
-            <input type="number" id="page-input" min="1" max="{{ clients_data.paginator.num_pages }}">
-            <button type="button" onclick="goToPage()">Перейти</button>
-        </form>
+        <span class="close-button">&times;</span>
+        <div id="modal-body">
+            <!-- Форма загружается сюда -->
+        </div>
     </div>
 </div>
+
 
 <script src="{% static 'scripts/clients_scripts.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -94,6 +93,7 @@ const url = '{% url "clients:client_stats" %}';
 const page_url = '{% url "clients:client_list" %}';
 
 {% include "clients/stats_ajax_scripts.js" %}
+{% include "clients/modal_window_scripts.js" %}
 {% include "clients/pagination_ajax_scripts.js" %}
 {% include "clients/note_button.js" %}
 {% endblock %}

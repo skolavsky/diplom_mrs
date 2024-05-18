@@ -1,34 +1,3 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modal-body');
-    const closeButton = document.querySelector('.close-button');
-
-    document.querySelectorAll('.show-spoiler-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const clientUrl = this.getAttribute('data-client-url');
-
-            fetch(clientUrl)
-                .then(response => response.text())
-                .then(data => {
-                    modalBody.innerHTML = data;
-                    modal.style.display = 'block';
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    });
-
-    closeButton.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    });
-});
-
-
 document.getElementById('toggleFormBtn').addEventListener('click', function () {
     document.getElementById('addClientForm').style.display = 'block';
 });
@@ -110,19 +79,4 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = '?' + urlParams.toString();
         });
     });
-
-
-    function goToPage() {
-        const pageNumber = document.getElementById('page-input').value;
-        const currentPageUrl = window.location.href;
-
-        // Создаем новый URL объект на основе текущего URL
-        const url = new URL(currentPageUrl);
-
-        // Устанавливаем параметр 'page' равным номеру страницы
-        url.searchParams.set('page', pageNumber);
-
-        // Перенаправляем на новый URL
-        window.location.href = url.toString();
-    }
 })

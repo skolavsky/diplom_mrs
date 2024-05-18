@@ -699,3 +699,8 @@ form button[type="submit"]:hover {
 .show-spoiler-button:hover {
     text-decoration: underline;
 }
+
+#modal-body {
+    column-count: 2; /* Желаемое количество столбцов */
+    column-gap: 10px; /* Пространство между столбцами */
+}
