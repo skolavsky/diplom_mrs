@@ -1,89 +1,93 @@
 <div id="clientTableWrapper">
-<table>
-    <caption></caption>
-<thead>
-    <tr class="table">
-        <th data-sort="personal_info__last_name" data-order="asc"><a href="?sort=personal_info__last_name&order={{ next_order }}">ФИО</a></th>
-        <th {% if sort_by == 'spo2_fio' %} class="active"{% endif %}><a href="?sort=spo2_fio&order={{ next_order }}">SPO2/FIO</a></th>
-        <th {% if sort_by == 'rox' %} class="active"{% endif %}><a href="?sort=rox&order={{ next_order }}">ROX</a></th>
-        <th {% if sort_by == 'ventilation_reserve' %} class="active"{% endif %}><a href="?sort=ventilation_reserve&order={{ next_order }}">Вентиляционный резерв</a></th>
-        <th {% if sort_by == 'result' %} class="active"{% endif %}><a href="?sort=result&order={{ next_order }}">Результат</a></th>
-        <th>Действия</th>
-    </tr>
-</thead>
-    <tbody>
-{% if clients_data %}
-    {% for client_data in clients_data %}
+    <table>
+        <thead>
         <tr class="table">
-<td class="cell_name">
-    <a href="{{ client_data.personal_info.get_absolute_url }}">
-        {{ client_data.personal_info }}
-    </a>
-    <button class="show-spoiler-button" data-client-url="client-data/{{ client_data.personal_info.id }}/">
-        Показать дополнительную информацию
-    </button>
-    <div class="client-data" id="{{ client_data.personal_info.id }}" style="display: none;"></div>
-</td>
-
-            <td class="cell_spo2_fio">{{ client_data.spo2_fio|floatformat:3 }}</td>
-            <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
-            <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>
-            <td class="cell_res">{% if client_data.result == 0 %}
-   без исхода (прогноз на выписку в течение недели ({{ client_data.forecast_for_week }}%))
-{% else %}
-    {{ client_data.get_result_display }}
-{% endif %}
-{% if client_data.group %}
-            группа: ({{client_data.group }})
-    {% endif %}
-</td>
-            <td class="cell_button">
-    <a href="{{ client_data.personal_info.get_absolute_url }}">
-        <div class="button delete-button">
-            Удалить
-                </div>
-            </a>
-
-            {% include "clients/note_button.html" %}
-
-            </button>
-        </td>
-
+            <th data-sort="personal_info__last_name" data-order="asc">
+                <a href="?sort=personal_info__last_name&order={{ next_order }}">ФИО</a>
+            </th>
+            <th {% if sort_by == 'spo2_fio' %} class="active"{% endif %}>
+                <a href="?sort=spo2_fio&order={{ next_order }}">SPO2/FIO</a>
+            </th>
+            <th {% if sort_by == 'rox' %} class="active"{% endif %}>
+                <a href="?sort=rox&order={{ next_order }}">ROX</a>
+            </th>
+            <th {% if sort_by == 'ventilation_reserve' %} class="active"{% endif %}>
+                <a href="?sort=ventilation_reserve&order={{ next_order }}">Вентиляционный резерв</a>
+            </th>
+            <th {% if sort_by == 'result' %} class="active"{% endif %}>
+                <a href="?sort=result&order={{ next_order }}">Результат</a>
+            </th>
+            <th>Действия</th>
         </tr>
-    {% endfor %}
-{% else %}
-    <H3>Извините, ничего не обнаружено</H3>
-{% endif %}
+        </thead>
 
-    </tbody>
-</table>
+        <tbody>
+        {% if clients_data %}
+            {% for client_data in clients_data %}
+                <tr class="table">
+                    <td class="cell_name">
+                        <a href="{{ client_data.personal_info.get_absolute_url }}">
+                            {{ client_data.personal_info }}
+                        </a>
+                        <button class="show-spoiler-button"
+                                data-client-url="client-data/{{ client_data.personal_info.id }}/">
+                            Показать дополнительную информацию
+                        </button>
+                    </td>
+                    <td class="cell_spo2_fio">{{ client_data.spo2_fio|floatformat:3 }}</td>
+                    <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
+                    <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>
+                    <td class="cell_res">
+                        {% if client_data.result == 0 %}
+                            без исхода (прогноз на выписку в течение недели ({{ client_data.forecast_for_week }}%))
+                        {% else %}
+                            {{ client_data.get_result_display }}
+                        {% endif %}
+                        {% if client_data.group %}
+                            группа: ({{ client_data.group }})
+                        {% endif %}
+                    </td>
+                    <td class="cell_button">
+                        <a href="{{ client_data.personal_info.get_absolute_url }}">
+                            <div class="button delete-button">Удалить</div>
+                        </a>
+                        {% include "clients/note_button.html" %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <h3>Извините, ничего не обнаружено</h3>
+        {% endif %}
+        </tbody>
+    </table>
 
-<div class="pagination">
-    <span class="step-links">
-        <div class="page_next">
+    <div class="pagination">
+        <span class="step-links">
             {% if clients_data.has_previous %}
                 <a href="?{{ query_params }}&page=1" class="button btn-first">&laquo; Первая страница</a>
             {% endif %}
             {% if clients_data.has_previous %}
                 <a href="?{{ query_params }}&page={{ clients_data.previous_page_number }}" class="button btn-back">&#8592;</a>
-
             {% endif %}
-
             <p class="page-info">
                 Страница {{ clients_data.number }} / {{ clients_data.paginator.num_pages }}
             </p>
-
             {% if clients_data.has_next %}
                 <a href="?{{ query_params }}&page={{ clients_data.next_page_number }}" class="button btn-forward">&#8594;</a>
             {% endif %}
             {% if clients_data.has_next %}
                 <a href="?{{ query_params }}&page={{ clients_data.paginator.num_pages }}" class="button btn-last">Последняя страница &raquo;</a>
             {% endif %}
-        </div>
-    </span>
-</div>
-<script >
-    const last_page_number = {{ clients_data.paginator.num_pages }}
-</script>
+        </span>
+    </div>
 </div>
 
+<!-- Модальное окно -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <div id="modal-body">
+            <!-- Форма загружается сюда -->
+        </div>
+    </div>
+</div>

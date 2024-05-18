@@ -1,3 +1,34 @@
+document.addEventListener('DOMContentLoaded', (event) => {
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modal-body');
+    const closeButton = document.querySelector('.close-button');
+
+    document.querySelectorAll('.show-spoiler-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const clientUrl = this.getAttribute('data-client-url');
+
+            fetch(clientUrl)
+                .then(response => response.text())
+                .then(data => {
+                    modalBody.innerHTML = data;
+                    modal.style.display = 'block';
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+
+    closeButton.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+
+
 document.getElementById('toggleFormBtn').addEventListener('click', function () {
     document.getElementById('addClientForm').style.display = 'block';
 });

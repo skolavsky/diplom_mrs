@@ -1,237 +1,701 @@
-input[type="checkbox"] {
-    /* Отключаем стандартные стили браузера */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    /* Устанавливаем желаемый размер кастомного чекбокса */
-    width: 20px;
-    height: 20px;
-    /* Устанавливаем кастомный фон для отмеченного и неотмеченного состояния */
-    background-color: #fff;
-    border: 1px solid #ccc; /* Устанавливаем границу для чекбокса */
-    border-radius: 3px; /* Закругляем углы */
-    /* При отмеченном состоянии меняем цвет фона */
-    &:checked {
-        background-color: #2B4141;
-    }
-}
-
-/* Стили для кастомного визуального отображения чекбокса */
-input[type="checkbox"]::before {
-    content: ''; /* Создаем псевдоэлемент для кастомного отображения */
-    display: inline-block;
-    width: 10px; /* Задаем размер кастомной отметки */
-    height: 10px;
-    border-radius: 2px; /* Закругляем углы отметки */
-    background-color: #fff; /* Устанавливаем цвет отметки */
-    position: relative;
-    top: -1px; /* Смещаем отметку вверх, чтобы она выровнялась по центру чекбокса */
-}
-
-/* Стили для кастомного визуального отображения чекбокса в отмеченном состоянии */
-input[type="checkbox"]:checked::before {
-    background-color: #2B4141; /* Изменяем цвет отметки при отмеченном состоянии */
-}
-
-
-
-.filters {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.filters {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #c8c2ae;
-}
-
-.filters label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 16px;
-    color: #333;
-}
-
+/* Основной контейнер страницы */
 .box_tool {
-    height: 30px;
-    margin-bottom: 30px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
-.table {
+.search_box {
+    display: flex;
+    align-items: center;
+}
+
+.search_box .search {
+    width: 300px;
+    padding: 8px;
+    border: 1px solid #C2C5C8;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.search_box .button {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.search_box .button:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
+}
+
+#resetButton {
+    background-color: #9BA3AC;
+    color: #FFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#resetButton:hover {
+    background-color: #FFF;
+    color: #9BA3AC;
+    border: 1px solid #9BA3AC;
+}
+
+.filters, .stats-container {
+    margin-bottom: 20px;
+    border: 1px solid #C2C5C8;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.filters summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.filters .filter-form {
+    margin-top: 10px;
+}
+
+.filters .filter-group {
+    margin-bottom: 10px;
+}
+
+.filters .filter-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filters .btn-filter {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filters .btn-filter:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
+}
+
+.button_box {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.button_box .button {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.button_box .button:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.modal .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.modal .close:hover,
+.modal .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#addClientForm {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #C2C5C8;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#addClientForm table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+#addClientForm table th,
+#addClientForm table td {
+    padding: 8px;
+    border: 1px solid #C2C5C8;
+}
+
+.client-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: 1px solid #C2C5C8;
+}
+
+.client-table th,
+.client-table td {
+    padding: 10px;
+    border: 1px solid #C2C5C8;
+}
+
+.client-table th {
+    background-color: #2a92c0;
+    color: #FFF;
+}
+
+.client-table td {
+    background-color: #FFFFFF99;
+}
+
+.client-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.client-table tr:hover {
+    background-color: #e2e2e2;
+}
+
+.client-table .button-note,
+.client-table .button-delete {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.client-table .button-note {
+    background-color: #FFD700;
+    color: #000;
+    border: none;
+}
+
+.client-table .button-delete {
+    background-color: #FF4500;
+    color: #FFF;
+    border: none;
+}
+
+.client-table .button-note:hover {
+    background-color: #FFA500;
+}
+
+.client-table .button-delete:hover {
+    background-color: #FF6347;
+}
+
+.stats-container .button {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.stats-container .button:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
+}
+
+.spoiler {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #C2C5C8;
+    border-radius: 4px;
+}
+
+/* Основные стили для таблицы */
+#clientTableWrapper {
+    margin-top: 20px;
+}
+
+#clientTableWrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#clientTableWrapper th,
+#clientTableWrapper td {
+    padding: 10px;
+    border: 1px solid #C2C5C8; /* Добавляем границы между ячейками */
+    text-align: left;
+}
+
+#clientTableWrapper th {
+    background-color: #2a92c0;
+    color: #FFF;
+}
+
+#clientTableWrapper tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#clientTableWrapper tr:hover {
+    background-color: #e2e2e2;
+}
+
+/* Стили для ячеек с конкретными классами */
+.cell_name a {
+    color: #2a92c0;
+    text-decoration: none;
+}
+
+.cell_name a:hover {
+    text-decoration: underline;
+}
+
+.cell_button .button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.delete-button {
+    background-color: #FF4500;
+    color: #FFF;
+    border: none;
+}
+
+.delete-button:hover {
+    background-color: #FF6347;
+}
+
+.note-button {
+    background-color: #FFD700;
+    color: #000;
+    border: none;
+}
+
+.note-button:hover {
+    background-color: #FFA500;
+}
+
+/* Стили для пагинации */
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pagination .step-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.pagination .step-links .button {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    margin: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap; /* предотвращает перенос текста */
+}
+
+.pagination .step-links .button:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
+}
+
+.pagination .page-info {
+    margin: 0 10px;
+    font-weight: bold;
+    min-width: 120px;
+    text-align: center;
+    white-space: nowrap; /* предотвращает перенос текста */
+}
+
+
+/* Стили для блока с фильтрами и статистикой */
+.filters, .stats-container {
+    margin-bottom: 20px;
+    border: 1px solid #C2C5C8;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Эффекты для кнопок при наведении */
+.filters .btn-filter, .stats-container .button, .search_box .button, .button_box .button {
+    transition: all 0.3s ease;
+}
+
+
+/* Основные стили таблицы */
+/* Основные стили таблицы */
+table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.button {
-    height: 100%;
-    padding: 5px 10px;
-    border: 2px solid #2B4141;
-
-    background-color: #2B4141;
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #C8C2AE;
-
-    text-align: center;
+th, td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    text-align: left;
 }
 
-.button:hover {
-    background-color: #C8C2AE;
-    color: #2B4141;
+thead th {
+    background-color: #f2f2f2;
+    font-weight: bold;
 }
 
-.search {
-    width: 250px;
-    height: 30px;
-
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    border-bottom: 3px solid #2B4141;
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-.active a {
-    color: #2B4141;
+tbody tr:hover {
+    background-color: #f1f1f1;
 }
 
-[class^="cell_"] {
-    border: 2px solid #2B4141;
-    text-align: center;
-}
-
-.cell_name {
-    width: 35%;
-}
-
-.cell_age {
-    width: 5%;
-}
-
-.cell_imt {
-    width: 10%;
-}
-
-.cell_spo {
-    width: 5%;
-}
-
-.cell_date {
-    width: 20%;
-}
-
-.cell_res {
-    width: 20%;
-}
-
-.cell_button {
-    width: 15%;
-
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #C8C2AE;
-
-    background-color: #2B4141;
-}
-
-.page_next {
-    display: flex;
-
-    width: 210px;
-    justify-content: space-between;
-}
-
-.page_next p {
-    padding: 5px 10px;
-    border: 2px solid #2B4141;
-
-    background-color: #2B4141;
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #C8C2AE;
-
-    text-align: center;
-}
-
-.add_form {
-    display: none;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-
-    max-width: 1335px;
-    height: 50%;
-}
-
-.input_box {
-    height: 250px;
-    max-width: 1325px;
-
-    color: #FFF;
-    background-color: #2B4141;
-
-    padding: 10px;
+td.cell_name {
     display: flex;
     flex-direction: column;
-    gap: 5px
+    align-items: flex-start;
 }
 
-.input_box input {
-    max-width: 250px;
-
-    color: #2B4141;
-    background-color: #C8C2AE;
+td.cell_name a {
+    font-weight: bold;
+    color: #2a92c0;
+    text-decoration: none;
 }
 
-.input_box label {
-    width: 300px;
-    height: 50px;
-    padding: 5px 10px;
+td.cell_name a:hover {
+    text-decoration: underline;
+}
 
-    border-bottom: 1px solid #C8C2AE;
-
+td.cell_button {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    gap: 5px;
 }
 
-.name_input {
-    width: 10%;
+td.cell_button .button,
+td.cell_button .delete-button {
+    display: inline-block;
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
 }
 
-/* Стили для элемента <details> */
-details {
-    margin-bottom: 20px; /* Добавляем немного отступа снизу */
+td.cell_button .button:hover,
+td.cell_button .delete-button:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
 }
 
-/* Стили для заголовка <summary> */
-summary {
-    cursor: pointer; /* Делаем курсор указателем, чтобы пользователи могли понять, что это интерактивный элемент */
-    outline: none; /* Убираем обводку, чтобы не было эффекта при нажатии на заголовок */
-    font-weight: bold; /* Делаем заголовок жирным */
+td.cell_button .delete-button {
+    background-color: #ff4d4d;
 }
 
-/* Стили для содержимого блока <details> */
-details > * {
-    margin-left: 20px; /* Добавляем отступ слева для содержимого блока */
+td.cell_button .delete-button:hover {
+    background-color: #FFF;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
 }
 
-/* Стили для кнопки "Применить фильтры" */
-details button {
-    margin-top: 10px; /* Добавляем отступ сверху для кнопки */
-    padding: 5px 10px; /* Добавляем немного отступа вокруг текста кнопки */
-    background-color: #2B4141; /* Цвет фона кнопки */
-    color: #fff; /* Цвет текста кнопки */
-    border: none; /* Убираем границу кнопки */
-    border-radius: 3px; /* Делаем скругленные углы кнопки */
-    cursor: pointer; /* Делаем курсор указателем */
+/* Стили для кнопки "Показать дополнительную информацию" */
+.show-spoiler-button {
+    background: none;
+    border: none;
+    color: #2a92c0;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+}
+
+.show-spoiler-button:hover {
+    text-decoration: underline;
+}
+
+/* Стили для кнопки "Показать дополнительную информацию" */
+.show-spoiler-button {
+    background: none;
+    border: none;
+    color: #2a92c0;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.show-spoiler-button:hover {
+    text-decoration: underline;
+}
+
+/* Основные стили формы */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+form p {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+form label {
+    font-weight: bold;
+    color: #333;
+}
+
+form input[type="number"],
+form input[type="date"],
+form select,
+form input[type="checkbox"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form input[type="checkbox"] {
+    width: auto;
+}
+
+form button[type="submit"] {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    align-self: flex-start;
+}
+
+form button[type="submit"]:hover {
+    background-color: #1d6a8c;
+}
+
+/* Дополнительные стили для кнопок */
+.button, .delete-button {
+    display: inline-block;
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.button:hover, .delete-button:hover {
+    background-color: #1d6a8c;
+    color: #FFF;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
+/* Для кнопки "Показать дополнительную информацию" */
+.show-spoiler-button {
+    background: none;
+    border: none;
+    color: #2a92c0;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+}
+
+.show-spoiler-button:hover {
+    text-decoration: underline;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 5px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Основные стили формы */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+form p {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+form label {
+    font-weight: bold;
+    color: #333;
+}
+
+form input[type="number"],
+form input[type="date"],
+form select,
+form input[type="checkbox"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form input[type="checkbox"] {
+    width: auto;
+}
+
+form button[type="submit"] {
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    align-self: flex-start;
+}
+
+form button[type="submit"]:hover {
+    background-color: #1d6a8c;
+}
+
+/* Дополнительные стили для кнопок */
+.button, .delete-button {
+    display: inline-block;
+    background-color: #2a92c0;
+    color: #FFF;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.button:hover, .delete-button:hover {
+    background-color: #1d6a8c;
+    color: #FFF;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
+/* Для кнопки "Показать дополнительную информацию" */
+.show-spoiler-button {
+    background: none;
+    border: none;
+    color: #2a92c0;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+}
+
+.show-spoiler-button:hover {
+    text-decoration: underline;
 }

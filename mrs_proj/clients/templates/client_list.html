@@ -12,12 +12,11 @@
     <div class="search_box">
         <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
         <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-<button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска </button>
+        <button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска </button>
     </div>
 
     <div class="">
-        <button id="toggleFormBtn" class="button" onclick="toggleForm()"><i class="fas fa-plus"></i> Добавить пациента
-        </button>
+        <button id="toggleFormBtn" class="button" onclick="toggleForm()"><i class="fas fa-plus"></i> Добавить пациента</button>
     </div>
 </div>
 
@@ -47,11 +46,10 @@
         <label><input type="checkbox" name="group_2"> Группа 2</label>
         <label><input type="checkbox" name="group_3"> Группа 3</label>
       </div>
-        <div class="filter-group">
+      <div class="filter-group">
         <label><input type="checkbox" name="noted_1"> Показать отслеживаемые записи</label>
         <label><input type="checkbox" name="noted_0"> Показать не отслеживаемые записи </label>
       </div>
-
       <button type="submit" class="btn-filter">Применить фильтры</button>
     </form>
   </details>
@@ -75,7 +73,6 @@
     </div>
 </form>
 
-
 <!-- Модальное окно для ввода номера страницы -->
 <div id="goToPageModal" class="modal">
     <div class="modal-content">
@@ -98,7 +95,5 @@ const page_url = '{% url "clients:client_list" %}';
 
 {% include "clients/stats_ajax_scripts.js" %}
 {% include "clients/pagination_ajax_scripts.js" %}
-
 {% include "clients/note_button.js" %}
-
 {% endblock %}
