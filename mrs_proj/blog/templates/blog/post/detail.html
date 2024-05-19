@@ -17,6 +17,17 @@
                 {% thumbnail post.preview "300x300" crop="smart" as im %}
                 <img src="{{ im.url }}" alt="preview" class="preview">
             {% endif %}
+
+            {% if post.short_description %}
+
+                <h3>Краткое описание</h3>
+                {{ post.short_description|markdown }}
+
+            {% endif %}
+
+
+            <hr>
+
             {{ post.body|markdown }}
         </article>
         <h2>Similar posts</h2>

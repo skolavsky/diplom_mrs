@@ -23,7 +23,17 @@
         <p class="date">
             Published {{ post.publish }} by {{ post.author }}
         </p>
-        {{ post.body|truncatechars_html:300 }}
-        <a href="{{ post.get_absolute_url }}">Читать далее...</a>
+
+        {% if post.short_description %}
+
+            {{ post.short_description|markdown }}
+
+        {% else %}
+
+            Краткое описание отсутствует,
+
+        {% endif %}
+
+        <a href="{{ post.get_absolute_url }}">читать далее...</a>
     </article>
 {% endfor %}
