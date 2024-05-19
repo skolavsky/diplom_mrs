@@ -1,0 +1,94 @@
+/* Основные стили страницы профиля */
+.profile-container {
+    max-width: 90%; /* Процент ширины экрана */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.profile-header {
+    text-align: center; /* Центрирование заголовка */
+    margin-bottom: 20px; /* Отступ после заголовка */
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 5px 0; /* Уменьшение промежутка между полями */
+
+}
+
+.profile-form label {
+    font-weight: bold; /* Жирный шрифт для меток */
+    font-size: 16px; /* Увеличение шрифта для подписей */
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="date"],
+.profile-form input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ccc; /* Граница для полей ввода */
+    border-radius: 4px; /* Скругление углов полей ввода */
+}
+
+.profile-form img {
+    width: 100%; /* Ширина изображения соответствует контейнеру */
+    max-width: 300px; /* Максимальная ширина изображения */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    margin-top: 20px; /* Отступ сверху для изображения */
+    border-radius: 8px; /* Скругление углов изображения */
+}
+
+.profile-form input[type="submit"] {
+    font-size: 18px; /* Увеличение шрифта кнопки */
+    padding: 15px 30px; /* Увеличение размера кнопки */
+    background-color: #4CAF50; /* Изменение цвета кнопки на зеленый */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.profile-form input[type="submit"]:hover {
+    background-color: #45a049; /* Темно-зеленый цвет при наведении */
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    .profile-container {
+        max-width: 100%; /* Контейнер займет всю доступную ширину */
+        padding: 10px; /* Уменьшаем внутренние отступы */
+    }
+
+    .profile-form p {
+        margin: 3px 0; /* Уменьшаем промежутки между полями */
+    }
+
+    .profile-form label {
+        font-size: 14px; /* Уменьшаем размер шрифта подписей */
+    }
+
+    .profile-avatar {
+        max-width: 100%; /* Аватарка адаптируется под ширину экрана */
+        height: auto; /* Высота автоматически корректируется */
+    }
+
+    .profile-form input[type="text"],
+    .profile-form input[type="email"],
+    .profile-form input[type="date"],
+    .profile-form input[type="file"],
+    .profile-form input[type="submit"] {
+        width: 100%; /* Поля ввода займут всю доступную ширину */
+        box-sizing: border-box; /* Размеры включают паддинги и бордюры */
+    }
+
+    .profile-form input[type="submit"] {
+        padding: 12px; /* Уменьшаем размер кнопки */
+    }
+}
