@@ -1,28 +1,49 @@
 {% extends "base.html" %}
-
+{% load static %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/account_styles.css' %}">
+{% endblock %}
 {% load thumbnail %}
 
-{% block title %}Edit your account{% endblock %}
+{% block title %}Профиль{% endblock %}
 
 {% block content %}
-  <h1>Edit your account</h1>
-<a href="{% url 'password_change' %}"><i class="fas fa-home"></i> Сменить пароль </a>
-  <p>You can edit your account using the following form:</p>
-  <form method="post" enctype="multipart/form-data">
-    {{ user_form.as_p }}
-    {{ profile_form.as_p }}
-    {% csrf_token %}
+    <div class="profile-container">
+        <h1 class="profile-header">Ваш профиль</h1>
+        <a href="{% url 'password_change' %}" class="change-password-link"><i class="fas fa-home"></i> Сменить пароль
+        </a>
+        <p>Вы можете внести изменения в ваш профиль:</p>
+        <form method="post" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ user_form.first_name.id_for_label }}">Имя:</label>
+                {{ user_form.first_name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ user_form.last_name.id_for_label }}">Фамилия:</label>
+                {{ user_form.last_name }}
+            </div>
+            <div class="form-group">
+                <label for="{{ user_form.email.id_for_label }}">Адрес электронной почты:</label>
+                {{ user_form.email }}
+            </div>
+            <div class="form-group">
+                <label for="{{ profile_form.date_of_birth.id_for_label }}">Дата рождения:</label>
+                {{ profile_form.date_of_birth }}
+            </div>
 
-    <!-- Проверяем, есть ли у пользователя аватарка -->
-    {% if request.user.profile.photo %}
-      <!-- Создаем уменьшенную версию изображения с обрезанием "smart" -->
-      {% thumbnail request.user.profile.photo "300x300" crop="smart" as im %}
-      <!-- Отображаем уменьшенную версию изображения -->
-      <img src="{{ im.url }}" alt="Your Avatar">
-    {% else %}
-      <p>No avatar uploaded yet.</p>
-    {% endif %}
+            {% if request.user.profile.photo %}
+                {% thumbnail request.user.profile.photo "300x300" crop="smart" as im %}
+                <img src="{{ im.url }}" alt="Your Avatar" class="profile-avatar">
+            {% else %}
+                <p>No avatar uploaded yet.</p>
+            {% endif %}
+            <div class="form-group">
+                <label for="id_photo">Изменить аватар:</label>
+                <input type="file" name="photo" id="id_photo">
+            </div>
 
-    <p><input type="submit" value="Save changes"></p>
-  </form>
+            <input type="submit" value="Save changes">
+        </form>
+    </div>
 {% endblock %}
