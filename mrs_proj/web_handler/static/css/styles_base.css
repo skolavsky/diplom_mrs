@@ -4,9 +4,11 @@ html {
 }
 
 body {
-    position: relative;
+    margin: 0; /* Обнуляем внешний отступ */
+    padding: 0; /* Обнуляем внутренний отступ */
     background-color: #046C7A1A;
     color: #5a5a5a;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .wrapper {
@@ -25,29 +27,29 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 2px 20px; /* Уменьшаем внутренние отступы */
 }
 
 .header h1 a {
     color: #2a92c0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-decoration: none;
 }
 
 .header h2 {
     color: #2a92c0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .menu {
     display: flex;
-    gap: 15px;
+    gap: 10px; /* Уменьшаем расстояние между элементами меню */
 }
 
 .menu a {
     color: #2a92c0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-decoration: none;
-    padding: 8px 12px;
+    padding: 12px 15px; /* Увеличиваем внутренние отступы для комфортного клика */
+    font-size: 20px; /* Увеличиваем размер шрифта ссылок */
+    font-family: inherit; /* Use the common font-family */
 }
 
 .menu a:hover {
@@ -56,19 +58,53 @@ body {
     border-radius: 5px;
 }
 
+.account-link, .account-label {
+    font-size: 20px; /* Устанавливаем размер шрифта, равный размеру шрифта других элементов меню */
+    display: block; /* Гарантируем, что ссылка занимает весь доступный блок для клика */
+    text-align: center; /* Центрирование текста внутри ссылки */
+    padding: 12px 15px; /* Увеличиваем отступы для визуального единства с другими пунктами меню */
+}
+
+
 .avatar-container {
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Столбцовое расположение элементов */
+    align-items: center; /* Центрирование элементов */
+    justify-content: center;
+    text-align: center; /* Центрирование текста */
 }
 
 .avatar-container img.avatar {
-    border-radius: 50%;
-    margin-right: 10px;
+    border-radius: 50%; /* Круглая форма */
+    width: 48px; /* Поддерживаем размер изображения */
+    height: 48px; /* Поддерживаем размер изображения */
+    border: 2px solid #2a92c0; /* Голубая рамка вокруг аватара */
+    display: block; /* Элемент занимает весь доступный блок */
+    margin-bottom: 5px; /* Отступ снизу перед надписью */
 }
 
+
 .account-link {
-    color: #2a92c0;
-    text-decoration: none;
+    color: #2a92c0; /* Цвет ссылки */
+    text-decoration: none; /* Убираем подчеркивание */
+    display: block; /* Блочное отображение для корректного расположения */
+}
+
+
+.account-link:hover .account-label, .account-link:hover img {
+    color: #ffffff; /* Сохраняем синий цвет текста */
+}
+
+
+.account-link:hover {
+    background-color: #e8f4f9; /* Светло-голубой фон при наведении */
+    border-radius: 5px; /* Скругление углов */
+}
+
+.account-label {
+    font-size: 20px; /* Размер шрифта для подписи */
+    color: #2a92c0; /* Цвет подписи */
+    margin-top: 5px; /* Отступ сверху для подписи */
 }
 
 .logout-form {
@@ -76,19 +112,35 @@ body {
 }
 
 .logout-form .menu-button {
-    background: none;
-    border: none;
-    color: #2a92c0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    cursor: pointer;
+    background-color: #6c757d; /* Серый цвет фона для кнопки */
+    color: #ffffff; /* Белый текст для контраста */
     padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
 }
 
 .logout-form .menu-button:hover {
-    background-color: #2a92c0;
-    color: #ffffff;
-    border-radius: 5px;
+    background-color: #5a6268; /* Светло-серый фон при наведении, чуть светлее основного серого */
+    color: #ffffff; /* Белый текст для контраста */
+    border-radius: 5px; /* Скругление углов для согласованности стиля */
 }
+
+.logout-form .menu-button:hover {
+    background-color: #5a6268; /* Темно-серый при наведении */
+}
+
+.menu a, .account-link, .logout-form .menu-button {
+    align-items: center; /* Выравниваем текст и иконки по центру */
+    display: flex; /* Элементы отображаются как flex */
+    justify-content: center;
+}
+
+.avatar-container, .logout-form {
+    display: flex;
+    align-items: center; /* Центрируем элементы по вертикали */
+    justify-content: center;
+}
+
 
 .messages {
     list-style: none;
@@ -127,7 +179,7 @@ body {
     padding: 20px;
     background-color: #ffffff;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .footer {
@@ -177,8 +229,8 @@ body {
 .list_item a {
     text-decoration: none;
     color: #2a92c0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
+    font-family: inherit; /* Use the common font-family */
 }
 
 .list_item a:hover {
