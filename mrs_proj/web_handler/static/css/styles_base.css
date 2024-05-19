@@ -241,3 +241,49 @@ body {
     margin-right: 8px;
     color: #2a92c0;
 }
+
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    .header .wrapp {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .menu a, .account-link, .account-label {
+        font-size: 16px; /* Уменьшаем размер шрифта */
+        padding: 10px; /* Уменьшаем отступы */
+    }
+
+    .avatar-container img.avatar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .header {
+        padding: 10px 0;
+    }
+}
+
+/* Стили для планшетов и маленьких ноутбуков */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .menu a, .account-link, .account-label {
+        font-size: 18px; /* Немного уменьшаем размер шрифта */
+        padding: 11px 14px; /* Немного уменьшаем отступы */
+    }
+
+    .avatar-container img.avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .header {
+        padding: 15px 0;
+    }
+}
