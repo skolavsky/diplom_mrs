@@ -14,18 +14,23 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.box_tool {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+/* Общие стили для всех кнопок */
+button,
+.button {
+    padding: 8px 16px; /* Универсальный padding */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: var(--main-color);
+    color: #FFF;
 }
 
-.search_box {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: none;
+button:hover,
+.button:hover {
+    background-color: var(--hover-color);
 }
 
 .search_box .search {
@@ -36,8 +41,11 @@ body {
     font-size: 18px;
 }
 
+
+/* Кнопки в search_box и button_box */
 .search_box .button,
-#resetButton {
+#resetButton,
+.button_box .button {
     background-color: var(--main-color);
     color: #FFF;
     padding: 10px 20px; /* Универсальный padding */
@@ -46,12 +54,6 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
-}
-
-.search_box .button:hover,
-#resetButton:hover {
-    background-color: var(--hover-color);
-    color: #FFF;
 }
 
 #resetButton {
@@ -60,113 +62,61 @@ body {
 
 #resetButton:hover {
     background-color: #7a8b96;
-    color: #FFF;
 }
 
 .button_box .button {
-    background-color: var(--main-color); /* Синий цвет */
-    color: #FFF;
-    padding: 10px 20px; /* Универсальный padding */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    margin-right: 10px; /* Добавляем зазор справа */
+    margin-right: 10px; /* Отступ справа */
 }
 
-.button_box .button:hover {
-    background-color: var(--hover-color); /* Цвет при наведении как у кнопки поиска */
+.search_box .button:hover,
+#resetButton:hover {
+    background-color: var(--hover-color);
     color: #FFF;
 }
 
-.client-table,
-#clientTableWrapper table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
 
-.client-table th,
-.client-table td,
-#clientTableWrapper th,
-#clientTableWrapper td {
-    padding: 15px;
-    border: 1px solid var(--border-color);
-    text-align: left;
-}
-
-.client-table th,
-#clientTableWrapper th {
-    background-color: var(--main-color);
-    color: #FFF;
-}
-
-.client-table tr:nth-child(even),
-#clientTableWrapper tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.client-table tr:hover,
-#clientTableWrapper tr:hover {
-    background-color: #e2e2e2;
-}
-
+/* Специальные стили для кнопок в таблице клиентов */
+.client-table .button-show-info,
 .client-table .button-delete,
-.client-table .note-button,
-.client-table .delete-button {
+.client-table .button-note,
+.note-button,
+.delete-button {
     display: inline-block;
-    padding: var(--button-padding);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
-    width: 150px; /* Фиксированная ширина для всех кнопок */
+    width: 150px; /* Фиксированная ширина */
     box-sizing: border-box; /* Включаем padding и border в общую ширину */
 }
 
 .client-table .button-delete,
-.client-table .delete-button {
+.delete-button {
     background-color: var(--danger-color);
-    color: #FFF;
 }
 
 .client-table .button-delete:hover,
-.client-table .delete-button:hover {
+.delete-button:hover {
     background-color: var(--danger-hover-color);
 }
 
 .client-table .button-note,
-.client-table .note-button {
+.note-button {
     background-color: var(--warning-color);
-    color: #ffffff;
 }
 
 .client-table .button-note:hover,
-.client-table .note-button:hover {
+.note-button:hover {
     background-color: var(--warning-hover-color);
 }
 
 .client-table .button-show-info {
-    background-color: var(--main-color);
-    color: #FFF;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .client-table .button-show-info:hover {
     background-color: var(--hover-color);
 }
 
+/* Стили для модальных окон */
 .modal {
     display: none;
     position: fixed;
@@ -184,7 +134,7 @@ body {
 .modal-content {
     background-color: #fefefe;
     margin: auto;
-    padding: 40px; /* Увеличено с 20px для добавления пространства вверху */
+    padding: 40px;
     border: 1px solid #888;
     width: 100%;
     max-width: 800px;
@@ -195,10 +145,10 @@ body {
 .close,
 .close-button {
     position: absolute;
-    top: 5px; /* Уменьшенное значение для позиционирования ближе к верхнему краю */
-    left: 10px; /* Уменьшенное значение для отступа от левого края */
+    top: 5px;
+    left: 10px;
     color: #aaa;
-    font-size: 24px; /* Уменьшенный размер, было 28px */
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
 }
@@ -206,12 +156,6 @@ body {
 .close:hover,
 .close-button:hover {
     color: #0d5dcd;
-    text-decoration: none;
-}
-
-.close:hover {
-    color: black;
-    text-decoration: none;
 }
 
 .form-container {
@@ -257,6 +201,60 @@ body {
     width: 100%;
 }
 
+/* Стили для таблицы клиентов */
+.client-table,
+#clientTableWrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.client-table th,
+.client-table td,
+#clientTableWrapper th,
+#clientTableWrapper td {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.client-table th,
+#clientTableWrapper th {
+    background-color: var(--main-color);
+    color: #FFF;
+}
+
+.client-table tr:nth-child(even),
+#clientTableWrapper tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.client-table tr:hover,
+#clientTableWrapper tr:hover {
+    background-color: #e2e2e2;
+}
+
+.client-table .cell_button,
+.cell_button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+td.cell_name a,
+.cell_name a {
+    font-weight: bold;
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+td.cell_name a:hover,
+.cell_name a:hover {
+    text-decoration: underline;
+}
+
 .pagination {
     text-align: center;
     margin: 20px 0;
@@ -282,110 +280,107 @@ body {
     white-space: nowrap;
 }
 
-td.cell_name a,
-.cell_name a {
-    font-weight: bold;
-    color: var(--main-color);
-    text-decoration: none;
+/* Основные стили для макета */
+.main {
+    justify-content: center;
+    padding: 20px;
 }
 
-td.cell_name a:hover,
-.cell_name a:hover {
-    text-decoration: underline;
-}
-
-td.cell_button,
-.cell_button {
+.main .container {
+    flex-grow: 3;
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
+    flex-wrap: nowrap;
+}
+
+.clients-content-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.clients-content {
+    flex-grow: 2;
+    padding: 10px;
+    transition: width 0.3s ease;
+}
+
+.clients-sidebar {
+    width: 150px;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-right: 10px;
+    transition: width 0.3s ease;
+    height: 100%;
+}
+
+#filtersDetails[open] ~ .clients-content-wrapper .clients-content {
+    width: 25%;
+}
+
+#filtersDetails:not([open]) ~ .clients-content-wrapper .clients-content {
+    width: 10%;
+}
+
+.filters {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Стили для элементов details */
+.filters details {
+    font-size: 18px;
+    color: #5a5a5a;
+    margin: 10px 0;
+}
+
+/* Стили для элементов summary */
+.filters summary {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+/* Стили для группы фильтров */
+.filter-group {
+    margin-bottom: 15px;
+}
+
+/* Стили для отдельных фильтров */
+.filter-group label {
+    display: block; /* Каждый элемент с новой строки */
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+/* Стили для чекбоксов */
+.filter-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Стили для кнопки применить фильтры */
+.btn-filter {
+    padding: var(--button-padding);
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+/* Стили для кнопок в таблице */
+.client-table .cell_button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 5px;
-}
-
-#modal-body,
-#addClientModal .modal-content {
-    column-count: 2;
-    column-gap: 10px;
-}
-
-button,
-.button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    background-color: var(--main-color);
-    color: #FFF;
-}
-
-button:hover,
-.button:hover {
-    background-color: var(--hover-color);
-    color: #FFF;
-}
-
-/* Кнопка "Удалить" */
-.client-table .button-delete,
-.delete-button {
-    background-color: var(--danger-color);
-    color: #FFF;
-    display: inline-block;
-    padding: var(--button-padding);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
-    width: 150px; /* Фиксированная ширина для всех кнопок */
-    box-sizing: border-box; /* Включаем padding и border в общую ширину */
-}
-
-.client-table .button-delete:hover,
-.delete-button:hover {
-    background-color: var(--danger-hover-color);
-}
-
-/* Кнопка "Сделать заметку"/"Удалить заметку" */
-.client-table .button-note,
-.note-button {
-    background-color: var(--warning-color);
-    color: #FFF;
-    display: inline-block;
-    padding: var(--button-padding);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
-    width: 150px; /* Фиксированная ширина для всех кнопок */
-    box-sizing: border-box; /* Включаем padding и border в общую ширину */
-}
-
-.client-table .button-note:hover,
-.note-button:hover {
-    background-color: var(--warning-hover-color);
-}
-
-/* Кнопка "Показать данные" */
-.client-table .button-show-info {
-    background-color: var(--main-color);
-    color: #FFF;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
-}
-
-.client-table .button-show-info:hover {
-    background-color: var(--hover-color);
 }
 
 /* Стили для мобильных телефонов */
@@ -438,194 +433,4 @@ button:hover,
     .close-button {
         font-size: 26px; /* Больший размер для иконки закрытия */
     }
-}
-
-.main {
-    justify-content: center;
-}
-
-.main .container {
-    flex-grow: 3;
-    width: 100%;
-    max-width: none; /* Убираем ограничение по максимальной ширине */
-    padding: 10px;
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex; /* Используем flexbox для макета */
-    flex-wrap: nowrap;
-}
-
-.clients-sidebar {
-    grid-template-columns: 10fr;
-    background-color: #f9f9f9;
-    overflow-y: auto;
-    height: 100vh;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    margin-right: 10px; /* Отступ между сайдбаром и контентом */
-}
-
-.clients-content {
-    flex-grow: 1; /* Занимает оставшееся пространство */
-    padding: 20px;
-    overflow-x: auto; /* Добавляем прокрутку, если контент выходит за рамки */
-}
-
-.clients-sidebar.open ~ .clients-content {
-    grid-template-columns: 0 10fr;
-}
-
-.client-table .cell_button {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-}
-
-.client-table .show-spoiler-button {
-    background-color: var(--main-color);
-    color: #FFF;
-    padding: 20px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.3s ease;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.client-table .show-spoiler-button i {
-    font-size: 14px;
-}
-
-.client-table .show-spoiler-button:hover {
-    background-color: var(--hover-color);
-}
-
-.main {
-    padding: 20px;
-}
-
-.main .container {
-    display: flex;
-    flex-direction: row; /* Устанавливаем рядовую ориентацию для контейнера */
-    width: 100%;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.clients-content-wrapper {
-    display: flex;
-    width: 100%;
-}
-
-.clients-content {
-    flex-grow: 2;
-    padding: 10px;
-    transition: width 0.3s ease;
-}
-
-.clients-sidebar {
-    width: 150px;
-    background-color: #f9f9f9;
-    overflow-y: auto;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    margin-right: 10px;
-    transition: width 0.3s ease;
-    height: 100%;
-}
-
-#filtersDetails[open] ~ .clients-content-wrapper .clients-content {
-    width: 25%;
-}
-
-#filtersDetails:not([open]) ~ .clients-content-wrapper .clients-content {
-    width: 10%;
-}
-
-.client-table .cell_button {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-}
-
-.client-table .button-show-info {
-    background-color: var(--main-color);
-    color: #FFF;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.filters {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-/* Стили для элементов details */
-.filters details {
-    font-size: 18px;
-    color: #5a5a5a;
-    margin: 10px 0;
-}
-
-/* Стили для элементов summary */
-.filters summary {
-    cursor: pointer;
-    font-weight: bold;
-    padding: 5px 0;
-}
-
-/* Стили для группы фильтров */
-.filter-group {
-    margin-bottom: 15px;
-}
-
-/* Стили для отдельных фильтров */
-.filter-group label {
-    display: block; /* Каждый элемент с новой строки */
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-
-/* Стили для чекбоксов */
-.filter-group input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-/* Стили для кнопки применить фильтры */
-.btn-filter {
-    background-color: var(--main-color);
-    color: #FFF;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    display: block;
-    width: 100%;
-    text-align: center;
-}
-
-.btn-filter:hover {
-    background-color: var(--hover-color);
 }
