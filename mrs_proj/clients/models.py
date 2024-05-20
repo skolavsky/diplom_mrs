@@ -1,5 +1,6 @@
 import uuid
 from datetime import date
+
 import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -8,9 +9,8 @@ from django.db.models import BooleanField
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
-from simple_history.models import HistoricalRecords
-
 from mrs_proj.settings_common import FORECAST_URL
+from simple_history.models import HistoricalRecords
 
 
 class PersonalInfo(models.Model):
@@ -63,6 +63,11 @@ class ClientData(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     date_last_modified = models.DateTimeField(auto_now=True)
 
+    oxygen_flow = models.FloatField(null=True, blank=True, default=0)  # поток кислорода (литры в минуту)
+
+    mvv = models.FloatField(null=True, blank=True, default=0)  # МВЛ ???
+    mv = models.FloatField(null=True, blank=True, default=0)  # МОД ???
+
     age = models.IntegerField(null=False, blank=True, default=0)
     body_mass_index = models.FloatField(null=True, blank=True)
     spo2 = models.IntegerField(null=True, blank=True)
@@ -71,16 +76,16 @@ class ClientData(models.Model):
     dayshome = models.IntegerField(null=True, blank=True)
     f_test_ex = models.IntegerField(null=True, blank=True)
     f_test_in = models.IntegerField(null=True, blank=True)
-    ventilation_reserve = models.FloatField(null=True, blank=True)
+    ventilation_reserve = models.FloatField(null=True, blank=True, default=0)  # pb (mvv / mv)
     comorb_ccc = models.BooleanField(default=False, blank=True)
     comorb_bl = models.BooleanField(default=False, blank=True)
     cd_ozhir = models.BooleanField(default=False, blank=True)
     comorb_all = models.BooleanField(default=False, blank=True)
     l_109 = models.FloatField(null=True, blank=True)
     lf = models.FloatField(null=True, blank=True)
-    rox = models.FloatField(null=True, blank=True)
-    spo2_fio = models.FloatField(null=True, blank=True)
-    ch_d = models.IntegerField(null=True, blank=True)
+    rox = models.FloatField(null=True, blank=True)  # rox = (spo2_fio / ch_d)
+    spo2_fio = models.FloatField(null=True, blank=True)  # spo2 / (21+3*oxygen_flow) / 100
+    ch_d = models.IntegerField(null=True, blank=True, default=0)  # частота дыхания
     group = models.IntegerField(null=True, blank=True, validators=[validate_integer_size])
     measurementday = models.IntegerField(null=True, blank=True)
     daystoresult = models.IntegerField(null=True, blank=True)
@@ -118,6 +123,7 @@ class ClientData(models.Model):
     @property
     def has_personal_info(self):
         return self.personal_info is not None
+
 
 @receiver(pre_save, sender=ClientData)
 def update_forecast(sender, instance, **kwargs):
@@ -160,7 +166,6 @@ def update_group(sender, instance, **kwargs):
             instance.group = 0  # Группа для записей без spo2_fio и rox
     else:
         instance.group = None  # или другое значение, обозначающее отсутствие данных
-
 
 
 @receiver(post_save, sender=ClientData)
