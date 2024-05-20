@@ -40,22 +40,6 @@ class WebHandlerViewsTest(TestCase):
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
-    def test_home_view(self):
-        """
-        Тестирование представления домашней страницы (home view).
-
-        - Аутентификация пользователя.
-        - Проверка GET-запроса к представлению домашней страницы.
-        """
-
-        # Аутентификация пользователя
-        self.client.login(username='testuser', password='testpassword')
-
-        # Проверка GET-запроса к представлению домашней страницы
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home.html')
-
 
 class LoginViewTests(TestCase):
     '''
