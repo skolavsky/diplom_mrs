@@ -186,7 +186,7 @@ body {
 .modal-content {
     background-color: #fefefe;
     margin: auto;
-    padding: 20px;
+    padding: 40px; /* Увеличено с 20px для добавления пространства вверху */
     border: 1px solid #888;
     width: 100%;
     max-width: 800px;
@@ -197,17 +197,17 @@ body {
 .close,
 .close-button {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 5px; /* Уменьшенное значение для позиционирования ближе к верхнему краю */
+    left: 10px; /* Уменьшенное значение для отступа от левого края */
     color: #aaa;
-    font-size: 28px;
+    font-size: 24px; /* Уменьшенный размер, было 28px */
     font-weight: bold;
     cursor: pointer;
 }
 
 .close:hover,
 .close-button:hover {
-    color: black;
+    color: #0d5dcd;
     text-decoration: none;
 }
 

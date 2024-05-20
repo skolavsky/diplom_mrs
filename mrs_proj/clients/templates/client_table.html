@@ -47,16 +47,19 @@
                             группа: ({{ client_data.group }})
                         {% endif %}
                     </td>
-<td class="cell_button">
-    <button class="button button-delete" onclick="window.location.href='{{ client_data.personal_info.get_absolute_url }}'">Удалить</button>
-    <button class="button note-button" data-client-id="{{ client_data.id }}">
-        {% if request.user not in client_data.users_note.all %}
-            Сделать заметку
-        {% else %}
-            Удалить заметку
-        {% endif %}
-    </button>
-</td>
+                    <td class="cell_button">
+                        <button class="button button-delete"
+                                onclick="window.location.href='{{ client_data.personal_info.get_absolute_url }}'">
+                            Удалить
+                        </button>
+                        <button class="button note-button" data-client-id="{{ client_data.id }}">
+                            {% if request.user not in client_data.users_note.all %}
+                                Сделать заметку
+                            {% else %}
+                                Удалить заметку
+                            {% endif %}
+                        </button>
+                    </td>
 
                 </tr>
             {% endfor %}

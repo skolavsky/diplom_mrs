@@ -68,10 +68,10 @@
 </div>
 
 <!-- Модальное окно для добавления нового клиента -->
-<div id="addClientModal" class="modal" style="display: none;">
+<div id="addClientModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="toggleForm()">&times;</span>
-        <div class="form-container">
+        <div class="modal-body">
             <form id="addClientForm">
                 {% csrf_token %}
                 <div>
