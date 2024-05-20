@@ -6,4 +6,4 @@ from unfold.admin import ModelAdmin
 @admin.register(Profile)
 class ProfileAdmin(ModelAdmin):
     list_display = ['user', 'date_of_birth', 'photo']
-    raw_id_fields = ['user']
+    autocomplete_fields = ['user']  # Добавление автокомплита для поля user
