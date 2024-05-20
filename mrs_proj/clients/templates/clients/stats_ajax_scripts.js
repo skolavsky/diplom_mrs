@@ -151,5 +151,20 @@ document.querySelectorAll('.pagination a').forEach(link => {
 
 });
 
+// для отображения сайдбара
 
+ const details = document.getElementById('filtersDetails');
+    const clientsContent = document.querySelector('.clients-content');
 
+    function adjustContentWidth() {
+        if (details.open) {
+            clientsContent.style.width = 'calc(100% - 25%)';
+        } else {
+            clientsContent.style.width = '90%';
+        }
+    }
+
+    details.addEventListener('toggle', adjustContentWidth);
+
+    // Устанавливаем начальную ширину при загрузке страницы
+    adjustContentWidth();

@@ -19,7 +19,6 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding: 0 20px;
 }
 
 .search_box {
@@ -47,7 +46,6 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: all 0.3s ease;
-    margin-right: 10px; /* Добавляем зазор справа */
 }
 
 .search_box .button:hover,
@@ -508,6 +506,10 @@ button:hover,
     background-color: var(--hover-color);
 }
 
+.main {
+    padding: 20px;
+}
+
 .main .container {
     display: flex;
     flex-direction: row; /* Устанавливаем рядовую ориентацию для контейнера */
@@ -520,24 +522,32 @@ button:hover,
 
 .clients-content-wrapper {
     display: flex;
-    flex-direction: row; /* Горизонтальное расположение элементов */
     width: 100%;
 }
 
 .clients-content {
-    flex-grow: 1;
-    padding: 20px;
-    min-width: 0; /* Позволяет таблице уменьшаться */
+    flex-grow: 2;
+    padding: 10px;
+    transition: width 0.3s ease;
 }
 
 .clients-sidebar {
-    flex: 0 0 250px; /* Фиксированная ширина для боковой панели */
+    width: 150px;
     background-color: #f9f9f9;
     overflow-y: auto;
-    height: auto;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    padding: 20px;
-    margin-left: 20px; /* Добавляем отступ слева */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin-right: 10px;
+    transition: width 0.3s ease;
+    height: 100%;
+}
+
+#filtersDetails[open] ~ .clients-content-wrapper .clients-content {
+    width: 25%;
+}
+
+#filtersDetails:not([open]) ~ .clients-content-wrapper .clients-content {
+    width: 10%;
 }
 
 .client-table .cell_button {
@@ -562,10 +572,60 @@ button:hover,
     gap: 5px;
 }
 
-.client-table .button-show-info i {
-    font-size: 16px;
+.filters {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
 }
 
-.client-table .button-show-info:hover {
+/* Стили для элементов details */
+.filters details {
+    font-size: 18px;
+    color: #5a5a5a;
+    margin: 10px 0;
+}
+
+/* Стили для элементов summary */
+.filters summary {
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 0;
+}
+
+/* Стили для группы фильтров */
+.filter-group {
+    margin-bottom: 15px;
+}
+
+/* Стили для отдельных фильтров */
+.filter-group label {
+    display: block; /* Каждый элемент с новой строки */
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+/* Стили для чекбоксов */
+.filter-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Стили для кнопки применить фильтры */
+.btn-filter {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-filter:hover {
     background-color: var(--hover-color);
 }
