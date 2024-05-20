@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block style %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/home_styles.css' %}">
+{% endblock %}
 {% block title %}Home{% endblock %}
 {% block header %}Главная страница{% endblock %}
 
