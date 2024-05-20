@@ -389,3 +389,70 @@ button:hover,
 .client-table .button-show-info:hover {
     background-color: var(--hover-color);
 }
+
+/* Стили для мобильных телефонов */
+@media (max-width: 600px) {
+    .modal-content {
+        padding: 20px;
+        width: 95%; /* Уменьшенная ширина для мобильных устройств */
+    }
+
+    .form-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea,
+    .button {
+        font-size: 14px; /* Уменьшенный размер шрифта */
+        padding: 8px; /* Уменьшенный padding */
+    }
+
+    .close,
+    .close-button {
+        font-size: 24px; /* Меньший размер для иконки закрытия */
+    }
+}
+
+/* Стили для планшетов */
+@media (min-width: 601px) and (max-width: 900px) {
+    .modal-content {
+        padding: 30px;
+        width: 80%; /* Ширина адаптирована для планшетов */
+    }
+
+    .form-container {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea,
+    .button {
+        font-size: 16px; /* Чуть больший размер шрифта */
+        padding: 10px; /* Чуть больший padding */
+    }
+
+    .close,
+    .close-button {
+        font-size: 26px; /* Больший размер для иконки закрытия */
+    }
+}
+
+/* Стили для настольных ПК */
+@media (min-width: 901px) {
+    .modal-content {
+        padding: 40px;
+        width: 50%; /* Идеальная ширина для настольных экранов */
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        font-size: 18px; /* Подходящий размер шрифта */
+        padding: 12px; /* Подходящий padding */
+    }
+}
