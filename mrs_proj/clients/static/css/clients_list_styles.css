@@ -3,8 +3,8 @@
     --hover-color: #1d6a8c;
     --danger-color: #ff4d4d;
     --danger-hover-color: #cc0000;
-    --warning-color: #FFD700;
-    --warning-hover-color: #FFA500;
+    --warning-color: #30256d;
+    --warning-hover-color: #241c53;
     --light-color: #f9f9f9;
     --border-color: #C2C5C8;
     --button-padding: 10px 20px;
@@ -145,7 +145,7 @@ body {
 .client-table .button-note,
 .client-table .note-button {
     background-color: var(--warning-color);
-    color: #000;
+    color: #ffffff;
 }
 
 .client-table .button-note:hover,
@@ -354,7 +354,7 @@ button:hover,
 .client-table .button-note,
 .note-button {
     background-color: var(--warning-color);
-    color: #000;
+    color: #FFF;
     display: inline-block;
     padding: var(--button-padding);
     border: none;
@@ -442,17 +442,68 @@ button:hover,
     }
 }
 
-/* Стили для настольных ПК */
-@media (min-width: 901px) {
-    .modal-content {
-        padding: 40px;
-        width: 50%; /* Идеальная ширина для настольных экранов */
-    }
+.main {
+    justify-content: center;
+}
 
-    .form-container input,
-    .form-container select,
-    .form-container textarea {
-        font-size: 18px; /* Подходящий размер шрифта */
-        padding: 12px; /* Подходящий padding */
-    }
+.main .container {
+    flex-grow: 3;
+    width: 100%;
+    max-width: none; /* Убираем ограничение по максимальной ширине */
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* Используем flexbox для макета */
+    flex-wrap: nowrap;
+}
+
+.clients-sidebar {
+    grid-template-columns: 10fr;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    height: 100vh;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    margin-right: 10px; /* Отступ между сайдбаром и контентом */
+}
+
+.clients-content {
+    flex-grow: 1; /* Занимает оставшееся пространство */
+    padding: 20px;
+    overflow-x: auto; /* Добавляем прокрутку, если контент выходит за рамки */
+}
+
+.clients-sidebar.open ~ .clients-content {
+    grid-template-columns: 0 10fr;
+}
+
+.client-table .cell_button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.client-table .show-spoiler-button {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 20px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.client-table .show-spoiler-button i {
+    font-size: 14px;
+}
+
+.client-table .show-spoiler-button:hover {
+    background-color: var(--hover-color);
 }
