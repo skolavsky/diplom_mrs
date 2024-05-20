@@ -7,38 +7,10 @@
 {% block header %}Список записей{% endblock %}
 
 {% block content %}
-
 <div class="main container">
-    <div class="clients-content" id="clientsContent">
-        <div class="box_tool">
-            <div class="search_box">
-                <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
-                <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-                <button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска</button>
-            </div>
-
-            <div class="button_box">
-                <button id="toggleFormBtn" class="button" onclick="toggleForm()"><i class="fas fa-plus"></i>
-                    Добавить пациента
-                </button>
-            </div>
-        </div>
-
-        <div class="stats-container">
-            <button id="statsToggleBtn" class="button">Показать статистику</button>
-            <div id="statsSpoiler" class="spoiler" style="display: none;">
-                <!-- Здесь будет ваша статистика -->
-                <input type="number" id="percentInput" placeholder="Введите процент">
-                <button id="submitPercentBtn" class="button">Отправить процент</button>
-            </div>
-        </div>
-
-        {% include 'client_table.html' %}
-    </div>
-    <div class="clients-sidebar" id="filtersSidebar">
-        <div class="filters">
-            <details id="filtersDetails">
-                <summary>Фильтры</summary>
+    <div class="clients-content-wrapper">
+        <div class="clients-sidebar">
+            <div class="filters">
                 <form method="get" class="filter-form">
                     <!-- Фильтры по результату -->
                     <div class="filter-group">
@@ -59,10 +31,30 @@
                     </div>
                     <button type="submit" class="btn-filter">Применить фильтры</button>
                 </form>
-            </details>
+            </div>
+        </div>
+        <div class="clients-content">
+            <div class="box_tool">
+                <div class="search_box">
+                    <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
+                    <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
+                    <button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска</button>
+                </div>
+                <div class="button_box">
+                    <button id="toggleFormBtn" class="button" onclick="toggleForm()"><i class="fas fa-plus"></i> Добавить пациента</button>
+                </div>
+            </div>
+            <div class="stats-container">
+                <button id="statsToggleBtn" class="button">Показать статистику</button>
+                <div id="statsSpoiler" class="spoiler" style="display: none;">
+                    <!-- Здесь будет ваша статистика -->
+                    <input type="number" id="percentInput" placeholder="Введите процент">
+                    <button id="submitPercentBtn" class="button">Отправить процент</button>
+                </div>
+            </div>
+            {% include 'client_table.html' %}
         </div>
     </div>
-
 </div>
 
 <!-- Модальное окно -->
@@ -131,13 +123,4 @@
     {% include "clients/modal_window_scripts.js" %}
     {% include "clients/pagination_ajax_scripts.js" %}
     {% include "clients/note_button.js" %}
-
-    // Добавим JavaScript для управления фильтрами
-    document.getElementById('filtersDetails').addEventListener('toggle', function () {
-        if (this.open) {
-            document.getElementById('clientsContent').style.flex = '1 1 calc(100% - 300px)';
-        } else {
-            document.getElementById('clientsContent').style.flex = '1 1 100%';
-        }
-    });
 {% endblock %}

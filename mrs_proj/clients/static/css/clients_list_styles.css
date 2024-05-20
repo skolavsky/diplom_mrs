@@ -507,3 +507,65 @@ button:hover,
 .client-table .show-spoiler-button:hover {
     background-color: var(--hover-color);
 }
+
+.main .container {
+    display: flex;
+    flex-direction: row; /* Устанавливаем рядовую ориентацию для контейнера */
+    width: 100%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.clients-content-wrapper {
+    display: flex;
+    flex-direction: row; /* Горизонтальное расположение элементов */
+    width: 100%;
+}
+
+.clients-content {
+    flex-grow: 1;
+    padding: 20px;
+    min-width: 0; /* Позволяет таблице уменьшаться */
+}
+
+.clients-sidebar {
+    flex: 0 0 250px; /* Фиксированная ширина для боковой панели */
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    height: auto;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-left: 20px; /* Добавляем отступ слева */
+}
+
+.client-table .cell_button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.client-table .button-show-info {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.client-table .button-show-info i {
+    font-size: 16px;
+}
+
+.client-table .button-show-info:hover {
+    background-color: var(--hover-color);
+}
