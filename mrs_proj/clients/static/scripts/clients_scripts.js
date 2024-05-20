@@ -3,9 +3,10 @@ document.getElementById('toggleFormBtn').addEventListener('click', function () {
 });
 
 function toggleForm() {
-    let form = document.getElementById('addClientForm');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    let modal = document.getElementById('addClientModal');
+    modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
 }
+
 
 function cancelAddClient() {
     let form = document.getElementById('addClientForm');

@@ -1,321 +1,264 @@
-/* Основной контейнер страницы */
+:root {
+    --main-color: #2a92c0;
+    --hover-color: #1d6a8c;
+    --danger-color: #ff4d4d;
+    --danger-hover-color: #cc0000;
+    --warning-color: #FFD700;
+    --warning-hover-color: #FFA500;
+    --light-color: #f9f9f9;
+    --border-color: #C2C5C8;
+    --button-padding: 10px 20px;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .box_tool {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    padding: 0 20px;
 }
 
 .search_box {
     display: flex;
     align-items: center;
+    gap: 10px;
+    border: none;
 }
 
 .search_box .search {
-    width: 300px;
-    padding: 8px;
-    border: 1px solid #C2C5C8;
+    width: 400px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    margin-right: 10px;
+    font-size: 18px;
 }
 
-.search_box .button {
-    background-color: #2a92c0;
+.search_box .button,
+#resetButton {
+    background-color: var(--main-color);
     color: #FFF;
-    padding: 8px 16px;
+    padding: 10px 20px; /* Универсальный padding */
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-right: 10px; /* Добавляем зазор справа */
 }
 
-.search_box .button:hover {
-    background-color: #FFF;
-    color: #2a92c0;
-    border: 1px solid #2a92c0;
+.search_box .button:hover,
+#resetButton:hover {
+    background-color: var(--hover-color);
+    color: #FFF;
 }
 
 #resetButton {
     background-color: #9BA3AC;
-    color: #FFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 #resetButton:hover {
-    background-color: #FFF;
-    color: #9BA3AC;
-    border: 1px solid #9BA3AC;
-}
-
-.filters, .stats-container {
-    margin-bottom: 20px;
-    border: 1px solid #C2C5C8;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-.filters summary {
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.filters .filter-form {
-    margin-top: 10px;
-}
-
-.filters .filter-group {
-    margin-bottom: 10px;
-}
-
-.filters .filter-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.filters .btn-filter {
-    background-color: #2a92c0;
+    background-color: #7a8b96;
     color: #FFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.filters .btn-filter:hover {
-    background-color: #FFF;
-    color: #2a92c0;
-    border: 1px solid #2a92c0;
-}
-
-.button_box {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
 }
 
 .button_box .button {
-    background-color: #2a92c0;
+    background-color: var(--main-color); /* Синий цвет */
     color: #FFF;
-    padding: 8px 16px;
+    padding: 10px 20px; /* Универсальный padding */
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-right: 10px; /* Добавляем зазор справа */
 }
 
 .button_box .button:hover {
-    background-color: #FFF;
-    color: #2a92c0;
-    border: 1px solid #2a92c0;
+    background-color: var(--hover-color); /* Цвет при наведении как у кнопки поиска */
+    color: #FFF;
+}
+
+.client-table,
+#clientTableWrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.client-table th,
+.client-table td,
+#clientTableWrapper th,
+#clientTableWrapper td {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.client-table th,
+#clientTableWrapper th {
+    background-color: var(--main-color);
+    color: #FFF;
+}
+
+.client-table tr:nth-child(even),
+#clientTableWrapper tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.client-table tr:hover,
+#clientTableWrapper tr:hover {
+    background-color: #e2e2e2;
+}
+
+.client-table .button-delete,
+.client-table .note-button,
+.client-table .delete-button {
+    display: inline-block;
+    padding: var(--button-padding);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px; /* Фиксированная ширина для всех кнопок */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
+
+.client-table .button-delete,
+.client-table .delete-button {
+    background-color: var(--danger-color);
+    color: #FFF;
+}
+
+.client-table .button-delete:hover,
+.client-table .delete-button:hover {
+    background-color: var(--danger-hover-color);
+}
+
+.client-table .button-note,
+.client-table .note-button {
+    background-color: var(--warning-color);
+    color: #000;
+}
+
+.client-table .button-note:hover,
+.client-table .note-button:hover {
+    background-color: var(--warning-hover-color);
+}
+
+.client-table .button-show-info {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.client-table .button-show-info:hover {
+    background-color: var(--hover-color);
 }
 
 .modal {
     display: none;
     position: fixed;
     z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+    height: auto;
     overflow: auto;
-    background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 5px;
+    position: relative;
 }
 
-.modal .close {
+.close,
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
     color: #aaa;
-    float: right;
     font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
 }
 
-.modal .close:hover,
-.modal .close:focus {
+.close:hover,
+.close-button:hover {
     color: black;
     text-decoration: none;
-    cursor: pointer;
 }
 
-#addClientForm {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border: 1px solid #C2C5C8;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-#addClientForm table {
-    width: 100%;
-    border-spacing: 0;
-    border-collapse: collapse;
-}
-
-#addClientForm table th,
-#addClientForm table td {
-    padding: 8px;
-    border: 1px solid #C2C5C8;
-}
-
-.client-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    border: 1px solid #C2C5C8;
-}
-
-.client-table th,
-.client-table td {
-    padding: 10px;
-    border: 1px solid #C2C5C8;
-}
-
-.client-table th {
-    background-color: #2a92c0;
-    color: #FFF;
-}
-
-.client-table td {
-    background-color: #FFFFFF99;
-}
-
-.client-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.client-table tr:hover {
-    background-color: #e2e2e2;
-}
-
-.client-table .button-note,
-.client-table .button-delete {
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.client-table .button-note {
-    background-color: #FFD700;
-    color: #000;
-    border: none;
-}
-
-.client-table .button-delete {
-    background-color: #FF4500;
-    color: #FFF;
-    border: none;
-}
-
-.client-table .button-note:hover {
-    background-color: #FFA500;
-}
-
-.client-table .button-delete:hover {
-    background-color: #FF6347;
-}
-
-.stats-container .button {
-    background-color: #2a92c0;
-    color: #FFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.stats-container .button:hover {
-    background-color: #FFF;
-    color: #2a92c0;
-    border: 1px solid #2a92c0;
-}
-
-.spoiler {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border: 1px solid #C2C5C8;
-    border-radius: 4px;
-}
-
-/* Основные стили для таблицы */
-#clientTableWrapper {
-    margin-top: 20px;
-}
-
-#clientTableWrapper table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-#clientTableWrapper th,
-#clientTableWrapper td {
-    padding: 10px;
-    border: 1px solid #C2C5C8; /* Добавляем границы между ячейками */
-    text-align: left;
-}
-
-#clientTableWrapper th {
-    background-color: #2a92c0;
-    color: #FFF;
-}
-
-#clientTableWrapper tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-#clientTableWrapper tr:hover {
-    background-color: #e2e2e2;
-}
-
-/* Стили для ячеек с конкретными классами */
-.cell_name a {
-    color: #2a92c0;
+.close:hover {
+    color: black;
     text-decoration: none;
 }
 
-.cell_name a:hover {
-    text-decoration: underline;
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    background-color: var(--light-color);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
 }
 
-.cell_button .button {
-    padding: 5px 10px;
+.form-container > div {
+    flex: 1 1 45%;
+}
+
+.form-container label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
-.delete-button {
-    background-color: #FF4500;
-    color: #FFF;
-    border: none;
+.form-container input[type="checkbox"] {
+    width: auto;
 }
 
-.delete-button:hover {
-    background-color: #FF6347;
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
 }
 
-.note-button {
-    background-color: #FFD700;
-    color: #000;
-    border: none;
-}
-
-.note-button:hover {
-    background-color: #FFA500;
-}
-
-/* Стили для пагинации */
 .pagination {
     text-align: center;
     margin: 20px 0;
@@ -328,22 +271,9 @@
     flex-wrap: nowrap;
 }
 
-.pagination .step-links .button {
-    background-color: #2a92c0;
-    color: #FFF;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
+.pagination .button {
     margin: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap; /* предотвращает перенос текста */
-}
-
-.pagination .step-links .button:hover {
-    background-color: #FFF;
-    color: #2a92c0;
-    border: 1px solid #2a92c0;
+    white-space: nowrap;
 }
 
 .pagination .page-info {
@@ -351,356 +281,111 @@
     font-weight: bold;
     min-width: 120px;
     text-align: center;
-    white-space: nowrap; /* предотвращает перенос текста */
+    white-space: nowrap;
 }
 
-
-/* Стили для блока с фильтрами и статистикой */
-.filters, .stats-container {
-    margin-bottom: 20px;
-    border: 1px solid #C2C5C8;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+td.cell_name a,
+.cell_name a {
+    font-weight: bold;
+    color: var(--main-color);
+    text-decoration: none;
 }
 
-/* Эффекты для кнопок при наведении */
-.filters .btn-filter, .stats-container .button, .search_box .button, .button_box .button {
+td.cell_name a:hover,
+.cell_name a:hover {
+    text-decoration: underline;
+}
+
+td.cell_button,
+.cell_button {
+    display: flex;
+    gap: 5px;
+}
+
+#modal-body,
+#addClientModal .modal-content {
+    column-count: 2;
+    column-gap: 10px;
+}
+
+button,
+.button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
     transition: all 0.3s ease;
-}
-
-
-/* Основные стили таблицы */
-/* Основные стили таблицы */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 5px;
-    text-align: left;
-}
-
-thead th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tbody tr:hover {
-    background-color: #f1f1f1;
-}
-
-td.cell_name {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-td.cell_name a {
-    font-weight: bold;
-    color: #2a92c0;
-    text-decoration: none;
-}
-
-td.cell_name a:hover {
-    text-decoration: underline;
-}
-
-td.cell_button {
-    display: flex;
-    gap: 5px;
-}
-
-td.cell_button .button,
-td.cell_button .delete-button {
-    display: inline-block;
-    background-color: #2a92c0;
-    color: #FFF;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-td.cell_button .button:hover,
-td.cell_button .delete-button:hover {
-    background-color: #FFF;
-    color: #2a92c0;
-    border: 1px solid #2a92c0;
-}
-
-td.cell_button .delete-button {
-    background-color: #ff4d4d;
-}
-
-td.cell_button .delete-button:hover {
-    background-color: #FFF;
-    color: #ff4d4d;
-    border: 1px solid #ff4d4d;
-}
-
-/* Стили для кнопки "Показать дополнительную информацию" */
-.show-spoiler-button {
-    background: none;
-    border: none;
-    color: #2a92c0;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: left;
-}
-
-.show-spoiler-button:hover {
-    text-decoration: underline;
-}
-
-/* Стили для кнопки "Показать дополнительную информацию" */
-.show-spoiler-button {
-    background: none;
-    border: none;
-    color: #2a92c0;
-    cursor: pointer;
-    padding: 5px;
-    font-size: 14px;
-    text-align: left;
-}
-
-.show-spoiler-button:hover {
-    text-decoration: underline;
-}
-
-/* Основные стили формы */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-form p {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-form label {
-    font-weight: bold;
-    color: #333;
-}
-
-form input[type="number"],
-form input[type="date"],
-form select,
-form input[type="checkbox"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-form input[type="checkbox"] {
-    width: auto;
-}
-
-form button[type="submit"] {
-    background-color: #2a92c0;
-    color: #FFF;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    align-self: flex-start;
-}
-
-form button[type="submit"]:hover {
-    background-color: #1d6a8c;
-}
-
-/* Дополнительные стили для кнопок */
-.button, .delete-button {
-    display: inline-block;
-    background-color: #2a92c0;
-    color: #FFF;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.button:hover, .delete-button:hover {
-    background-color: #1d6a8c;
+    background-color: var(--main-color);
     color: #FFF;
 }
 
+button:hover,
+.button:hover {
+    background-color: var(--hover-color);
+    color: #FFF;
+}
+
+/* Кнопка "Удалить" */
+.client-table .button-delete,
 .delete-button {
-    background-color: #ff4d4d;
-}
-
-.delete-button:hover {
-    background-color: #cc0000;
-}
-
-/* Для кнопки "Показать дополнительную информацию" */
-.show-spoiler-button {
-    background: none;
-    border: none;
-    color: #2a92c0;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: left;
-}
-
-.show-spoiler-button:hover {
-    text-decoration: underline;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 5px;
-}
-
-.close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Основные стили формы */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-form p {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-form label {
-    font-weight: bold;
-    color: #333;
-}
-
-form input[type="number"],
-form input[type="date"],
-form select,
-form input[type="checkbox"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-form input[type="checkbox"] {
-    width: auto;
-}
-
-form button[type="submit"] {
-    background-color: #2a92c0;
+    background-color: var(--danger-color);
     color: #FFF;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    align-self: flex-start;
-}
-
-form button[type="submit"]:hover {
-    background-color: #1d6a8c;
-}
-
-/* Дополнительные стили для кнопок */
-.button, .delete-button {
     display: inline-block;
-    background-color: #2a92c0;
-    color: #FFF;
-    padding: 5px 10px;
+    padding: var(--button-padding);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     text-decoration: none;
     font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px; /* Фиксированная ширина для всех кнопок */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
 }
 
-.button:hover, .delete-button:hover {
-    background-color: #1d6a8c;
-    color: #FFF;
-}
-
-.delete-button {
-    background-color: #ff4d4d;
-}
-
+.client-table .button-delete:hover,
 .delete-button:hover {
-    background-color: #cc0000;
+    background-color: var(--danger-hover-color);
 }
 
-/* Для кнопки "Показать дополнительную информацию" */
-.show-spoiler-button {
-    background: none;
+/* Кнопка "Сделать заметку"/"Удалить заметку" */
+.client-table .button-note,
+.note-button {
+    background-color: var(--warning-color);
+    color: #000;
+    display: inline-block;
+    padding: var(--button-padding);
     border: none;
-    color: #2a92c0;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px; /* Фиксированная ширина для всех кнопок */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
+
+.client-table .button-note:hover,
+.note-button:hover {
+    background-color: var(--warning-hover-color);
+}
+
+/* Кнопка "Показать данные" */
+.client-table .button-show-info {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
-    text-align: left;
+    transition: all 0.3s ease;
+    text-align: center;
 }
 
-.show-spoiler-button:hover {
-    text-decoration: underline;
-}
-
-#modal-body {
-    column-count: 2; /* Желаемое количество столбцов */
-    column-gap: 10px; /* Пространство между столбцами */
+.client-table .button-show-info:hover {
+    background-color: var(--hover-color);
 }
