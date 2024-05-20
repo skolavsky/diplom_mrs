@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.contrib import admin
 from django.http import HttpResponse
+from unfold.admin import ModelAdmin
 
 from .ClientDataDownloader import ClientDataDownloader
 from .management.commands.populate_data import Command as PopulateDataCommand
@@ -11,7 +12,7 @@ from .models import PersonalInfo
 
 
 @admin.register(PersonalInfo)
-class PersonalInfoAdmin(admin.ModelAdmin):
+class PersonalInfoAdmin(ModelAdmin):
     list_display = ['first_name', 'last_name', 'patronymic', 'gender', 'is_active', 'id', ]
     list_filter = ['gender', 'is_active', ]
     search_fields = ['first_name', 'last_name', 'patronymic', 'gender']
@@ -28,7 +29,7 @@ class PersonalInfoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ClientData)
-class ClientDataAdmin(admin.ModelAdmin):
+class ClientDataAdmin(ModelAdmin):
     file_name = f'{datetime.now().strftime("%Y%m%d-%H%M")}-data'
     list_display = ['personal_info_last_name', 'personal_info', 'age', 'admission_date', 'result', ]
     list_filter = ['result', ]

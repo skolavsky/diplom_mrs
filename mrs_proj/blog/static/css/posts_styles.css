@@ -1,0 +1,90 @@
+/* Стили для страницы блога и списка статей */
+main {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+main h1 {
+    color: #2a92c0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#copyButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2a92c0;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    transition: background-color 0.3s;
+}
+
+#copyButton:hover {
+    background-color: #1b6c89;
+}
+
+#posts-list {
+    margin-top: 20px;
+}
+
+/* Стили для единичной статьи */
+article {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #c2c5c8;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+article h2 {
+    font-size: 1.5rem;
+    color: #2a92c0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+article h2 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+article h2 a:hover {
+    text-decoration: underline;
+}
+
+article .preview {
+    display: block;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+article .tags {
+    font-size: 0.875rem;
+    color: #6F7881;
+}
+
+article .tags a {
+    color: #2a92c0;
+    text-decoration: none;
+}
+
+article .tags a:hover {
+    text-decoration: underline;
+}
+
+article .date {
+    font-size: 0.875rem;
+    color: #9BA3AC;
+    margin-top: 5px;
+}
+
+article p {
+    color: #5a5a5a;
+    line-height: 1.6;
+}

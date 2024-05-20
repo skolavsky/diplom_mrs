@@ -1,0 +1,55 @@
+/* Общие стили для списка клиентов */
+.list {
+    padding: 0;
+    margin: 10px 0;
+}
+
+.list li {
+    list-style: none; /* Убираем маркеры списка */
+    margin-bottom: 10px;
+    background-color: #f9f9f9; /* Светлый фон для каждого элемента списка */
+    border: 1px solid #ccc; /* Граница вокруг элементов списка */
+    border-radius: 5px; /* Скругление углов */
+    transition: background-color 0.3s; /* Плавное изменение фона при наведении */
+}
+
+.list li:hover {
+    background-color: #e8f4f9; /* Изменение фона при наведении */
+}
+
+.list_item {
+    border: none; /* Убираем границы элементов списка */
+    margin-bottom: 2px; /* Уменьшаем отступ между элементами списка */
+    background-color: transparent; /* Убираем фон, если он есть */
+    padding: 5px 10px; /* Небольшие отступы для содержимого, чтобы текст не прилипал к краям */
+}
+
+.list a {
+    display: block; /* Элементы списка растягиваются на всю ширину контейнера */
+    color: #2a92c0; /* Синий цвет текста */
+    text-decoration: none; /* Убираем подчёркивание текста */
+    transition: background-color 0.2s; /* Плавное изменение фона при наведении */
+}
+
+.list i {
+    margin-right: 10px; /* Отступ справа от иконки */
+}
+
+.list a:hover {
+    background-color: #e8f4f9; /* Цвет фона при наведении */
+}
+
+/* Стили для специальных иконок */
+.fa-user, .fa-star {
+    color: #666; /* Цвет иконок */
+}
+
+@media (max-width: 768px) {
+    .list_item {
+        padding: 5px; /* Уменьшаем отступы для маленьких экранов */
+    }
+
+    .list a {
+        font-size: 14px; /* Уменьшаем размер шрифта для улучшения читаемости на маленьких экранах */
+    }
+}

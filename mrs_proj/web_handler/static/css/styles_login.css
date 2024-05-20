@@ -1,161 +1,230 @@
+html {
+    font-size: 18px; /* базовый размер шрифта */
+}
+
 body {
-    background-color: #C8C2AE;
+    position: relative;
+    overflow: hidden;
+
+    background-color: #046C7A1A;
+    color: #5a5a5a;
+}
+
+.mrs h1 {
+    color: #2a92c0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    align-items: center;
+    justify-content: center;
+    flex-grow: initial;
+    text-align: center;
+    font-size: 2rem; /* 32px, если базовый размер шрифта 16px */
+    padding: 30px; /* отступ сверху и снизу */
+}
+
+.main h1 {
+    color: #2a92c0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    align-items: center;
+    justify-content: center;
+    flex-grow: initial;
+
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 60px; /* Расположение подсказки над элементом */
+    background-color: rgb(42, 146, 192);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+[data-tooltip]:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+.main {
+    height: 82%;
 
     display: flex;
     align-items: center;
     justify-content: center;
+
+    z-index: 1;
 }
 
-.login_box {
-    width: 30vw;
-    min-height: 90vh;
-
-    box-shadow: 0 0 10px #2B4141;
-    border-radius: 15px;
-
+.column {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.title {
-    width: 100%;
-    height: 15vh;
-
-    margin-bottom: 60px;
-
-    background-color: #2B4141;
-    border-radius: 15px 15px 0 0;
-
-    display: flex;
-    align-items: center;
-}
-
-.title h1 {
-    width: 100%;
-    text-align: center;
-
-    font: 700 32px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #FFF;
-}
-
-.form {
-    width: 100%;
-}
-
-.form_group {
-    width: 90%;
-    height: 50px;
-
-    margin: 25px 20px;
-    font: 400 25px/100% 'Times New Roman', Times, serif;
-    color: #2B4141;
-
-    border-radius: 25px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.form_group input {
-    margin-left: 10px;
-    font: 400 25px/100% 'Times New Roman', Times, serif;
-    color: #2B4141
-}
-
-.form_group input::selection {
-    background-color: #548C88;
-}
-
-.form_group a {
-    color: #2B4141
+.contrast {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 420px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #2a92c0; /* Рамка вокруг элемента */
 }
 
 .input_box {
-    height: 50px;
-    width: 85%;
+    width: 360px;
+    height: 36px;
 
-    padding: 10px;
+    padding: 8px 12px;
 
-    border-radius: 25px 0 0 25px;
-    background-color: #A49A79;
+    background-color: #FFFFFF99;
+
+    border: 1px solid #C2C5C8;
+    border-radius: 6px;
+
+    display: flex;
+}
+
+.input_margin_bottom {
+    margin-bottom: 22px; /* расстояние между полями ввода*/
 }
 
 .input_box input {
-    width: 98%;
+    width: 304px;
+
+    padding: 0 8px;
 
     border: none;
     background: transparent;
     outline: none;
 }
 
-.input_box input:-webkit-autofill {
-    transition: all 5000s ease-in-out 0s;
+.input_box input::placeholder {
+    font: 400 15px/19.6px 'Arial', sans-serif;
+    color: #9BA3AC;
 }
 
-.input_box:hover {
-    background-color: #9C916D;
+.icon_box {
+    width: 16px;
+    height: 16px;
 }
 
-.info_box {
-    height: 50px;
-    width: 15%;
-    padding: 5px 10px;
+.icon_box_gray {
+    width: 16px;
+    height: 16px;
 
-    background-color: #A49A79;
-    text-align: center;
+    color: #6F7881;
+}
 
-    border-radius: 0 25px 25px 0;
-    border-left: 5px solid #C8C2AE;
+.icon_box_gray a {
+    color: #6F7881;
+}
+
+.reset-password {
+    width: 360px;
+    height: 24px;
+
+    margin: 22px 0;
 
     display: flex;
+    justify-content: space-between;
+}
+
+.reset-password .group {
+    display: flex;
+
+}
+
+
+.reset-password a {
+    font: 400 14px/24px "Arial", sans-serif;
+    color: #2a92c0;
+}
+
+.form button {
+    width: 100%;
+    height: 45px;
+
+    padding: 8px 27px;
+    border-radius: 4px;
+
+    font: 400 16px/23.68px Arial, 'Inter', sans-serif;
+    text-align: center;
+
+    background-color: #2a92c0;
+    color: #FFF;
+}
+
+.form button:hover {
+    background-color: #FFF;
+    color: #2a92c0;
+    border: 1px solid #2a92c0;
+}
+
+.error {
+    font: 400 14px/19.6px 'Arial', sans-serif;
+    text-align: center;
+    color: #ff0000;
+}
+
+.footer {
+    height: 7%;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.info_box:hover {
-    background-color: #9C916D;
-}
+.footer p {
+    width: 300px;
+    height: 40px;
 
-.button_open {
-    width: 90%;
-    height: 50px;
-
-    margin: 25px 20px;
-    border-radius: 25px;
-
-    background-color: #2B4141;
+    font: 400 12px/22px "Arial", sans-serif;
+    color: #171C2673;
     text-align: center;
-
-    font: 700 24px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #FFF;
 }
 
-.button_open:hover {
-    background-color: #293D3D;
+/* CSS часов */
+
+.clock {
+    border: 1px solid #2a92c0;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 100px;
+    right: calc(50% - 40px);
 }
 
-[data-tooltip] {
-    position: relative; /* Относительное позиционирование */
+.hour {
+    height: 24px;
+    width: 1px;
+    background: #2a92c0;
+    position: absolute;
+    top: calc(50% - 24px);
+    left: calc(50% - 1px);
+    transform-origin: bottom;
+    transform: rotate(0deg);
 }
 
-[data-tooltip]::after {
-    content: attr(data-tooltip); /* Выводим текст */
-    position: absolute; /* Абсолютное позиционирование */
-    width: 300px; /* Ширина подсказки */
-    left: 0;
-    top: 0; /* Положение подсказки */
-    background: #548C88; /* Синий цвет фона */
-    color: #fff; /* Цвет текста */
-    padding: 0.5em; /* Поля вокруг текста */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Параметры тени */
-    pointer-events: none; /* Подсказка */
-    opacity: 0; /* Подсказка невидима */
-    transition: 1s; /* Время появления подсказки */
-}
-
-[data-tooltip]:hover::after {
-    opacity: 1; /* Показываем подсказку */
-    top: 2em; /* Положение подсказки */
+.minute {
+    height: 40px;
+    width: 1px;
+    background: #2a92c0;
+    position: absolute;
+    top: calc(50% - 40px);
+    left: calc(50% - 1px);
+    transform-origin: bottom;
+    transform: rotate(0deg);
 }

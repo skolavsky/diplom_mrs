@@ -1,26 +1,39 @@
 {% load thumbnail %}
 {% load blog_tags %}
 {% for post in posts %}
-    <h2>
-        <a href="{{ post.get_absolute_url }}">
-            {{ post.title }}
-        </a>
-        {% if post.preview %}
-                 {% thumbnail post.preview "300x300" crop="smart" as im %}
-                        <img src="{{ im.url }}" alt="preview" class="preview">
-        {% endif %}
-    </h2>
-    <p class="tags">
-        Tags:
-        {% for tag in post.tags.all %}
-            <a href="{% url "blog:post_list_by_tag" tag.slug %}">
-                {{ tag.name }}
+    <article>
+        <h2>
+            <a href="{{ post.get_absolute_url }}">
+                {{ post.title }}
             </a>
-            {% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </p>
-    <p class="date">
-        Published {{ post.publish }} by {{ post.author }}
-    </p>
-    {{ post.body|markdown|truncatewords_html:30 }}
+            {% if post.preview %}
+                {% thumbnail post.preview "450x300" crop="smart" as im %}
+                <img src="{{ im.url }}" alt="preview" class="preview">
+            {% endif %}
+        </h2>
+        <p class="tags">
+            Tags:
+            {% for tag in post.tags.all %}
+                <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+                    {{ tag.name }}
+                </a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p class="date">
+            Published {{ post.publish }} by {{ post.author }}
+        </p>
+
+        {% if post.short_description %}
+
+            {{ post.short_description|markdown }}
+
+        {% else %}
+
+            Краткое описание отсутствует,
+
+        {% endif %}
+
+        <a href="{{ post.get_absolute_url }}">читать далее...</a>
+    </article>
 {% endfor %}

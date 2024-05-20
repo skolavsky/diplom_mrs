@@ -3,9 +3,10 @@ document.getElementById('toggleFormBtn').addEventListener('click', function () {
 });
 
 function toggleForm() {
-    let form = document.getElementById('addClientForm');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    let modal = document.getElementById('addClientModal');
+    modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
 }
+
 
 function cancelAddClient() {
     let form = document.getElementById('addClientForm');
@@ -79,19 +80,4 @@ document.addEventListener('DOMContentLoaded', function () {
             window.location.href = '?' + urlParams.toString();
         });
     });
-
-
-    function goToPage() {
-        const pageNumber = document.getElementById('page-input').value;
-        const currentPageUrl = window.location.href;
-
-        // Создаем новый URL объект на основе текущего URL
-        const url = new URL(currentPageUrl);
-
-        // Устанавливаем параметр 'page' равным номеру страницы
-        url.searchParams.set('page', pageNumber);
-
-        // Перенаправляем на новый URL
-        window.location.href = url.toString();
-    }
 })

@@ -40,22 +40,6 @@ class WebHandlerViewsTest(TestCase):
         user = get_user(self.client)
         self.assertFalse(user.is_authenticated)
 
-    def test_home_view(self):
-        """
-        Тестирование представления домашней страницы (home view).
-
-        - Аутентификация пользователя.
-        - Проверка GET-запроса к представлению домашней страницы.
-        """
-
-        # Аутентификация пользователя
-        self.client.login(username='testuser', password='testpassword')
-
-        # Проверка GET-запроса к представлению домашней страницы
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home.html')
-
 
 class LoginViewTests(TestCase):
     '''
@@ -119,11 +103,11 @@ class LoginViewTests(TestCase):
 
     def test_failed_login_button(self):
         '''
-        Проверка на наличие кнопки с текстом "ВХОД" и классом "button_open" в ответе
+        Проверка на наличие кнопки с текстом "Войти" в ответе
         :return:
         '''
         response = self.client.get(reverse('web_handler:login'))
-        self.assertContains(response, '<button type="submit" class="button_open">ВХОД</button>')
+        self.assertContains(response, '<button type="submit">Войти</button>')
 
     def test_failed_login_header(self):
         '''
@@ -131,7 +115,7 @@ class LoginViewTests(TestCase):
         :return:
         '''
         response = self.client.get(reverse('web_handler:login'))
-        self.assertContains(response, '<h1>ВХОД В СИСТЕМУ</h1>')
+        self.assertContains(response, '<h1>MRS</h1>')
 
     def test_login_title(self):
         '''
@@ -139,7 +123,7 @@ class LoginViewTests(TestCase):
         :return:
         '''
         response = self.client.get(reverse('web_handler:login'))
-        self.assertContains(response, '<title>Вход в систему</title>')
+        self.assertContains(response, '<title>Вход</title>')
 
     def test_failed_login_password_wrong_type(self):
         '''

@@ -8,64 +8,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Django App{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles_base.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon/favicon-32x32.png' %}">
-    {% block style %}
-    {% endblock %}
+    {% block style %}{% endblock %}
 </head>
 <body>
 <div class="wrapper">
-<header class="header">
-    <div class="wrapp">
-        <h1><a href="{% url 'web_handler:home' %}">MRS <i class="fa-solid fa-microscope"></i>
-        </a></h1>
-        <h2>{% block header %}{% endblock %}</h2>
-        <nav class="menu">
-            <a href="{% url 'web_handler:home' %}">
-                <i class="fas fa-home"></i> На главную
-            </a>
-            <a href="{% url 'clients:client_list' %}">
-                <i class="fas fa-list"></i> Все записи
-            </a>
-            <a href="{% url 'web_handler:contacts' %}">
-                <i class="fas fa-address-book"></i> Контакты
-            </a>
-            <a href="{% url 'blog:post_list' %}">
-                <i class="fas fa-chart-bar"></i> Статьи и обновления
-            </a>
-            <div class="avatar-container">
-                {% if request.user.profile.photo %}
-                    {% thumbnail request.user.profile.photo "32x32" crop="smart" as im %}
-                    <a href="{% url 'account_edit' %}">
-                        <img src="{{ im.url }}" alt="Your Avatar" class="avatar">
+    <header class="header">
+        <div class="wrapp">
+            <h1><a href="{% url 'web_handler:home' %}">MRS <i class="fa-solid fa-microscope"></i></a></h1>
+            <h2>{% block header %}{% endblock %}</h2>
+            <nav class="menu">
+                <a href="{% url 'web_handler:home' %}"><i class="fas fa-home"></i> Главная страница</a>
+                <a href="{% url 'clients:client_list' %}"><i class="fas fa-list"></i> Все записи</a>
+                <a href="{% url 'web_handler:contacts' %}"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="{% url 'blog:post_list' %}"><i class="fas fa-chart-bar"></i> Статьи и обновления</a>
+                <!-- Объединяем аватар и надпись в один контейнер -->
+                <div class="avatar-container">
+                    <a href="{% url 'account_edit' %}" class="account-link">
+                        {% if request.user.profile.photo %}
+                            {% thumbnail request.user.profile.photo "48x48" crop="smart" as im %}
+                            <img src="{{ im.url }}" alt="Your Avatar" class="avatar">
+                        {% else %}
+                            <img src="{% static 'img/default_avatar.png' %}" alt="Default Avatar" class="avatar">
+                        {% endif %}
+                        <span class="account-label">Профиль</span> <!-- Добавляем подпись под аватаром -->
                     </a>
-                {% else %}
-                    <p>No avatar uploaded yet.</p>
-                {% endif %}
-                <a href="{% url 'account_edit' %}" class="account-link"> Аккаунт </a>
-            </div>
-            <form action="{% url 'logout' %}" method="post" class="logout-form">
-                {% csrf_token %}
-                <button type="submit" class="menu-button"><i class="fas fa-sign-out-alt"></i> Выход</button>
-            </form>
-        </nav>
-    </div>
-</header>
+                </div>
 
+                <form action="{% url 'logout' %}" method="post" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="menu-button"><i class="fas fa-sign-out-alt"></i> Выход</button>
+                </form>
+            </nav>
+        </div>
+    </header>
 
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages|slice:"3:" %}
-            <li class="{{ message.tags }}">
-                {{ message|safe }}
-                <a href="#" class="close">x</a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages|slice:"3:" %}
+                <li class="{{ message.tags }}">
+                    {{ message|safe }}
+                    <a href="#" class="close">x</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     <main class="main">
         <div class="container">
@@ -84,25 +72,16 @@
 
 <script src="//cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 <script>
-    const csrftoken = Cookies.get('csrftoken'); // берём csrf токен от джанги из кук, через библиотеку для отправки
-    // с пост запросами
+    const csrftoken = Cookies.get('csrftoken');
     document.addEventListener('DOMContentLoaded', (event) => {
-        // DOM loaded
-        {% block domready %}
-        {% endblock %}
-    })
+        {% block domready %}{% endblock %}
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Получаем все кнопки закрытия уведомлений
         var closeButtons = document.querySelectorAll('.messages li a.close');
-
-        // Перебираем каждую кнопку и назначаем обработчик события клика
         closeButtons.forEach(function (button) {
             button.addEventListener('click', function (event) {
-                // Отменяем стандартное действие ссылки
                 event.preventDefault();
-
-                // Получаем родительский элемент (элемент уведомления) и удаляем его
                 var notification = this.parentNode;
                 notification.parentNode.removeChild(notification);
             });

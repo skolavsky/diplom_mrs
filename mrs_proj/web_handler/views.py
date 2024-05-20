@@ -1,5 +1,5 @@
 from datetime import timedelta
-from django.shortcuts import redirect, reverse
+
 from clients.models import ClientData
 from django.conf import settings
 from django.contrib import messages
@@ -10,7 +10,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
-from django.contrib.auth.tokens import default_token_generator
 
 LOGIN_URL = '/login/'
 
@@ -94,7 +93,8 @@ class LoginView(View):
                     return redirect('/account/password-reset/')
                 elif delta_days < 3:
                     # Warn user that password will expire soon
-                    messages.info(request, 'Ваш пароль скоро истечёт. Вы можете изменить его самостоятельно в своём профиле.')
+                    messages.info(request,
+                                  'Ваш пароль скоро истечёт. Вы можете изменить его самостоятельно в своём профиле.')
 
                 # Authentication successful, log in the user
                 login(request, user)

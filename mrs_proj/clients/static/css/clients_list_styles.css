@@ -1,237 +1,391 @@
-input[type="checkbox"] {
-    /* Отключаем стандартные стили браузера */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    /* Устанавливаем желаемый размер кастомного чекбокса */
-    width: 20px;
-    height: 20px;
-    /* Устанавливаем кастомный фон для отмеченного и неотмеченного состояния */
-    background-color: #fff;
-    border: 1px solid #ccc; /* Устанавливаем границу для чекбокса */
-    border-radius: 3px; /* Закругляем углы */
-    /* При отмеченном состоянии меняем цвет фона */
-    &:checked {
-        background-color: #2B4141;
-    }
+:root {
+    --main-color: #2a92c0;
+    --hover-color: #1d6a8c;
+    --danger-color: #ff4d4d;
+    --danger-hover-color: #cc0000;
+    --warning-color: #FFD700;
+    --warning-hover-color: #FFA500;
+    --light-color: #f9f9f9;
+    --border-color: #C2C5C8;
+    --button-padding: 10px 20px;
 }
 
-/* Стили для кастомного визуального отображения чекбокса */
-input[type="checkbox"]::before {
-    content: ''; /* Создаем псевдоэлемент для кастомного отображения */
-    display: inline-block;
-    width: 10px; /* Задаем размер кастомной отметки */
-    height: 10px;
-    border-radius: 2px; /* Закругляем углы отметки */
-    background-color: #fff; /* Устанавливаем цвет отметки */
-    position: relative;
-    top: -1px; /* Смещаем отметку вверх, чтобы она выровнялась по центру чекбокса */
-}
-
-/* Стили для кастомного визуального отображения чекбокса в отмеченном состоянии */
-input[type="checkbox"]:checked::before {
-    background-color: #2B4141; /* Изменяем цвет отметки при отмеченном состоянии */
-}
-
-
-
-.filters {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.filters {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #c8c2ae;
-}
-
-.filters label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 16px;
-    color: #333;
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .box_tool {
-    height: 30px;
-    margin-bottom: 30px;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
 }
 
-.table {
+.search_box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+}
+
+.search_box .search {
+    width: 400px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.search_box .button,
+#resetButton {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 10px 20px; /* Универсальный padding */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-right: 10px; /* Добавляем зазор справа */
+}
+
+.search_box .button:hover,
+#resetButton:hover {
+    background-color: var(--hover-color);
+    color: #FFF;
+}
+
+#resetButton {
+    background-color: #9BA3AC;
+}
+
+#resetButton:hover {
+    background-color: #7a8b96;
+    color: #FFF;
+}
+
+.button_box .button {
+    background-color: var(--main-color); /* Синий цвет */
+    color: #FFF;
+    padding: 10px 20px; /* Универсальный padding */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin-right: 10px; /* Добавляем зазор справа */
+}
+
+.button_box .button:hover {
+    background-color: var(--hover-color); /* Цвет при наведении как у кнопки поиска */
+    color: #FFF;
+}
+
+.client-table,
+#clientTableWrapper table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
 
-.button {
-    height: 100%;
-    padding: 5px 10px;
-    border: 2px solid #2B4141;
-
-    background-color: #2B4141;
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #C8C2AE;
-
-    text-align: center;
+.client-table th,
+.client-table td,
+#clientTableWrapper th,
+#clientTableWrapper td {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    text-align: left;
 }
 
-.button:hover {
-    background-color: #C8C2AE;
-    color: #2B4141;
-}
-
-.search {
-    width: 250px;
-    height: 30px;
-
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    border-bottom: 3px solid #2B4141;
-}
-
-.active a {
-    color: #2B4141;
-}
-
-[class^="cell_"] {
-    border: 2px solid #2B4141;
-    text-align: center;
-}
-
-.cell_name {
-    width: 35%;
-}
-
-.cell_age {
-    width: 5%;
-}
-
-.cell_imt {
-    width: 10%;
-}
-
-.cell_spo {
-    width: 5%;
-}
-
-.cell_date {
-    width: 20%;
-}
-
-.cell_res {
-    width: 20%;
-}
-
-.cell_button {
-    width: 15%;
-
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #C8C2AE;
-
-    background-color: #2B4141;
-}
-
-.page_next {
-    display: flex;
-
-    width: 210px;
-    justify-content: space-between;
-}
-
-.page_next p {
-    padding: 5px 10px;
-    border: 2px solid #2B4141;
-
-    background-color: #2B4141;
-    font: 700 18px/120% Arial, "Helvetica Neue", Helvetica, sans-serif;
-    color: #C8C2AE;
-
-    text-align: center;
-}
-
-.add_form {
-    display: none;
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-
-    max-width: 1335px;
-    height: 50%;
-}
-
-.input_box {
-    height: 250px;
-    max-width: 1325px;
-
+.client-table th,
+#clientTableWrapper th {
+    background-color: var(--main-color);
     color: #FFF;
-    background-color: #2B4141;
-
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px
 }
 
-.input_box input {
-    max-width: 250px;
-
-    color: #2B4141;
-    background-color: #C8C2AE;
+.client-table tr:nth-child(even),
+#clientTableWrapper tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
 
-.input_box label {
-    width: 300px;
-    height: 50px;
-    padding: 5px 10px;
+.client-table tr:hover,
+#clientTableWrapper tr:hover {
+    background-color: #e2e2e2;
+}
 
-    border-bottom: 1px solid #C8C2AE;
+.client-table .button-delete,
+.client-table .note-button,
+.client-table .delete-button {
+    display: inline-block;
+    padding: var(--button-padding);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px; /* Фиксированная ширина для всех кнопок */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
 
+.client-table .button-delete,
+.client-table .delete-button {
+    background-color: var(--danger-color);
+    color: #FFF;
+}
+
+.client-table .button-delete:hover,
+.client-table .delete-button:hover {
+    background-color: var(--danger-hover-color);
+}
+
+.client-table .button-note,
+.client-table .note-button {
+    background-color: var(--warning-color);
+    color: #000;
+}
+
+.client-table .button-note:hover,
+.client-table .note-button:hover {
+    background-color: var(--warning-hover-color);
+}
+
+.client-table .button-show-info {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.client-table .button-show-info:hover {
+    background-color: var(--hover-color);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 800px;
+    height: auto;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 40px; /* Увеличено с 20px для добавления пространства вверху */
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close,
+.close-button {
+    position: absolute;
+    top: 5px; /* Уменьшенное значение для позиционирования ближе к верхнему краю */
+    left: 10px; /* Уменьшенное значение для отступа от левого края */
+    color: #aaa;
+    font-size: 24px; /* Уменьшенный размер, было 28px */
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close-button:hover {
+    color: #0d5dcd;
+    text-decoration: none;
+}
+
+.close:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.form-container {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    background-color: var(--light-color);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.form-container > div {
+    flex: 1 1 45%;
+}
+
+.form-container label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.form-container input[type="checkbox"] {
+    width: auto;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+}
+
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pagination .step-links {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
-.name_input {
-    width: 10%;
+.pagination .button {
+    margin: 5px;
+    white-space: nowrap;
 }
 
-/* Стили для элемента <details> */
-details {
-    margin-bottom: 20px; /* Добавляем немного отступа снизу */
+.pagination .page-info {
+    margin: 0 10px;
+    font-weight: bold;
+    min-width: 120px;
+    text-align: center;
+    white-space: nowrap;
 }
 
-/* Стили для заголовка <summary> */
-summary {
-    cursor: pointer; /* Делаем курсор указателем, чтобы пользователи могли понять, что это интерактивный элемент */
-    outline: none; /* Убираем обводку, чтобы не было эффекта при нажатии на заголовок */
-    font-weight: bold; /* Делаем заголовок жирным */
+td.cell_name a,
+.cell_name a {
+    font-weight: bold;
+    color: var(--main-color);
+    text-decoration: none;
 }
 
-/* Стили для содержимого блока <details> */
-details > * {
-    margin-left: 20px; /* Добавляем отступ слева для содержимого блока */
+td.cell_name a:hover,
+.cell_name a:hover {
+    text-decoration: underline;
 }
 
-/* Стили для кнопки "Применить фильтры" */
-details button {
-    margin-top: 10px; /* Добавляем отступ сверху для кнопки */
-    padding: 5px 10px; /* Добавляем немного отступа вокруг текста кнопки */
-    background-color: #2B4141; /* Цвет фона кнопки */
-    color: #fff; /* Цвет текста кнопки */
-    border: none; /* Убираем границу кнопки */
-    border-radius: 3px; /* Делаем скругленные углы кнопки */
-    cursor: pointer; /* Делаем курсор указателем */
+td.cell_button,
+.cell_button {
+    display: flex;
+    gap: 5px;
+}
+
+#modal-body,
+#addClientModal .modal-content {
+    column-count: 2;
+    column-gap: 10px;
+}
+
+button,
+.button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: var(--main-color);
+    color: #FFF;
+}
+
+button:hover,
+.button:hover {
+    background-color: var(--hover-color);
+    color: #FFF;
+}
+
+/* Кнопка "Удалить" */
+.client-table .button-delete,
+.delete-button {
+    background-color: var(--danger-color);
+    color: #FFF;
+    display: inline-block;
+    padding: var(--button-padding);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px; /* Фиксированная ширина для всех кнопок */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
+
+.client-table .button-delete:hover,
+.delete-button:hover {
+    background-color: var(--danger-hover-color);
+}
+
+/* Кнопка "Сделать заметку"/"Удалить заметку" */
+.client-table .button-note,
+.note-button {
+    background-color: var(--warning-color);
+    color: #000;
+    display: inline-block;
+    padding: var(--button-padding);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    width: 150px; /* Фиксированная ширина для всех кнопок */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
+
+.client-table .button-note:hover,
+.note-button:hover {
+    background-color: var(--warning-hover-color);
+}
+
+/* Кнопка "Показать данные" */
+.client-table .button-show-info {
+    background-color: var(--main-color);
+    color: #FFF;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.client-table .button-show-info:hover {
+    background-color: var(--hover-color);
 }

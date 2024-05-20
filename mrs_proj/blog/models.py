@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
@@ -19,16 +20,15 @@ class Post(models.Model):
     tags = TaggableManager()
 
     title = models.CharField(max_length=250)
-    slug = models.SlugField(max_length=250,
-                            unique_for_date='publish')
+    slug = models.SlugField(max_length=250, unique_for_date='publish')
+    short_description = models.CharField(max_length=100, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
-    body = models.TextField()
+    body = RichTextUploadingField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.DRAFT)
     preview = ThumbnailerImageField(upload_to='previews/%Y/%m/%d/', blank=True, null=True)
-
 
     objects = models.Manager()  # The default manager.
     published = PublishedManager()  # Our custom manager.

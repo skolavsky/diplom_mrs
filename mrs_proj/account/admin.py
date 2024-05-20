@@ -1,8 +1,10 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
+
 from .models import Profile
 
 
 @admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
+class ProfileAdmin(ModelAdmin):
     list_display = ['user', 'date_of_birth', 'photo']
-    raw_id_fields = ['user']
+    autocomplete_fields = ['user']  # Добавление автокомплита для поля user
