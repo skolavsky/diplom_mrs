@@ -30,6 +30,7 @@ function highlightChangedValues() {
 function showConfirmation() {
     document.getElementById('confirmEditDiv').style.display = 'block';
 }
+
 function confirmEdit() {
     document.getElementById('client_personal_edit').submit();
 }

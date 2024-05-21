@@ -76,7 +76,7 @@
     <div class="modal-content">
         <span class="close" onclick="toggleForm()">&times;</span>
         <div class="modal-body">
-            <form id="addClientForm">
+            <form id="addClientForm" action="{% url 'clients:client_list' %}" method="post">
                 {% csrf_token %}
                 <div>
                     <label for="first_name">Имя:</label>
@@ -87,14 +87,14 @@
                     <input type="text" id="last_name" name="last_name">
                 </div>
                 <div>
-                    <label for="middle_name">Отчество:</label>
-                    <input type="text" id="middle_name" name="middle_name">
+                    <label for="patronymic">Отчество:</label>
+                    <input type="text" id="patronymic" name="patronymic">
                 </div>
                 <div>
                     <label for="gender">Пол:</label>
                     <select id="gender" name="gender">
-                        <option value="male">Мужской</option>
-                        <option value="female">Женский</option>
+                        <option value="True">Мужской</option>
+                        <option value="False">Женский</option>
                     </select>
                 </div>
                 <div>
@@ -116,10 +116,10 @@
                 <div>
                     <label for="result">Результат:</label>
                     <select id="result" name="result">
-                        <option value="processing">В процессе</option>
-                        <option value="d">D</option>
-                        <option value="h">H</option>
-                        <option value="r">R</option>
+                        <option value="0">В процессе</option>
+                        <option value="1">D</option>
+                        <option value="2">H</option>
+                        <option value="3">R</option>
                     </select>
                 </div>
                 <div>
@@ -195,7 +195,7 @@
                     <input type="checkbox" id="more_than_week" name="more_than_week">
                 </div>
                 <div class="form-actions">
-                    <button type="submit" class="button">Сохранить</button>
+                    <button type="submit" class="button" name="action" value="save">Сохранить</button>
                     <button type="button" class="button" onclick="toggleForm()">Отменить</button>
                 </div>
             </form>
@@ -210,33 +210,6 @@
 {% block domready %}
     const url = '{% url "clients:client_stats" %}';
     const page_url = '{% url "clients:client_list" %}';
-
-    document.getElementById('addClientForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const formData = new FormData(this);
-
-    fetch(page_url, {
-    method: 'POST',
-    body: formData,
-    headers: {
-    'X-CSRFToken': formData.get('csrfmiddlewaretoken')  // Получаем токен CSRF из формы
-    }
-    })
-    .then(response => {
-    if (response.ok) {
-    return response.json();
-    }
-    throw new Error('Something went wrong');
-    })
-    .then(data => {
-    console.log('Success:', data);
-    document.getElementById('addClientModal').style.display = 'none';
-    // Тут можно обновить таблицу клиентов или показать уведомление
-    })
-    .catch(error => {
-    console.error('Error:', error);
-    });
-    });
 
     {% include "clients/stats_ajax_scripts.js" %}
     {% include "clients/modal_window_scripts.js" %}

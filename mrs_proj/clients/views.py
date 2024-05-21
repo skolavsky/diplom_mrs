@@ -124,10 +124,12 @@ class ClientListView(LoginRequiredMixin, View):
 
     def post(self, request):
         action = request.POST.get('action', '')
-
         if action == 'save':
+
             personal_info_form = PersonalInfoForm(request.POST)
             client_data_form = ClientDataForm(request.POST)
+            print(personal_info_form)
+            print(client_data_form)
 
             if personal_info_form.is_valid() and client_data_form.is_valid():
                 # Создаем и сохраняем PersonalInfo
@@ -143,12 +145,17 @@ class ClientListView(LoginRequiredMixin, View):
                 new_personal_info.id_token = secrets.token_urlsafe(32)
                 new_personal_info.save()
 
-                # Редиректим на страницу с клиентами
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    messages.success(request, 'Запись успешно добавлена')
+                    print('GUNDONE')
+                    return JsonResponse({'message': 'ok'})
+
+                # Для обычных запросов перенаправляем на список клиентов
                 messages.success(request, 'Запись успешно добавлена')
                 return redirect('clients:client_list')
 
-        messages.error(request, 'Ошибка при добавлении записи')
-        return redirect('clients:client_list')
+            messages.error(request, 'Ошибка при добавлении записи')
+            return redirect('clients:client_list')
 
 
 class ClientDetailView(View, LoginRequiredMixin):

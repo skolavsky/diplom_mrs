@@ -149,7 +149,7 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'mvv': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 100}),
             'mv': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 20}),
             'measurementday': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 30}),
-            'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
+            'comorb_ccc': forms.CheckboxInput(attrs={'required': False, 'class': 'checkbox-input'}),
         }
 
     def clean_daystoresult(self):
