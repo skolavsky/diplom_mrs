@@ -1,20 +1,17 @@
 # views.py
 import secrets
 
-import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
 from django.views import View
 from django.views.decorators.http import require_POST, require_GET
 
-from .AI.serializers import ClientSerializer
 from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
 
@@ -114,7 +111,7 @@ class ClientListView(LoginRequiredMixin, View):
 
         if 'table_only' in request.GET:
             # Если указан параметр 'table_only', возвращаем только HTML-таблицу
-            return render(request, self.table_template_name, {'clients_data': page,  'ready_in_week': ready_in_week ,})
+            return render(request, self.table_template_name, {'clients_data': page, 'ready_in_week': ready_in_week, })
 
         # В противном случае возвращаем полный HTML-шаблон страницы
         client_data_form = ClientDataForm()
@@ -172,71 +169,89 @@ class ClientDetailView(View, LoginRequiredMixin):
 
     def get(self, request, id):
         client_data = get_object_or_404(ClientData, personal_info__id=id)
+        history_entries_query = client_data.history.all()
+        paginator = Paginator(history_entries_query, 10)  # Показывать по 10 записей на странице
+
+        page = request.GET.get('page', 1)
+        try:
+            history_entries = paginator.page(page)
+        except PageNotAnInteger:
+            # Если страница не является целым числом, показать первую страницу.
+            history_entries = paginator.page(1)
+        except EmptyPage:
+            # Если страница выходит за пределы диапазона (например, 9999), показать последнюю страницу результатов.
+            history_entries = paginator.page(paginator.num_pages)
+
+        history_with_changes = []
         client_info = get_object_or_404(PersonalInfo, id=id)
         form = ClientDataForm(instance=client_data)
         form_info = PersonalInfoForm(instance=client_info)
-        client_serializer = ClientSerializer(client_data)
-        result_data = None
-        try:
-            response = requests.post(
-                self.request.build_absolute_uri(reverse('result')),
-                client_serializer.data,
-                headers={
-                    'X-CSRFToken': request.COOKIES.get('csrftoken', '')
-                },
-                cookies=request.COOKIES
-            )
-            response.raise_for_status()  # Поднимает исключение при неудачном запросе (например, 4xx или 5xx)
-            result_data = response.json().get('result', '')
 
-            # Дальнейшая обработка успешного запроса
-        except requests.RequestException as e:
-            print(f"Request failed: {e}")
+        fields = ['spo2', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'mvv', 'mv', 'ventilation_reserve']
+
+        for i in range(len(history_entries)):
+            version = history_entries[i]
+            changes = {}
+            if i > 0:  # Skip the first item
+                prev_version = history_entries[i - 1]
+                for field in fields:
+                    if getattr(version, field) != getattr(prev_version, field):
+                        changes[field] = True
+                    else:
+                        changes[field] = False
+            else:
+                changes = {field: False for field in fields}
+
+            history_with_changes.append({
+                'version': version,
+                'changes': changes
+            })
 
         context = {
-            'client_data': client_data,
             'form': form,
             'form_info': form_info,
-            'result': result_data,
-            'history_entries': client_data.history.all(),
+            'client_data': client_data,
+            'history_with_changes': history_with_changes,
+            'history_entries': history_entries,
         }
 
         return render(request, self.template_name, context)
 
-    def post(self, request, id):
-        action = request.POST.get('action', '')
 
-        if action == 'delete_client':
-            client = get_object_or_404(PersonalInfo, id=id)
-            client.delete()
-            messages.success(request, f'Запись {client}успешно удалена')
-            return redirect('clients:client_list')
+def post(self, request, id):
+    action = request.POST.get('action', '')
 
-        elif action == 'edit_client_info':
-            client_info = get_object_or_404(PersonalInfo, id=id)
-            form = PersonalInfoForm(request.POST, instance=client_info)
-            if form.is_valid():
-                form.save()
-                messages.success(request, f'Данные успешно изменены')
-                return redirect('clients:client_detail', id=id)
-            else:
-                client_data = get_object_or_404(ClientData, personal_info__id=id)
-                history_entries = client_data.history.all()
-                context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
-                messages.error(request, f'Ошибка при изменении записи')
-                return render(request, self.template_name, context)
+    if action == 'delete_client':
+        client = get_object_or_404(PersonalInfo, id=id)
+        client.delete()
+        messages.success(request, f'Запись {client}успешно удалена')
+        return redirect('clients:client_list')
 
-        elif action == 'edit_client':
-            client_data = get_object_or_404(ClientData, personal_info__id=id)
-            form = ClientDataForm(request.POST, instance=client_data)
-            if form.is_valid():
-                form.save()
-                messages.success(request, f'Запись успешно изменена')
-                return redirect('clients:client_detail', id=id)
-            else:
-                return HttpResponseBadRequest("Invalid form submission")
+    elif action == 'edit_client_info':
+        client_info = get_object_or_404(PersonalInfo, id=id)
+        form = PersonalInfoForm(request.POST, instance=client_info)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Данные успешно изменены')
+            return redirect('clients:client_detail', id=id)
         else:
-            return HttpResponseBadRequest("Invalid action")
+            client_data = get_object_or_404(ClientData, personal_info__id=id)
+            history_entries = client_data.history.all()
+            context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
+            messages.error(request, f'Ошибка при изменении записи')
+            return render(request, self.template_name, context)
+
+    elif action == 'edit_client':
+        client_data = get_object_or_404(ClientData, personal_info__id=id)
+        form = ClientDataForm(request.POST, instance=client_data)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Запись успешно изменена')
+            return redirect('clients:client_detail', id=id)
+        else:
+            return HttpResponseBadRequest("Invalid form submission")
+    else:
+        return HttpResponseBadRequest("Invalid action")
 
 
 @login_required

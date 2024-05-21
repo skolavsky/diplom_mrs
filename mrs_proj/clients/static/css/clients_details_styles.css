@@ -14,9 +14,52 @@ h2 {
     color: #d70c0c;
 }
 
-main {
-    margin: 20px;
+.main {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    flex-wrap: nowrap;
 }
+
+.main .container {
+    flex-grow: 3;
+    width: 100%;
+    max-width: none;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.client-details-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.client-details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.client-details-table th,
+.client-details-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
 
 p {
     margin: 10px 0;
@@ -167,3 +210,56 @@ form {
   width: 100%; /* Ширина полей ввода и списка выбора занимает всю доступную ширину колонки */
 }
 
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+}
+
+.history-table th, .history-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.history-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.highlight {
+    background-color: #ffeb3b;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .step-links {
+    display: flex;
+    align-items: center;
+}
+
+.pagination .step-links a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination .step-links .current {
+    margin: 0 5px;
+    padding: 5px 10px;
+    font-weight: bold;
+}
