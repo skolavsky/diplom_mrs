@@ -2,48 +2,24 @@
 <html>
 
 <head>
-    <title>Api-Service Login</title>
+    <title>Api-Service</title>
     <link rel="stylesheet" 
           href="css/index.css">
+    <link rel="stylesheet" 
+        href="css/loader.css">
 </head>
 
 <body>
     <div class="main">
-        <h1>My login page for api-service</h1>
-        <h3>Enter your login credentials</h3>
-        <form action="">
-            <label for="email">
-                  Email:
-            </label>
-            <input type="email" 
-                   id="email"
-                   name="eamil" 
-                   placeholder="Enter your Email" required>
-
-            <label for="password">
-                Password:
-            </label>
-            <input type="password"
-                   id="password" 
-                   name="password" 
-                   placeholder="Enter your Password" required>
-
-            <div class="wrap">
-                <button type="button"
-                        onclick="loginRequest()">
-                    Log in
-                </button>
-            </div>
-        </form>
-        <p>Not registered?
-            <a href="./html/register.html"
-                style="text-decoration: none;">
-                Create an account
-            </a>
-        </p>
+    </div>
+    <div class="loader-container">
+        <h1>Page is loading, please wait...</h1>
+        <div class="wrap">    
+            <div class="loader"></div>
+        </div>
     </div>
 
-    <script src="js/login.js"></script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>

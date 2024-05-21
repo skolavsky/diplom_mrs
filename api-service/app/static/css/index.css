@@ -1,4 +1,4 @@
-/*style.css*/
+/*index.css*/
 body {
     display: flex;
     align-items: center;
@@ -6,13 +6,13 @@ body {
     font-family: sans-serif;
     line-height: 1.5;
     min-height: 100vh;
-    background: #f3f3f3;
+    background: #8f8f8f;
     flex-direction: column;
     margin: 0;
 }
 
 .main {
-    background-color: #fff;
+    background-color: #dadada;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 10px 20px;
@@ -63,4 +63,8 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+form input:invalid:not(:placeholder-shown) {
+    color: red;
 }

@@ -17,6 +17,3 @@ async def create_user(db: AsyncSession, user: schema.UserCreate):
     await db.commit()
     await db.refresh(db_user)
     return db_user
-
-async def check_user_password(db_user: model.User, user: schema.UserCreate) -> bool:
-    return password_handler.verify(db_user.hashed_password, user.password)
