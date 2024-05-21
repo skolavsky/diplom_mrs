@@ -2,19 +2,14 @@ var page = 1;
 var emptyPage = false;
 var blockRequest = false;
 
-let filters
-
-
 function updateTable(clear_url = false) {
 
     var m_url = page_url + '?table_only=1&'; // Формирование URL с учётом номера страницы
-
     if (clear_url === true) {
-
+        filters = '';  // Очищаем фильтры, если указан clear_url
     } else {
         m_url = m_url + 'page=' + page + '&' + filters;
     }
-
 
     console.log(m_url)
     fetch(m_url)
@@ -81,7 +76,7 @@ document.querySelectorAll('.sort-link').forEach(link => {
         const url = `${page_url}?sort=${sortField}&order=${sortOrder}&table_only=1`;
 
         // Вызываем функцию обновления таблицы с новым URL
-        updateTable(url);
+        updateTable();
     });
 });
 
@@ -89,14 +84,24 @@ document.querySelectorAll('.sort-link').forEach(link => {
 document.querySelectorAll('.btn-filter').forEach(link => {
     link.addEventListener('click', function (event) {
         event.preventDefault(); // Предотвращаем стандартное действие кнопки
+        
         const filterCheckboxes = document.querySelectorAll('.filter-group input[type="checkbox"]:checked');
         filters = Array.from(filterCheckboxes).map(checkbox => checkbox.name + '=1').join('&');
-        // Теперь у вас есть строка параметров с выбранными значениями чекбоксов
-        filters += '&' + 'search=' + document.getElementById('searchInput').value;
+        const search = document.getElementById('searchInput').value;
+        // Добавляем значение порога прогноза
+        const forecastThreshold = document.getElementById('forecast_threshold').value;
+        if (forecastThreshold) {
+            filters += '&forecast_threshold=' + forecastThreshold;
+        }
+        //строка поиска
+        if (search)
+        {
+            filters += '&' + 'search=' + search;
+        }
+        
         console.log(filters); // Пример вывода в консоль для проверки
 
-        updateTable()
-        // Здесь можете добавить код для использования переменной filters
+        updateTable();
     });
 });
 
@@ -105,15 +110,14 @@ const resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', function (event) {
     event.preventDefault(); // Предотвращаем стандартное действие кнопки
     const checkboxes = document.querySelectorAll('.filter-group input[type="checkbox"]');
-    filters = ''
+    filters = '';  // Очищаем фильтры
     // Снимаем галки с каждого чекбокса
     checkboxes.forEach(checkbox => {
         checkbox.checked = false;
     });
 
-    updateTable(true)
+    updateTable(true);
 });
-
 
 const searchButton = document.getElementById('searchButton');
 searchButton.addEventListener('click', function (event) {

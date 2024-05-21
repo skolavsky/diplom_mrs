@@ -7,209 +7,220 @@
 {% block header %}Список записей{% endblock %}
 
 {% block content %}
-<div class="main container">
-    <div class="clients-content-wrapper">
-        <details id="filtersDetails" open class="clients-sidebar">
-            <summary>Фильтры</summary>
-            <div class="filters">
-                <form method="get" class="filter-form">
-                    <!-- Фильтры по результату -->
-                    <div class="filter-group">
-                        <p>Фильтры результатов</p>
-                        <label><input type="checkbox" name="result_0"> В процессе</label>
-                        <label><input type="checkbox" name="result_1"> D</label>
-                        <label><input type="checkbox" name="result_2"> H</label>
-                        <label><input type="checkbox" name="result_3"> R</label>
+    <div class="main container">
+        <div class="clients-content-wrapper">
+            <details id="filtersDetails" open class="clients-sidebar">
+                <summary>Фильтры</summary>
+                <div class="filters">
+                    <form method="get" class="filter-form">
+                        <!-- Фильтры по результату -->
+                        <div class="filter-group">
+                            <p>Фильтры результатов</p>
+                            <label><input type="checkbox" name="result_0"> В процессе</label>
+                            <label><input type="checkbox" name="result_1"> D</label>
+                            <label><input type="checkbox" name="result_2"> H</label>
+                            <label><input type="checkbox" name="result_3"> R</label>
+                        </div>
+                        <!-- Фильтры по группам -->
+                        <div class="filter-group">
+                            <p>Фильтры групп</p>
+                            <label><input type="checkbox" name="group_1"> Группа 1</label>
+                            <label><input type="checkbox" name="group_2"> Группа 2</label>
+                            <label><input type="checkbox" name="group_3"> Группа 3</label>
+                        </div>
+                        <div class="filter-group">
+                            <p>Фильтры заметок</p>
+                            <label><input type="checkbox" name="noted_1"> Отслеживаемые записи</label>
+                            <label><input type="checkbox" name="noted_0"> Не отслеживаемые записи </label>
+                        </div>
+                        <div class="filter-group">
+                            <p>Шансы выписаться в течение недели</p>
+                            <label><input type="number" id="forecast_threshold" name="forecast_threshold" min="10"
+                                          max="90"></label>
+                            <button type="button" id="clearForecastThreshold" class="clear-button">&times;</button>
+                        </div>
+                        <button type="submit" class="btn-filter">Применить фильтры</button>
+                    </form>
+                </div>
+            </details>
+            <div class="clients-content">
+                <div class="action-buttons">
+                    <div class="search_box">
+                        <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
+                        <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск
+                        </button>
+                        <button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска</button>
                     </div>
-                    <!-- Фильтры по группам -->
-                    <div class="filter-group">
-                        <p>Фильтры групп</p>
-                        <label><input type="checkbox" name="group_1"> Группа 1</label>
-                        <label><input type="checkbox" name="group_2"> Группа 2</label>
-                        <label><input type="checkbox" name="group_3"> Группа 3</label>
+                    <div class="button_box">
+                        <button id="toggleFormBtn" class="button" onclick="toggleForm()"><i class="fas fa-plus"></i>
+                            Добавить пациента
+                        </button>
                     </div>
-                    <div class="filter-group">
-                        <p>Фильтры заметок</p>
-                        <label><input type="checkbox" name="noted_1"> Отслеживаемые записи</label>
-                        <label><input type="checkbox" name="noted_0"> Не отслеживаемые записи </label>
+                </div>
+                <div class="stats-container">
+                    <button id="statsToggleBtn" class="button">Показать статистику</button>
+                    <div id="statsSpoiler" class="spoiler" style="display: none;">
+                        <input type="number" id="percentInput" placeholder="Введите процент">
+                        <button id="submitPercentBtn" class="button">Отправить процент</button>
                     </div>
-                    <button type="submit" class="btn-filter">Применить фильтры</button>
+                </div>
+                {% include 'client_table.html' %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div id="modal-body">
+                <!-- Форма загружается сюда -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Модальное окно для добавления нового клиента -->
+    <div id="addClientModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleForm()">&times;</span>
+            <div class="modal-body">
+                <form id="addClientForm" action="{% url 'clients:client_list' %}" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <label for="first_name">Имя:</label>
+                        <input type="text" id="first_name" name="first_name">
+                    </div>
+                    <div>
+                        <label for="last_name">Фамилия:</label>
+                        <input type="text" id="last_name" name="last_name">
+                    </div>
+                    <div>
+                        <label for="patronymic">Отчество:</label>
+                        <input type="text" id="patronymic" name="patronymic">
+                    </div>
+                    <div>
+                        <label for="gender">Пол:</label>
+                        <select id="gender" name="gender">
+                            <option value="True">Мужской</option>
+                            <option value="False">Женский</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="age">Возраст:</label>
+                        <input type="number" id="age" name="age">
+                    </div>
+                    <div>
+                        <label for="admission_date">Дата поступления:</label>
+                        <input type="date" id="admission_date" name="admission_date">
+                    </div>
+                    <div>
+                        <label for="spo2">SPO2:</label>
+                        <input type="number" id="spo2" name="spo2">
+                    </div>
+                    <div>
+                        <label for="bmi">ИМТ:</label>
+                        <input type="number" id="bmi" name="bmi" step="0.01">
+                    </div>
+                    <div>
+                        <label for="result">Результат:</label>
+                        <select id="result" name="result">
+                            <option value="0">В процессе</option>
+                            <option value="1">D</option>
+                            <option value="2">H</option>
+                            <option value="3">R</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="days_at_home">Кол-во дней дома:</label>
+                        <input type="number" id="days_at_home" name="days_at_home">
+                    </div>
+                    <div>
+                        <label for="external">Внешний:</label>
+                        <input type="number" id="external" name="external">
+                    </div>
+                    <div>
+                        <label for="internal">Внутренний:</label>
+                        <input type="number" id="internal" name="internal">
+                    </div>
+                    <div>
+                        <label for="level_109">Уровень_109:</label>
+                        <input type="number" id="level_109" name="level_109" step="0.01">
+                    </div>
+                    <div>
+                        <label for="lung_function">Функция легких:</label>
+                        <input type="number" id="lung_function" name="lung_function" step="0.01">
+                    </div>
+                    <div>
+                        <label for="rox">ROX:</label>
+                        <input type="number" id="rox" name="rox" step="0.01">
+                    </div>
+                    <div>
+                        <label for="oxygen_share">Доля вдыхаемого кислорода:</label>
+                        <input type="number" id="oxygen_share" name="oxygen_share" step="0.01">
+                    </div>
+                    <div>
+                        <label for="breathing_rate">Частота дыхания:</label>
+                        <input type="number" id="breathing_rate" name="breathing_rate">
+                    </div>
+                    <div>
+                        <label for="ventilation_reserve">Вентиляционный резерв:</label>
+                        <input type="number" id="ventilation_reserve" name="ventilation_reserve" step="0.01">
+                    </div>
+                    <div>
+                        <label for="total_days">Общее кол-во дней:</label>
+                        <input type="number" id="total_days" name="total_days">
+                    </div>
+                    <div>
+                        <label for="oxygen_flow">Поток кислорода(л\мин):</label>
+                        <input type="number" id="oxygen_flow" name="oxygen_flow">
+                    </div>
+                    <div>
+                        <label for="mvv">МВЛ:</label>
+                        <input type="number" id="mvv" name="mvv">
+                    </div>
+                    <div>
+                        <label for="mv">МОД:</label>
+                        <input type="number" id="mv" name="mv">
+                    </div>
+                    <div>
+                        <label for="comorb_ccc">Comorb_ccc?</label>
+                        <input type="checkbox" id="comorb_ccc" name="comorb_ccc">
+                    </div>
+                    <div>
+                        <label for="comorbidity">Коморбидность:</label>
+                        <input type="checkbox" id="comorbidity" name="comorbidity">
+                    </div>
+                    <div>
+                        <label for="diabetes_or_obesity">Сахарный диабет или ожирение:</label>
+                        <input type="checkbox" id="diabetes_or_obesity" name="diabetes_or_obesity">
+                    </div>
+                    <div>
+                        <label for="allergies">Аллергии?</label>
+                        <input type="checkbox" id="allergies" name="allergies">
+                    </div>
+                    <div>
+                        <label for="more_than_week">Больше недели или нет:</label>
+                        <input type="checkbox" id="more_than_week" name="more_than_week">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="button" name="action" value="save">Сохранить</button>
+                        <button type="button" class="button" onclick="toggleForm()">Отменить</button>
+                    </div>
                 </form>
             </div>
-        </details>
-        <div class="clients-content">
-            <div class="box_tool">
-                <div class="search_box">
-                    <input type="text" class="search" id="searchInput" placeholder="Поиск по ФИО">
-                    <button type="button" class="button" id="searchButton"><i class="fas fa-search"></i> Поиск</button>
-                    <button id="resetButton"><i class="fas fa-undo"></i> Сброс сортировок и поиска</button>
-                </div>
-                <div class="button_box">
-                    <button id="toggleFormBtn" class="button" onclick="toggleForm()"><i class="fas fa-plus"></i> Добавить пациента</button>
-                </div>
-            </div>
-            <div class="stats-container">
-                <button id="statsToggleBtn" class="button">Показать статистику</button>
-                <div id="statsSpoiler" class="spoiler" style="display: none;">
-                    <input type="number" id="percentInput" placeholder="Введите процент">
-                    <button id="submitPercentBtn" class="button">Отправить процент</button>
-                </div>
-            </div>
-            {% include 'client_table.html' %}
         </div>
     </div>
-</div>
 
-<!-- Модальное окно -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <div id="modal-body">
-            <!-- Форма загружается сюда -->
-        </div>
-    </div>
-</div>
-
-
-<!-- Модальное окно для добавления нового клиента -->
-<div id="addClientModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="toggleForm()">&times;</span>
-        <div class="modal-body">
-            <form id="addClientForm" action="{% url 'clients:client_list' %}" method="post">
-                {% csrf_token %}
-                <div>
-                    <label for="first_name">Имя:</label>
-                    <input type="text" id="first_name" name="first_name">
-                </div>
-                <div>
-                    <label for="last_name">Фамилия:</label>
-                    <input type="text" id="last_name" name="last_name">
-                </div>
-                <div>
-                    <label for="patronymic">Отчество:</label>
-                    <input type="text" id="patronymic" name="patronymic">
-                </div>
-                <div>
-                    <label for="gender">Пол:</label>
-                    <select id="gender" name="gender">
-                        <option value="True">Мужской</option>
-                        <option value="False">Женский</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="age">Возраст:</label>
-                    <input type="number" id="age" name="age">
-                </div>
-                <div>
-                    <label for="admission_date">Дата поступления:</label>
-                    <input type="date" id="admission_date" name="admission_date">
-                </div>
-                <div>
-                    <label for="spo2">SPO2:</label>
-                    <input type="number" id="spo2" name="spo2">
-                </div>
-                <div>
-                    <label for="bmi">ИМТ:</label>
-                    <input type="number" id="bmi" name="bmi" step="0.01">
-                </div>
-                <div>
-                    <label for="result">Результат:</label>
-                    <select id="result" name="result">
-                        <option value="0">В процессе</option>
-                        <option value="1">D</option>
-                        <option value="2">H</option>
-                        <option value="3">R</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="days_at_home">Кол-во дней дома:</label>
-                    <input type="number" id="days_at_home" name="days_at_home">
-                </div>
-                <div>
-                    <label for="external">Внешний:</label>
-                    <input type="number" id="external" name="external">
-                </div>
-                <div>
-                    <label for="internal">Внутренний:</label>
-                    <input type="number" id="internal" name="internal">
-                </div>
-                <div>
-                    <label for="level_109">Уровень_109:</label>
-                    <input type="number" id="level_109" name="level_109" step="0.01">
-                </div>
-                <div>
-                    <label for="lung_function">Функция легких:</label>
-                    <input type="number" id="lung_function" name="lung_function" step="0.01">
-                </div>
-                <div>
-                    <label for="rox">ROX:</label>
-                    <input type="number" id="rox" name="rox" step="0.01">
-                </div>
-                <div>
-                    <label for="oxygen_share">Доля вдыхаемого кислорода:</label>
-                    <input type="number" id="oxygen_share" name="oxygen_share" step="0.01">
-                </div>
-                <div>
-                    <label for="breathing_rate">Частота дыхания:</label>
-                    <input type="number" id="breathing_rate" name="breathing_rate">
-                </div>
-                <div>
-                    <label for="ventilation_reserve">Вентиляционный резерв:</label>
-                    <input type="number" id="ventilation_reserve" name="ventilation_reserve" step="0.01">
-                </div>
-                <div>
-                    <label for="total_days">Общее кол-во дней:</label>
-                    <input type="number" id="total_days" name="total_days">
-                </div>
-                <div>
-                    <label for="oxygen_flow">Поток кислорода(л\мин):</label>
-                    <input type="number" id="oxygen_flow" name="oxygen_flow">
-                </div>
-                <div>
-                    <label for="mvv">МВЛ:</label>
-                    <input type="number" id="mvv" name="mvv">
-                </div>
-                <div>
-                    <label for="mv">МОД:</label>
-                    <input type="number" id="mv" name="mv">
-                </div>
-                <div>
-                    <label for="comorb_ccc">Comorb_ccc?</label>
-                    <input type="checkbox" id="comorb_ccc" name="comorb_ccc">
-                </div>
-                <div>
-                    <label for="comorbidity">Коморбидность:</label>
-                    <input type="checkbox" id="comorbidity" name="comorbidity">
-                </div>
-                <div>
-                    <label for="diabetes_or_obesity">Сахарный диабет или ожирение:</label>
-                    <input type="checkbox" id="diabetes_or_obesity" name="diabetes_or_obesity">
-                </div>
-                <div>
-                    <label for="allergies">Аллергии?</label>
-                    <input type="checkbox" id="allergies" name="allergies">
-                </div>
-                <div>
-                    <label for="more_than_week">Больше недели или нет:</label>
-                    <input type="checkbox" id="more_than_week" name="more_than_week">
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="button" name="action" value="save">Сохранить</button>
-                    <button type="button" class="button" onclick="toggleForm()">Отменить</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script src="{% static 'scripts/clients_scripts.js' %}"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'scripts/clients_scripts.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
 
 {% block domready %}
     const url = '{% url "clients:client_stats" %}';
     const page_url = '{% url "clients:client_list" %}';
+
+    let filters
 
     {% include "clients/stats_ajax_scripts.js" %}
     {% include "clients/modal_window_scripts.js" %}

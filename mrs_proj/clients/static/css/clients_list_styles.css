@@ -448,3 +448,80 @@ td.cell_name a:hover,
         background-color: transparent;
     }
 }
+
+/* Стили для элементов фильтров */
+.filter-group p {
+    color: #6c757d; /* Серый цвет */
+    font-family: 'Arial', sans-serif; /* Шрифт Arial */
+    font-size: 14px; /* Размер шрифта */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+/* Стили для контейнера фильтров */
+.filter-group {
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+/* Стили для чекбоксов и полей ввода */
+.filter-group label {
+    display: block; /* Каждая метка на новой строке */
+    font-size: 16px; /* Размер шрифта */
+    margin-bottom: 5px; /* Отступ снизу */
+}
+
+.filter-group input[type="checkbox"],
+.filter-group input[type="number"] {
+    margin-right: 10px; /* Отступ справа */
+}
+
+/* Стили для кнопки "Применить фильтры" */
+.btn-filter {
+    background-color: #17a2b8; /* Цвет фона */
+    color: white; /* Цвет текста */
+    padding: 10px 20px; /* Отступы */
+    border: none; /* Без границ */
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer; /* Курсор указателя */
+    font-size: 16px; /* Размер шрифта */
+    display: block; /* Блочный элемент */
+    width: 100%; /* Ширина 100% */
+    text-align: center; /* Выравнивание текста по центру */
+    margin-top: 10px; /* Отступ сверху */
+    transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+}
+
+.btn-filter:hover {
+    background-color: #138496; /* Цвет фона при наведении */
+}
+
+/* Стили для контейнера с полем ввода и кнопкой очистки */
+.clear-button {
+    background: none;
+    font-size: 18px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.clear-button:hover {
+    color: #333;
+}
+
+/* Контейнер для кнопок */
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Отступ снизу для разделения с таблицей */
+}
+
+/* Стили для кнопок в контейнере */
+.action-buttons .button {
+    margin-left: 10px; /* Отступ слева между кнопками */
+}
+
+#searchInput {
+    flex-grow: 1; /* Растягиваем поле поиска, чтобы занять оставшееся пространство */
+    max-width: 400px; /* Максимальная ширина для поля поиска */
+}

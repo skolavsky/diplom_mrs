@@ -92,6 +92,15 @@ class ClientListView(LoginRequiredMixin, View):
         else:
             clients_data = clients_data.order_by(f'-{sort_by}')
 
+        forecast_threshold = request.GET.get('forecast_threshold')
+        ready_in_week = ''
+        # Фильтрация по порогу прогноза и result = 0
+        if forecast_threshold:
+            forecast_threshold = int(forecast_threshold)
+            ready_in_week = clients_data.filter(result=0, forecast_for_week__gte=forecast_threshold).count()
+            clients_data = clients_data.filter(result=0, forecast_for_week__gte=forecast_threshold)
+            print(ready_in_week)
+
         if search_query:
             clients_data = clients_data.filter(
                 Q(personal_info__first_name__icontains=search_query) |
@@ -105,7 +114,7 @@ class ClientListView(LoginRequiredMixin, View):
 
         if 'table_only' in request.GET:
             # Если указан параметр 'table_only', возвращаем только HTML-таблицу
-            return render(request, self.table_template_name, {'clients_data': page})
+            return render(request, self.table_template_name, {'clients_data': page,  'ready_in_week': ready_in_week ,})
 
         # В противном случае возвращаем полный HTML-шаблон страницы
         client_data_form = ClientDataForm()
@@ -118,6 +127,7 @@ class ClientListView(LoginRequiredMixin, View):
             'search_query': search_query,
             'personal_info_form': personal_info_form,
             'client_data_form': client_data_form,
+            'ready_in_week': ready_in_week,
         }
 
         return render(request, self.template_name, context)
@@ -147,7 +157,6 @@ class ClientListView(LoginRequiredMixin, View):
 
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     messages.success(request, 'Запись успешно добавлена')
-                    print('GUNDONE')
                     return JsonResponse({'message': 'ok'})
 
                 # Для обычных запросов перенаправляем на список клиентов

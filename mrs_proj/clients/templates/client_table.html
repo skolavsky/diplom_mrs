@@ -1,4 +1,14 @@
 <div id="clientTableWrapper">
+    {% if ready_in_week %}
+
+    <div id="stats">
+
+        <ul>
+            <li>Пациентов готовых к выписке: {{ ready_in_week }}</li>
+        </ul>
+    </div>
+{% endif %}
+
     <table>
         <thead>
         <tr class="table">
