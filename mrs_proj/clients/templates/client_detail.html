@@ -118,6 +118,7 @@
                 <th>Дата</th>
                 <th>Пользователь</th>
                 <th>SPO2</th>
+                <th>Результат</th>
                 <th>SPO2/FIO</th>
                 <th>ROX</th>
                 <th>Вентиляционный резерв</th>
@@ -133,9 +134,9 @@
                 <td>{{ history_entry.version.history_date|date:"d M Y H:i" }}</td>
                 <td>{{ history_entry.version.history_user }}</td>
                 <td class="{% if history_entry.changes.spo2 %}highlight{% endif %}">{{ history_entry.version.spo2 }}</td>
+                <td class="{% if history_entry.changes.result %}highlight{% endif %}">{{ history_entry.version.result }}</td>
                 <td class="{% if history_entry.changes.spo2_fio %}highlight{% endif %}">{{ history_entry.version.spo2_fio }}</td>
                 <td class="{% if history_entry.changes.rox %}highlight{% endif %}">{{ history_entry.version.rox }}</td>
-                <td class="{% if history_entry.changes.ventilation_reserve %}highlight{% endif %}">{{ history_entry.version.ventilation_reserve }}</td>
                 <td class="{% if history_entry.changes.ch_d %}highlight{% endif %}">{{ history_entry.version.ch_d }}</td>
                 <td class="{% if history_entry.changes.oxygen_flow %}highlight{% endif %}">{{ history_entry.version.oxygen_flow }}</td>
                 <td class="{% if history_entry.changes.mvv %}highlight{% endif %}">{{ history_entry.version.mvv }}</td>
@@ -147,22 +148,23 @@
 
     <div class="pagination">
         <span class="step-links">
-            {% if history_entries.has_previous %}
+            {% if history_with_changes.has_previous %}
                 <a href="?page=1">&laquo; первая</a>
-                <a href="?page={{ history_entries.previous_page_number }}">&lsaquo; предыдущая</a>
+                <a href="?page={{ history_with_changes.previous_page_number }}">&lsaquo; предыдущая</a>
             {% endif %}
 
             <span class="current">
-                Страница {{ history_entries.number }} из {{ history_entries.paginator.num_pages }}.
+                Страница {{ history_with_changes.number }} из {{ history_with_changes.paginator.num_pages }}.
             </span>
 
-            {% if history_entries.has_next %}
-                <a href="?page={{ history_entries.next_page_number }}">следующая &rsaquo;</a>
-                <a href="?page={{ history_entries.paginator.num_pages }}">последняя &raquo;</a>
+            {% if history_with_changes.has_next %}
+                <a href="?page={{ history_with_changes.next_page_number }}">следующая &rsaquo;</a>
+                <a href="?page={{ history_with_changes.paginator.num_pages }}">последняя &raquo;</a>
             {% endif %}
         </span>
     </div>
 </div>
+
 
 </main>
 

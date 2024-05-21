@@ -169,89 +169,89 @@ class ClientDetailView(View, LoginRequiredMixin):
 
     def get(self, request, id):
         client_data = get_object_or_404(ClientData, personal_info__id=id)
-        history_entries_query = client_data.history.all()
-        paginator = Paginator(history_entries_query, 10)  # Показывать по 10 записей на странице
-
-        page = request.GET.get('page', 1)
-        try:
-            history_entries = paginator.page(page)
-        except PageNotAnInteger:
-            # Если страница не является целым числом, показать первую страницу.
-            history_entries = paginator.page(1)
-        except EmptyPage:
-            # Если страница выходит за пределы диапазона (например, 9999), показать последнюю страницу результатов.
-            history_entries = paginator.page(paginator.num_pages)
-
+        history_entries = client_data.history.all()
         history_with_changes = []
         client_info = get_object_or_404(PersonalInfo, id=id)
         form = ClientDataForm(instance=client_data)
         form_info = PersonalInfoForm(instance=client_info)
 
-        fields = ['spo2', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'mvv', 'mv', 'ventilation_reserve']
+        fields = ['spo2', 'result', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'mvv', 'mv']
 
         for i in range(len(history_entries)):
             version = history_entries[i]
             changes = {}
+            has_changes = False
             if i > 0:  # Skip the first item
                 prev_version = history_entries[i - 1]
                 for field in fields:
                     if getattr(version, field) != getattr(prev_version, field):
                         changes[field] = True
+                        has_changes = True
                     else:
                         changes[field] = False
             else:
                 changes = {field: False for field in fields}
 
-            history_with_changes.append({
-                'version': version,
-                'changes': changes
-            })
+            if has_changes:  # Добавляем только если есть изменения
+                history_with_changes.append({
+                    'version': version,
+                    'changes': changes
+                })
+
+        # Пагинация после фильтрации
+        paginator = Paginator(history_with_changes, 10)  # Показывать по 10 записей на странице
+
+        page = request.GET.get('page')
+        try:
+            paginated_history_with_changes = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_history_with_changes = paginator.page(1)
+        except EmptyPage:
+            paginated_history_with_changes = paginator.page(paginator.num_pages)
 
         context = {
             'form': form,
             'form_info': form_info,
             'client_data': client_data,
-            'history_with_changes': history_with_changes,
-            'history_entries': history_entries,
+            'history_with_changes': paginated_history_with_changes,
         }
 
         return render(request, self.template_name, context)
 
+    def post(self, request, id):
+        action = request.POST.get('action', '')
 
-def post(self, request, id):
-    action = request.POST.get('action', '')
+        if action == 'delete_client':
+            client = get_object_or_404(PersonalInfo, id=id)
+            client.delete()
+            messages.success(request, f'Запись {client}успешно удалена')
+            return redirect('clients:client_list')
 
-    if action == 'delete_client':
-        client = get_object_or_404(PersonalInfo, id=id)
-        client.delete()
-        messages.success(request, f'Запись {client}успешно удалена')
-        return redirect('clients:client_list')
+        elif action == 'edit_client_info':
+            client_info = get_object_or_404(PersonalInfo, id=id)
+            form = PersonalInfoForm(request.POST, instance=client_info)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f'Данные успешно изменены')
+                return redirect('clients:client_detail', id=id)
+            else:
+                client_data = get_object_or_404(ClientData, personal_info__id=id)
+                history_entries = client_data.history.all()
+                context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
+                messages.error(request, f'Ошибка при изменении записи')
+                return render(request, self.template_name, context)
 
-    elif action == 'edit_client_info':
-        client_info = get_object_or_404(PersonalInfo, id=id)
-        form = PersonalInfoForm(request.POST, instance=client_info)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'Данные успешно изменены')
-            return redirect('clients:client_detail', id=id)
-        else:
+        elif action == 'edit_client':
             client_data = get_object_or_404(ClientData, personal_info__id=id)
-            history_entries = client_data.history.all()
-            context = {'client_data': client_data, 'history_entries': history_entries, 'form': form}
-            messages.error(request, f'Ошибка при изменении записи')
-            return render(request, self.template_name, context)
-
-    elif action == 'edit_client':
-        client_data = get_object_or_404(ClientData, personal_info__id=id)
-        form = ClientDataForm(request.POST, instance=client_data)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'Запись успешно изменена')
-            return redirect('clients:client_detail', id=id)
+            form = ClientDataForm(request.POST, instance=client_data)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f'Запись успешно изменена')
+                return redirect('clients:client_detail', id=id)
+            else:
+                return HttpResponseBadRequest("Invalid form submission")
         else:
-            return HttpResponseBadRequest("Invalid form submission")
-    else:
-        return HttpResponseBadRequest("Invalid action")
+            return HttpResponseBadRequest("Invalid action")
 
 
 @login_required
