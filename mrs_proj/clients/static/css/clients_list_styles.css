@@ -434,3 +434,17 @@ td.cell_name a:hover,
         font-size: 26px; /* Больший размер для иконки закрытия */
     }
 }
+
+.highlight {
+    background-color: #ffeb3b !important; /* Желтый фон для подсветки */
+    transition: background-color 1s ease;
+}
+
+@keyframes highlight-animation {
+    0% {
+        background-color: #ffeb3b;
+    }
+    100% {
+        background-color: transparent;
+    }
+}

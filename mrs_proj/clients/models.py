@@ -126,6 +126,31 @@ class ClientData(models.Model):
 
 
 @receiver(pre_save, sender=ClientData)
+def calculate_values(sender, instance, **kwargs):
+    # Проверяем, что поля spo2 и oxygen_flow не равны None для расчета spo2_fio
+    if instance.spo2 is not None and instance.oxygen_flow is not None:
+        instance.spo2_fio = round(instance.spo2 / ((21 + 3 * instance.oxygen_flow) / 100), 3)
+    else:
+        instance.spo2_fio = None  # Или другое значение, которое имеет смысл в случае отсутствия данных
+
+    # Проверяем, что поля spo2_fio и ch_d не равны None и ch_d не равен 0 для расчета rox
+    if instance.spo2_fio is not None and instance.ch_d is not None and instance.ch_d != 0:
+        instance.rox = round(instance.spo2_fio / instance.ch_d, 3)
+    else:
+        instance.rox = None  # Или другое значение, которое имеет смысл в случае отсутствия данных
+
+
+@receiver(pre_save, sender=ClientData)
+def calculate_ventilation_reserve(sender, instance, **kwargs):
+    """
+    Calculates ventilation_reserve if MVV or MV are changed and not None or zero.
+    """
+    if instance.mvv is not None and instance.mv is not None and instance.mv != 0:
+        instance.ventilation_reserve = round(instance.mvv / instance.mv, 3)
+    else:
+        instance.ventilation_reserve = None  # Или другое значение, обозначающее отсутствие данных
+
+@receiver(pre_save, sender=ClientData)
 def update_forecast(sender, instance, **kwargs):
     try:
         previous_instance = sender.objects.get(pk=instance.pk)

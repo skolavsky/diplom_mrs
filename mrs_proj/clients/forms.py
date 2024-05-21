@@ -132,7 +132,7 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
 
         widgets = {
             'age': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 120}),
-            'admission_date': forms.DateInput(attrs={'required': False, 'type': 'date'}),
+            'admission_date': forms.DateInput(attrs={'required': False, 'type': 'date'}, format='%Y-%m-%d'),
             'body_mass_index': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
             'spo2': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 100}),
             'dayshome': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50}),
