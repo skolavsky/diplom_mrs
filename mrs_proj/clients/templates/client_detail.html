@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}
+    {{ client_data.personal_info }}
+{% endblock %}
+
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/clients_details_styles.css' %}">
 {% endblock %}
@@ -110,6 +114,11 @@
         </div>
 
 
+    <button id="show-chart-btn">Show Spo2 Chart</button>
+
+    <!-- Контейнер для графика -->
+    <div id="spo2-chart-container" style="display:none;"></div>
+
         <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
 
         {% include 'client_detail_history_table.html' %}
@@ -117,13 +126,66 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
     <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
+
 
 {% endblock %}
 
 {% block domready %}
     const page_url = "{% url 'clients:client_detail' client_data.personal_info.id %}";
+    const graph_url = "{% url 'clients:client_graph_data' client_data.personal_info.id %}";
     const filters = ''
     {% include "clients/pagination_ajax_scripts.js" %}
     {% include "clients/note_button.js" %}
+
+            const showChartBtn = document.getElementById('show-chart-btn');
+            const chartContainer = document.getElementById('spo2-chart-container');
+
+            let chartInitialized = false;
+
+            showChartBtn.addEventListener('click', function () {
+                if (chartContainer.style.display === 'none') {
+                    chartContainer.style.display = 'block';
+                    showChartBtn.textContent = 'Hide Spo2 Chart';
+
+                    if (!chartInitialized) {
+                        fetch(graph_url)
+                            .then(response => response.json())
+                            .then(data => {
+                                Highcharts.chart('spo2-chart-container', {
+                                    title: {
+                                        text: 'Spo2 Levels Over Time'
+                                    },
+                                    xAxis: {
+                                        title: {
+                                            text: 'Date'
+                                        },
+                                        categories: data.change_dates
+                                    },
+                                    yAxis: {
+                                        title: {
+                                            text: 'Spo2'
+                                        }
+                                    },
+                                    series: [{
+                                        name: 'Spo2',
+                                        data: data.spo2_values
+                                    }]
+                                });
+                                chartInitialized = true;
+                            });
+                    }
+                } else {
+                    chartContainer.style.display = 'none';
+                    showChartBtn.textContent = 'Show Spo2 Chart';
+                }
+            });
+
+
 {% endblock %}

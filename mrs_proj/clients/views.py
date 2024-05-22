@@ -18,6 +18,37 @@ from .models import ClientData, PersonalInfo
 LOGIN_URL = '/login/'
 
 
+class ClientGraphDataView(View, LoginRequiredMixin):
+    def get(self, request, id):
+        client_data = get_object_or_404(ClientData, personal_info__id=id)
+        history_entries = client_data.history.all()
+
+        spo2_values = []
+        change_dates = []
+
+        previous_spo2_value = None
+
+        for i in range(len(history_entries)):
+            version = history_entries[i]
+
+            spo2_value = getattr(version, 'spo2', None)
+            if spo2_value is not None and spo2_value != previous_spo2_value:
+                spo2_values.append(spo2_value)
+                change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
+                previous_spo2_value = spo2_value
+
+        # Reverse the lists so that the latest data appears last
+        spo2_values.reverse()
+        change_dates.reverse()
+
+        data = {
+            'spo2_values': spo2_values,
+            'change_dates': change_dates
+        }
+
+        return JsonResponse(data)
+
+
 class ClientStatsView(View):
     def post(self, request):
         # Проверяем, что метод запроса POST
@@ -180,6 +211,11 @@ class ClientDetailView(View, LoginRequiredMixin):
 
         fields = ['spo2', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'ventilation_reserve', 'mvv', 'mv']
 
+        spo2_values = []
+        change_dates = []
+
+        previous_spo2_value = None
+
         for i in range(len(history_entries)):
             version = history_entries[i]
             changes = {}
@@ -201,8 +237,19 @@ class ClientDetailView(View, LoginRequiredMixin):
                     'changes': changes
                 })
 
+            # Add spo2 value and change date to the lists if spo2 is not None and different from the previous value
+            spo2_value = getattr(version, 'spo2', None)
+            if spo2_value is not None and spo2_value != previous_spo2_value:
+                spo2_values.append(spo2_value)
+                change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
+                previous_spo2_value = spo2_value
+
+        # Reverse the lists so that the latest data appears last
+        spo2_values.reverse()
+        change_dates.reverse()
+
         # Пагинация после фильтрации
-        paginator = Paginator(history_with_changes, entries_per_page)  # Показывать по 10 записей на странице
+        paginator = Paginator(history_with_changes, entries_per_page)  # Показывать по 15 записей на странице
 
         page = request.GET.get('page')
         try:
@@ -221,9 +268,12 @@ class ClientDetailView(View, LoginRequiredMixin):
             'form_info': personal_info_form,
             'client_data': client_data,
             'history_with_changes': paginated_history_with_changes,
+            'spo2_values': spo2_values,
+            'change_dates': change_dates,
         }
 
         return render(request, self.template_name, context)
+
 
     def post(self, request, id):
         action = request.POST.get('action', '')
