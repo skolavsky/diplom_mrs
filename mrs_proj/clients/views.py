@@ -20,29 +20,30 @@ LOGIN_URL = '/login/'
 
 class ClientGraphDataView(View, LoginRequiredMixin):
     def get(self, request, id):
+        parameter = request.GET.get('parameter', 'spo2')  # Получаем параметр из запроса, по умолчанию 'spo2'
         client_data = get_object_or_404(ClientData, personal_info__id=id)
         history_entries = client_data.history.all()
 
-        spo2_values = []
+        parameter_values = []
         change_dates = []
 
-        previous_spo2_value = None
+        previous_value = None
 
         for i in range(len(history_entries)):
             version = history_entries[i]
 
-            spo2_value = getattr(version, 'spo2', None)
-            if spo2_value is not None and spo2_value != previous_spo2_value:
-                spo2_values.append(spo2_value)
+            value = getattr(version, parameter, None)
+            if value is not None and value != previous_value:
+                parameter_values.append(value)
                 change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
-                previous_spo2_value = spo2_value
+                previous_value = value
 
         # Reverse the lists so that the latest data appears last
-        spo2_values.reverse()
+        parameter_values.reverse()
         change_dates.reverse()
 
         data = {
-            'spo2_values': spo2_values,
+            'parameter_values': parameter_values,
             'change_dates': change_dates
         }
 

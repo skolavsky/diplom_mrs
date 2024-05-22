@@ -13,71 +13,6 @@
 {% block content %}
     <h1>Подробные данные</h1>
 
-    <div class="client-details-container">
-        <table class="client-details-table">
-            <caption>Подробные данные</caption>
-            <thead>
-            <tr>
-                <th>Параметры</th>
-                <th>Значение</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>ФИО:</td>
-                <td>{{ client_data.personal_info }}</td>
-            </tr>
-            <tr>
-                <td>Возраст:</td>
-                <td>{{ client_data.age }}</td>
-            </tr>
-            <tr>
-                <td>Пол:</td>
-                <td>
-                    {% if client_data.gender %}
-                        Мужской
-                    {% else %}
-                        Женский
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>ИМТ:</td>
-                <td>{{ client_data.body_mass_index }}</td>
-            </tr>
-            <tr>
-                <td>SPO2:</td>
-                <td>{{ client_data.spo2 }}</td>
-            </tr>
-            <tr>
-                <td>Дата поступления:</td>
-                <td>{{ client_data.admission_date }}</td>
-            </tr>
-            <tr>
-                <td>Результат:</td>
-                <td>{{ client_data.result }}</td>
-            </tr>
-            <tr>
-                <td>Шанс выписаться в ближайшие 7 дней:</td>
-                <td>{{ client_data.forecast_for_week }} %</td>
-            </tr>
-            <tr>
-                <td>Прогноз результата:</td>
-                <td>{% if result %}
-                    {{ result }}
-                {% else %}
-                    Обрабатывается
-                {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td>Группа:</td>
-                <td>{{ client_data.group }}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
     <main>
         <a href="{% url 'clients:client_list' %}">Назад к списку пациентов</a>
 
@@ -114,11 +49,26 @@
         </div>
 
 
-    <button id="show-chart-btn">Show Spo2 Chart</button>
-
-    <!-- Контейнер для графика -->
-    <div id="spo2-chart-container" style="display:none;"></div>
-
+        <form id="parameter-form">
+            <label for="parameter-select">Choose a parameter:</label>
+            <select id="parameter-select" name="parameter">
+                <option value="spo2">SPO2</option>
+                <option value="spo2_fio">Доля вдыхаемого кислорода</option>
+                <option value="rox">ROX</option>
+                <option value="ch_d">Частота дыхания</option>
+                <option value="ventilation_reserve">Вентиляционный резерв</option>
+                <option value="oxygen_flow">Поток кислорода(л/мин)</option>
+                <option value="mvv">МВЛ</option>
+                <option value="mv">МОД</option>
+                <!-- Добавьте другие параметры здесь -->
+            </select>
+            <button type="button" id="show-chart-btn">Show Chart</button>
+        </form>
+        <!-- Контейнер для графика -->
+        <div id="parameter-chart-container" style="display:none;">
+            <button type="button" id="hide-chart-btn">Hide Chart</button>
+            <div id="chart-content"></div>
+        </div>
         <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
 
         {% include 'client_detail_history_table.html' %}
@@ -143,49 +93,7 @@
     const filters = ''
     {% include "clients/pagination_ajax_scripts.js" %}
     {% include "clients/note_button.js" %}
-
-            const showChartBtn = document.getElementById('show-chart-btn');
-            const chartContainer = document.getElementById('spo2-chart-container');
-
-            let chartInitialized = false;
-
-            showChartBtn.addEventListener('click', function () {
-                if (chartContainer.style.display === 'none') {
-                    chartContainer.style.display = 'block';
-                    showChartBtn.textContent = 'Hide Spo2 Chart';
-
-                    if (!chartInitialized) {
-                        fetch(graph_url)
-                            .then(response => response.json())
-                            .then(data => {
-                                Highcharts.chart('spo2-chart-container', {
-                                    title: {
-                                        text: 'Spo2 Levels Over Time'
-                                    },
-                                    xAxis: {
-                                        title: {
-                                            text: 'Date'
-                                        },
-                                        categories: data.change_dates
-                                    },
-                                    yAxis: {
-                                        title: {
-                                            text: 'Spo2'
-                                        }
-                                    },
-                                    series: [{
-                                        name: 'Spo2',
-                                        data: data.spo2_values
-                                    }]
-                                });
-                                chartInitialized = true;
-                            });
-                    }
-                } else {
-                    chartContainer.style.display = 'none';
-                    showChartBtn.textContent = 'Show Spo2 Chart';
-                }
-            });
+    {% include "clients/graph_scripts.js" %}
 
 
 {% endblock %}
