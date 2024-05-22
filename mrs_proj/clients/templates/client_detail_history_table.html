@@ -1,0 +1,39 @@
+<div id="clientTableWrapper">
+
+    <h2>История изменений</h2>
+    <table class="history-table">
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Пользователь</th>
+            <th>SPO2</th>
+            <th>SPO2/FIO</th>
+            <th>ROX</th>
+            <th>Частота дыхания</th>
+            <th>Вентиляционный резерв</th>
+            <th>Поток кислорода</th>
+            <th>МВЛ</th>
+            <th>МОД</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for history_entry in history_with_changes %}
+            <tr>
+                <td>{{ history_entry.version.history_date|date:"d M Y H:i" }}</td>
+                <td>{{ history_entry.version.history_user }}</td>
+                <td class="{% if history_entry.changes.spo2 %}highlight{% endif %}">{{ history_entry.version.spo2 }}</td>
+                <td class="{% if history_entry.changes.spo2_fio %}highlight{% endif %}">{{ history_entry.version.spo2_fio }}</td>
+                <td class="{% if history_entry.changes.rox %}highlight{% endif %}">{{ history_entry.version.rox }}</td>
+                <td class="{% if history_entry.changes.ch_d %}highlight{% endif %}">{{ history_entry.version.ch_d }}</td>
+                <td class="{% if history_entry.changes.ch_d %}highlight{% endif %}">{{ history_entry.version.ventilation_reserve }}</td>
+                <td class="{% if history_entry.changes.oxygen_flow %}highlight{% endif %}">{{ history_entry.version.oxygen_flow }}</td>
+                <td class="{% if history_entry.changes.mvv %}highlight{% endif %}">{{ history_entry.version.mvv }}</td>
+                <td class="{% if history_entry.changes.mv %}highlight{% endif %}">{{ history_entry.version.mv }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include "pagination.html" with page_obj=history_with_changes %}
+
+</div>

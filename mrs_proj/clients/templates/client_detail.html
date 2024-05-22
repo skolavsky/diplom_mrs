@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block style %}
-<link rel="stylesheet" href="{% static 'css/clients_details_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/clients_details_styles.css' %}">
 {% endblock %}
 
 {% block header %} {{ client_data.personal_info }} {% endblock %}
 
 {% block content %}
-<h1>Подробные данные</h1>
+    <h1>Подробные данные</h1>
 
-<div class="client-details-container">
-    <table class="client-details-table">
-        <caption>Подробные данные</caption>
-        <thead>
+    <div class="client-details-container">
+        <table class="client-details-table">
+            <caption>Подробные данные</caption>
+            <thead>
             <tr>
                 <th>Параметры</th>
                 <th>Значение</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
                 <td>ФИО:</td>
                 <td>{{ client_data.personal_info }}</td>
@@ -31,9 +31,9 @@
                 <td>Пол:</td>
                 <td>
                     {% if client_data.gender %}
-                    Мужской
+                        Мужской
                     {% else %}
-                    Женский
+                        Женский
                     {% endif %}
                 </td>
             </tr>
@@ -61,118 +61,69 @@
                 <td>Прогноз результата:</td>
                 <td>{% if result %}
                     {{ result }}
-                    {% else %}
+                {% else %}
                     Обрабатывается
-                    {% endif %}
+                {% endif %}
                 </td>
             </tr>
             <tr>
                 <td>Группа:</td>
                 <td>{{ client_data.group }}</td>
             </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
 
-<main>
-    <a href="{% url 'clients:client_list' %}">Назад к списку пациентов</a>
+    <main>
+        <a href="{% url 'clients:client_list' %}">Назад к списку пациентов</a>
 
-    <h2>Действия</h2>
+        <h2>Действия</h2>
 
-    {% include "clients/note_button.html" %}
+        {% include "clients/note_button.html" %}
 
-    <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
+        <button id="edit" type="button" onclick="showConfirmation()">Редактировать персональные данные</button>
 
-    <form id="client_personal_edit" method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="edit_client">
-        <div id="confirmEditDiv" style="display: none;">
-            {{ form_info.as_p }}
-            <p>Вы уверены, что хотите редактировать персональные данные {{ client_data.personal_info }}?</p>
-            <button type="submit" name="action" value="edit_client_info">Сохранить</button>
-            <button type="button" onclick="cancelEdit()">Нет</button>
-        </div>
-    </form>
+        <form id="client_personal_edit" method="post"
+              action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="edit_client">
+            <div id="confirmEditDiv" style="display: none;">
+                {{ form_info.as_p }}
+                <p>Вы уверены, что хотите редактировать персональные данные {{ client_data.personal_info }}?</p>
+                <button type="submit" name="action" value="edit_client_info">Сохранить</button>
+                <button type="button" onclick="cancelEdit()">Нет</button>
+            </div>
+        </form>
 
-    <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
-        {% csrf_token %}
-        <button type="submit" name="action" value="delete_client">Удалить пациента</button>
-    </form>
-
-    <button id="client_edit" type="button" onclick="toggleForm()">Редактировать данные</button>
-    <div id="data-edit">
         <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" name="action" value="edit_client">Сохранить</button>
+            <button type="submit" name="action" value="delete_client">Удалить пациента</button>
         </form>
-    </div>
 
-<div class="container">
-    <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
-
-    <h2>История изменений</h2>
-    <table class="history-table">
-        <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Пользователь</th>
-                <th>SPO2</th>
-                <th>Результат</th>
-                <th>SPO2/FIO</th>
-                <th>ROX</th>
-                <th>Вентиляционный резерв</th>
-                <th>Частота дыхания</th>
-                <th>Поток кислорода</th>
-                <th>МВЛ</th>
-                <th>МОД</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for history_entry in history_with_changes %}
-            <tr>
-                <td>{{ history_entry.version.history_date|date:"d M Y H:i" }}</td>
-                <td>{{ history_entry.version.history_user }}</td>
-                <td class="{% if history_entry.changes.spo2 %}highlight{% endif %}">{{ history_entry.version.spo2 }}</td>
-                <td class="{% if history_entry.changes.result %}highlight{% endif %}">{{ history_entry.version.result }}</td>
-                <td class="{% if history_entry.changes.spo2_fio %}highlight{% endif %}">{{ history_entry.version.spo2_fio }}</td>
-                <td class="{% if history_entry.changes.rox %}highlight{% endif %}">{{ history_entry.version.rox }}</td>
-                <td class="{% if history_entry.changes.ch_d %}highlight{% endif %}">{{ history_entry.version.ch_d }}</td>
-                <td class="{% if history_entry.changes.oxygen_flow %}highlight{% endif %}">{{ history_entry.version.oxygen_flow }}</td>
-                <td class="{% if history_entry.changes.mvv %}highlight{% endif %}">{{ history_entry.version.mvv }}</td>
-                <td class="{% if history_entry.changes.mv %}highlight{% endif %}">{{ history_entry.version.mv }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if history_with_changes.has_previous %}
-                <a href="?page=1">&laquo; первая</a>
-                <a href="?page={{ history_with_changes.previous_page_number }}">&lsaquo; предыдущая</a>
-            {% endif %}
-
-            <span class="current">
-                Страница {{ history_with_changes.number }} из {{ history_with_changes.paginator.num_pages }}.
-            </span>
-
-            {% if history_with_changes.has_next %}
-                <a href="?page={{ history_with_changes.next_page_number }}">следующая &rsaquo;</a>
-                <a href="?page={{ history_with_changes.paginator.num_pages }}">последняя &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
-</div>
+        <button id="client_edit" type="button" onclick="toggleForm()">Редактировать данные</button>
+        <div id="data-edit">
+            <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" name="action" value="edit_client">Сохранить</button>
+            </form>
+        </div>
 
 
-</main>
+        <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
+        {% include 'client_detail_history_table.html' %}
+
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
 
 {% endblock %}
 
 {% block domready %}
-{% include "clients/note_button.js" %}
+    const page_url = "{% url 'clients:client_detail' client_data.personal_info.id %}";
+    const filters = ''
+    {% include "clients/pagination_ajax_scripts.js" %}
+    {% include "clients/note_button.js" %}
 {% endblock %}

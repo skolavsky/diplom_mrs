@@ -166,16 +166,19 @@ class ClientListView(LoginRequiredMixin, View):
 
 class ClientDetailView(View, LoginRequiredMixin):
     template_name = 'client_detail.html'
+    table_template_name = 'client_detail_history_table.html'
 
     def get(self, request, id):
+        entries_per_page = 15
+
         client_data = get_object_or_404(ClientData, personal_info__id=id)
         history_entries = client_data.history.all()
         history_with_changes = []
         client_info = get_object_or_404(PersonalInfo, id=id)
-        form = ClientDataForm(instance=client_data)
-        form_info = PersonalInfoForm(instance=client_info)
+        client_data_form = ClientDataForm(instance=client_data)
+        personal_info_form = PersonalInfoForm(instance=client_info)
 
-        fields = ['spo2', 'result', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'mvv', 'mv']
+        fields = ['spo2', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'ventilation_reserve', 'mvv', 'mv']
 
         for i in range(len(history_entries)):
             version = history_entries[i]
@@ -199,7 +202,7 @@ class ClientDetailView(View, LoginRequiredMixin):
                 })
 
         # Пагинация после фильтрации
-        paginator = Paginator(history_with_changes, 10)  # Показывать по 10 записей на странице
+        paginator = Paginator(history_with_changes, entries_per_page)  # Показывать по 10 записей на странице
 
         page = request.GET.get('page')
         try:
@@ -209,9 +212,13 @@ class ClientDetailView(View, LoginRequiredMixin):
         except EmptyPage:
             paginated_history_with_changes = paginator.page(paginator.num_pages)
 
+        if 'table_only' in request.GET:
+            # Если указан параметр 'table_only', возвращаем только HTML-таблицу
+            return render(request, self.table_template_name, {'history_with_changes': paginated_history_with_changes})
+
         context = {
-            'form': form,
-            'form_info': form_info,
+            'form': client_data_form,
+            'form_info': personal_info_form,
             'client_data': client_data,
             'history_with_changes': paginated_history_with_changes,
         }
