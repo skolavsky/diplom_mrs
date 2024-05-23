@@ -44,6 +44,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTHENTICATION_BACKENDS = [
+
+    'axes.backends.AxesStandaloneBackend',  # Для axes чтобы отслеживать неправильные входы
     'django.contrib.auth.backends.ModelBackend',
     'web_handler.authentication.EmailAuthBackend',
 ]
@@ -62,6 +64,7 @@ INSTALLED_APPS = [
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
     'django.contrib.admin',
     'django.contrib.auth',
+    'ratelimit',  # приложение для ограничивания слишком большого кол-ва запросов к представлению
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -78,8 +81,10 @@ INSTALLED_APPS = [
 ]
 
 # настройки для axes
-AXES_FAILURE_LIMIT = 5  # кол-во неудачных попыток входа
+AXES_FAILURE_LIMIT = 10  # кол-во неудачных попыток входа
 AXES_COOLOFF_TIME = 1  # Cool-off period in hours
+AXES_LOCK_OUT_AT_FAILURE = True  # Блокировать после неудачных попыток
+
 
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
@@ -93,7 +98,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'axes.middleware.AxesMiddleware',
+    'axes.middleware.AxesMiddleware', # для axes
 ]
 
 ROOT_URLCONF = 'mrs_proj.urls'

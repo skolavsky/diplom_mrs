@@ -9,7 +9,9 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.views import View
+from django_ratelimit.decorators import ratelimit
 
 LOGIN_URL = '/login/'
 
@@ -17,6 +19,7 @@ LOGIN_URL = '/login/'
 class ContactsView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request):
         # Define your criteria (e.g., no results or no updates for 30 days)
         return render(request, 'contacts.html')
@@ -25,6 +28,7 @@ class ContactsView(LoginRequiredMixin, View):
 class HomeView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request):
         # Определите ваши критерии (например, результат 0 и отсутствие обновлений в течение 3 дней)
         three_days_ago = timezone.now() - timedelta(days=3)
@@ -62,15 +66,17 @@ class HomeView(LoginRequiredMixin, View):
 class ContactsView(LoginRequiredMixin, View):
     login_url = LOGIN_URL
 
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request):
         return render(request, 'contacts.html')
 
 
 class LoginView(View):
-
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request):
         return render(request, 'login.html')
 
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='POST', block=True))
     def post(self, request):
         action = request.POST.get('action', '')
         print(request.POST)

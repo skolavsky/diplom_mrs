@@ -22,3 +22,4 @@ easy-thumbnails
 django-ckeditor
 django-unfold
 django-axes
+django-ratelimit

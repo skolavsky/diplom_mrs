@@ -4,7 +4,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views import View
+from django_ratelimit.decorators import ratelimit
 from taggit.models import Tag
 
 from .forms import SearchForm
@@ -12,6 +14,7 @@ from .models import Post
 
 
 class PostListView(LoginRequiredMixin, View):
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request, tag_slug=None):
         post_list = Post.published.all()
         posts_only = request.GET.get('posts_only')
@@ -39,6 +42,7 @@ class PostListView(LoginRequiredMixin, View):
 
 
 class PostSearchView(LoginRequiredMixin, View):
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request):
         form = SearchForm()
         query = None
@@ -60,6 +64,7 @@ class PostSearchView(LoginRequiredMixin, View):
 
 
 class PostDetailView(LoginRequiredMixin, View):
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request, year, month, day, post):
         post = get_object_or_404(Post,
                                  status=Post.Status.PUBLISHED,
