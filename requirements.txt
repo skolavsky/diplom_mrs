@@ -21,3 +21,4 @@ Pillow
 easy-thumbnails
 django-ckeditor
 django-unfold
+django-axes

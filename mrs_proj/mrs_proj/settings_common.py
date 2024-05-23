@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'clients.apps.ClientsConfig',  # own application
     'blog.apps.BlogConfig',  # own application
     "unfold",  # before django.contrib.admin
+    'axes',  # приложение для отслеживания неудачных попыток взлома
     "unfold.contrib.filters",  # optional, if special filters are needed
     "unfold.contrib.forms",  # optional, if special form elements are needed
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
@@ -76,6 +77,9 @@ INSTALLED_APPS = [
 
 ]
 
+# настройки для axes
+AXES_FAILURE_LIMIT = 5  # кол-во неудачных попыток входа
+AXES_COOLOFF_TIME = 1  # Cool-off period in hours
 
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
@@ -89,6 +93,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'mrs_proj.urls'
