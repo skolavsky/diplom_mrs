@@ -1,7 +1,19 @@
+:root {
+    --main-color: #2a92c0;
+    --hover-color: #1d6a8c;
+    --danger-color: #ff4d4d;
+    --danger-hover-color: #cc0000;
+    --warning-color: #30256d;
+    --warning-hover-color: #241c53;
+    --light-color: #f9f9f9;
+    --border-color: #C2C5C8;
+    --button-padding: 10px 20px;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body, html {
@@ -11,14 +23,14 @@ body, html {
 }
 
 h2 {
-    color: #d70c0c;
+    color: #7da7e3;
 }
 
 .main {
     display: flex;
     justify-content: center;
-    padding: 20px;
     flex-wrap: nowrap;
+    padding: 20px;
 }
 
 .main .container {
@@ -29,22 +41,6 @@ h2 {
     background-color: #ffffff;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.client-details-container {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.client-details-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.client-details-table th,
-.client-details-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
 }
 
 .history-table {
@@ -65,29 +61,23 @@ p {
     margin: 10px 0;
 }
 
-button {
-    padding: 10px;
-    margin: 5px;
-    background-color: #007BFF;
-    color: #fff;
+/* Общие стили для всех кнопок */
+button,
+.button {
+    padding: 8px 16px; /* Универсальный padding */
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-}
-
-nav a {
-    color: #fff;
     text-decoration: none;
-    margin: 0 15px;
-    font-size: 16px;
-    transition: color 0.3s ease;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background-color: var(--main-color);
+    color: #FFF;
 }
 
-nav a:hover {
-    color: #fff;
-}
-
-button:hover {
-    background-color: #0056b3;
+button:hover,
+.button:hover {
+    background-color: var(--hover-color);
 }
 
 form {
@@ -110,156 +100,225 @@ form {
     color: #007BFF;
 }
 
-.result {
-    font-weight: bold;
-    color: #28a745;
-}
-
-.client-details-container {
-    width: 100%;
-    background-color: #f5f5f5;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.client-details-table {
-    width: 100%;
-    max-width: 1200px; /* Set a max-width for better readability */
-    margin: 0 auto; /* Center the table on the page */
-    border-collapse: collapse;
-    margin-top: 20px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-}
-
-.client-details-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-.client-details-table td:first-child {
-    font-weight: bold;
-    width: 30%; /* Set a fixed width for the first column */
-}
-
-/* стили для формы по заполнению показателей клиента */
-
 #data-edit {
-  margin: 20px auto; /* Центрирование формы */
-  width: 80%; /* Ширина формы */
-}
+    margin: 20px auto; /* Центрирование формы */
+    width: 90%; /* Ширина формы */
+    justify-content: center;
+    flex-wrap: nowrap;
 
-#data-edit form {
-  background-color: #f9f9f9; /* Цвет фона формы */
-  padding: 20px; /* Поля вокруг элементов формы */
-  border-radius: 8px; /* Скругление углов формы */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень формы */
-}
-
-#data-edit form p {
-  margin-bottom: 15px; /* Отступ между абзацами (полями формы) */
-}
-
-#data-edit form label {
-  display: inline-block; /* Этикетка в ряд с полем ввода */
-  width: 200px; /* Ширина этикетки */
-  font-weight: bold; /* Жирный текст для этикетки */
-}
-
-#data-edit form input[type="number"],
-#data-edit form input[type="checkbox"],
-#data-edit form select {
-  width: 150px; /* Ширина полей ввода и списка выбора */
-  padding: 8px; /* Отступы вокруг содержимого поля ввода и списка выбора */
-  border-radius: 4px; /* Скругление углов поля ввода и списка выбора */
-  border: 1px solid #ccc; /* Обводка поля ввода и списка выбора */
-  box-sizing: border-box; /* Размеры включают границу и заполнение */
-}
-
-#data-edit form button[type="submit"] {
-  padding: 10px 20px; /* Отступы вокруг текста кнопки */
-  border: none; /* Убираем границу кнопки */
-  border-radius: 4px; /* Скругление углов кнопки */
-  background-color: #4CAF50; /* Цвет фона кнопки */
-  color: white; /* Цвет текста кнопки */
-  cursor: pointer; /* Изменение курсора при наведении */
-}
-
-#data-edit form button[type="submit"]:hover {
-  background-color: #45a049; /* Цвет фона кнопки при наведении */
-}
-
-#data-edit form {
-  display: grid; /* Используем CSS Grid для размещения элементов формы */
-  grid-template-columns: repeat(2, 1fr); /* Делим форму на две колонки равной ширины */
-  gap: 20px; /* Отступ между элементами формы */
-}
-
-#data-edit form p {
-  margin: 0; /* Убираем отступы у параграфов формы */
-}
-
-#data-edit form label {
-  font-weight: bold; /* Жирный текст для этикетки */
-}
-
-#data-edit form input[type="number"],
-#data-edit form input[type="checkbox"],
-#data-edit form select {
-  width: 100%; /* Ширина полей ввода и списка выбора занимает всю доступную ширину колонки */
-}
-
-.history-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #f9f9f9;
-}
-
-.history-table th, .history-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-.history-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-.history-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.history-table tr:hover {
-    background-color: #f1f1f1;
 }
 
 .highlight {
     background-color: #ffeb3b;
 }
 
+#data-edit form {
+    background-color: #f9f9f9; /* Цвет фона формы */
+    padding: 20px; /* Поля вокруг элементов формы */
+    border-radius: 8px; /* Скругление углов формы */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень формы */
+}
+
+#data-edit form p {
+    margin-bottom: 15px; /* Отступ между абзацами (полями формы) */
+}
+
+#data-edit form label {
+    display: inline-block; /* Этикетка в ряд с полем ввода */
+    width: 200px; /* Ширина этикетки */
+    font-weight: bold; /* Жирный текст для этикетки */
+}
+
+#data-edit form input[type="number"],
+#data-edit form input[type="checkbox"],
+#data-edit form select {
+    width: 150px; /* Ширина полей ввода и списка выбора */
+    padding: 8px; /* Отступы вокруг содержимого поля ввода и списка выбора */
+    border-radius: 4px; /* Скругление углов поля ввода и списка выбора */
+    border: 1px solid #ccc; /* Обводка поля ввода и списка выбора */
+    box-sizing: border-box; /* Размеры включают границу и заполнение */
+}
+
+#data-edit form button[type="submit"] {
+    padding: 10px 20px; /* Отступы вокруг текста кнопки */
+    border: none; /* Убираем границу кнопки */
+    border-radius: 4px; /* Скругление углов кнопки */
+    background-color: #4CAF50; /* Цвет фона кнопки */
+    color: white; /* Цвет текста кнопки */
+    cursor: pointer; /* Изменение курсора при наведении */
+}
+
+#data-edit form button[type="submit"]:hover {
+    background-color: #45a049; /* Цвет фона кнопки при наведении */
+}
+
+#data-edit form {
+    display: grid; /* Используем CSS Grid для размещения элементов формы */
+    grid-template-columns: repeat(2, 1fr); /* Делим форму на две колонки равной ширины */
+    gap: 20px; /* Отступ между элементами формы */
+}
+
+#data-edit form p {
+    margin: 0; /* Убираем отступы у параграфов формы */
+}
+
+#data-edit form label {
+    font-weight: bold; /* Жирный текст для этикетки */
+}
+
+#data-edit form input[type="number"],
+#data-edit form input[type="checkbox"],
+#data-edit form select {
+    width: 100%; /* Ширина полей ввода и списка выбора занимает всю доступную ширину колонки */
+}
+
+/* Стили для таблицы истории */
+.client-history-table-container {
+    margin: 20px 0; /* Внешние отступы */
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #c2c5c8;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.client-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.client-history-table th,
+.client-history-table td {
+    padding: 10px;
+    border: 1px solid #c2c5c8;
+    text-align: left;
+}
+
+.client-history-table th {
+    background-color: #2a92c0;
+    color: #ffffff;
+}
+
+.client-history-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.client-history-table tr:hover {
+    background-color: #e8f4f9;
+}
+
+/* Подсветка изменений */
+.changed-field {
+    background-color: #ffff99; /* Светло-желтый фон для измененных полей */
+}
+
+/* Пагинация */
 .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    margin: 20px 0;
+    gap: 20px; /* Расстояние между элементами пагинации */
+    flex-wrap: wrap; /* Перенос строк для адаптивности */
 }
 
-.pagination .step-links {
+.pagination span {
     display: flex;
     align-items: center;
+    color: #5a5a5a;
 }
 
-.pagination .step-links a {
-    margin: 0 5px;
-    padding: 5px 10px;
+.pagination a {
+    color: #2a92c0;
+    padding: 8px 16px;
     text-decoration: none;
-    color: #007bff;
+    border: 1px solid #c2c5c8;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    gap: 10px;
 }
 
-.pagination .step-links .current {
-    margin: 0 5px;
-    padding: 5px 10px;
-    font-weight: bold;
+.pagination a:hover {
+    background-color: #e8f4f9;
 }
+
+/* Стили для формы выбора параметра и дат */
+#parameter-form {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Расстояние между элементами формы */
+    margin: 20px 0; /* Внешние отступы */
+    padding: 15px;
+    background-color: #ffffff; /* Фон формы */
+    border: 1px solid #c2c5c8;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#parameter-form label {
+    font-size: 16px; /* Размер шрифта */
+    color: #5a5a5a;
+    font-family: inherit; /* Используем общий шрифт */
+    margin-right: 10px; /* Отступ справа от метки */
+}
+
+#parameter-form select,
+#parameter-form input[type="date"],
+#parameter-form button {
+    padding: 10px;
+    border: 1px solid #c2c5c8;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: inherit; /* Используем общий шрифт */
+}
+
+#parameter-form select,
+#parameter-form input[type="date"] {
+    flex: 1; /* Элементы занимают доступное пространство */
+    min-width: 150px; /* Минимальная ширина для каждого элемента */
+    max-width: 200px; /* Максимальная ширина для каждого элемента */
+}
+
+#parameter-form button {
+    background-color: #2a92c0;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 0 0 150px; /* Кнопка фиксированной ширины */
+    margin-left: 10px; /* Отступ слева от кнопки */
+}
+
+#parameter-form button:hover {
+    background-color: #21799e;
+}
+
+/* Дополнительные стили для визуального улучшения */
+#parameter-form select,
+#parameter-form input[type="date"] {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#parameter-form select:focus,
+#parameter-form input[type="date"]:focus,
+#parameter-form button:focus {
+    outline: none;
+    border-color: #2a92c0;
+    box-shadow: 0 0 5px rgba(42, 146, 192, 0.5);
+}
+
+a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #2a92c0;
+}
+
+a:hover {
+    color: #21799e;
+}
+
+a i {
+    margin-right: 8px; /* Отступ справа от иконки */
+}
+
