@@ -1,47 +1,46 @@
-const note_url = '{% url "clients:note" %}';
+const noteUrl = '{% url "clients:note" %}';
 
-const note_options = {
-    method: 'POST',
-    headers: {'X-CSRFToken': csrftoken},
-    mode: 'same-origin'
-};
-
-$(document).ready(function () {
-    $(document).on('click', '.note-button', function () {
-        var button = $(this);
-        var clientId = button.data('client-id');
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('note-button')) {
+        var button = event.target;
+        var clientId = button.getAttribute('data-client-id');
         var action = 'note'; // Заметить клиента
 
         // Создаем FormData для отправки данных
         var formData = new FormData();
         formData.append('id', clientId);
         formData.append('action', action);
-
-        // Добавляем CSRF-токен в данные запроса
         formData.append('csrfmiddlewaretoken', csrftoken);
 
-        // Обновляем параметры запроса
-        note_options.body = formData;
+        // Параметры запроса
+        var noteOptions = {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        };
 
         // Отправляем AJAX-запрос
-        fetch(note_url, note_options)
+        fetch(noteUrl, noteOptions)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok') {
                     // Обновите интерфейс или выполните другие действия
-                    var buttonText = button.text().trim();
+                    var buttonText = button.textContent.trim();
                     if (buttonText === 'Сделать заметку') {
-                        button.text('Удалить заметку');
+                        button.textContent = 'Удалить заметку';
                     } else {
-                        button.text('Сделать заметку');
+                        button.textContent = 'Сделать заметку';
                     }
                 } else {
+                    console.error('Ошибка при отметке клиента');
                 }
             })
             .catch(error => {
                 console.error('Error occurred while noting client:', error);
                 alert('Error occurred while noting client');
             });
-    });
+    }
 });
-

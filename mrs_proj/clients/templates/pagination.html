@@ -1,0 +1,22 @@
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{{ query_params }}&page=1" class="button btn-first">&laquo; Первая страница</a>
+        {% endif %}
+        {% if page_obj.has_previous %}
+            <a href="?{{ query_params }}&page={{ page_obj.previous_page_number }}" class="button btn-back">&#8592;</a>
+        {% endif %}
+        <p class="page-info">
+            Страница {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+        </p>
+        {% if page_obj.has_next %}
+            <a href="?{{ query_params }}&page={{ page_obj.next_page_number }}" class="button btn-forward">&#8594;</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?{{ query_params }}&page={{ page_obj.paginator.num_pages }}" class="button btn-last">Последняя страница &raquo;</a>
+        {% endif %}
+    </span>
+<!-- Включите этот элемент в вашем шаблоне -->
+<input type="hidden" id="last_page_number" value="{{ page_obj.paginator.num_pages }}">
+
+</div>

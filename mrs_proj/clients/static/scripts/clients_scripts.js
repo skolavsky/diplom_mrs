@@ -2,15 +2,13 @@ document.getElementById('toggleFormBtn').addEventListener('click', function () {
     document.getElementById('addClientForm').style.display = 'block';
 });
 
+document.getElementById('clearForecastThreshold').addEventListener('click', function () {
+    document.getElementById('forecast_threshold').value = '';
+});
+
 function toggleForm() {
     let modal = document.getElementById('addClientModal');
     modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'block' : 'none';
-}
-
-
-function cancelAddClient() {
-    let form = document.getElementById('addClientForm');
-    form.style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', function () {

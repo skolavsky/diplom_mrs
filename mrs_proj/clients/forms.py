@@ -100,12 +100,15 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
     class Meta:
         model = ClientData
         fields = ['age', 'admission_date', 'spo2', 'body_mass_index', 'result', 'dayshome', 'f_test_ex', 'f_test_in',
-                  'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d', 'ventilation_reserve', 'daystoresult', 'comorb_ccc',
-                  'comorb_bl', 'cd_ozhir', 'comorb_all',
-                  'week_result']
+                  'l_109', 'lf', 'rox', 'spo2_fio', 'ch_d', 'ventilation_reserve', 'mvv', 'mv', 'oxygen_flow',
+                  'daystoresult', 'comorb_ccc',
+                  'comorb_bl', 'cd_ozhir', 'comorb_all', 'week_result']
 
         labels = {
             'admission_date': 'Дата поступления',
+            'mvv': 'МВЛ',
+            'mv': 'МОД',
+            'oxygen_flow': 'Поток кислорода(л/мин)',
             'age': 'Возраст',
             'spo2': 'SPO2',
             'body_mass_index': 'ИМТ',
@@ -129,7 +132,7 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
 
         widgets = {
             'age': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 120}),
-            'admission_date': forms.DateInput(attrs={'required': False, 'type': 'date'}),
+            'admission_date': forms.DateInput(attrs={'required': False, 'type': 'date'}, format='%Y-%m-%d'),
             'body_mass_index': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
             'spo2': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 100}),
             'dayshome': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50}),
@@ -142,8 +145,11 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
             'spo2_fio': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 600.0}),
             'l_109': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 50.0}),
             'ch_d': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 150}),
+            'oxygen_flow': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 15}),
+            'mvv': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 100}),
+            'mv': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 20}),
             'measurementday': forms.NumberInput(attrs={'required': False, 'min': 0, 'max': 30}),
-            'comorb_ccc': forms.CheckboxInput(attrs={'class': 'checkbox-input'}),
+            'comorb_ccc': forms.CheckboxInput(attrs={'required': False, 'class': 'checkbox-input'}),
         }
 
     def clean_daystoresult(self):
@@ -160,6 +166,54 @@ class ClientDataForm(forms.ModelForm, ValidationMixin):
                     f"Значение {self.fields['daystoresult'].label} должно быть в пределах от 0 до 30.")
                 # Проверка на количество знаков после запятой (не более 3)
         return daystoresult
+
+    def clean_oxygen_flow(self):
+        oxygen_flow = self.cleaned_data.get('oxygen_flow')
+
+        if oxygen_flow is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(oxygen_flow, float, 'oxygen_flow')
+
+            # Проверка на кол-во и наличие
+            if oxygen_flow < 0 or oxygen_flow > 15:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['oxygen_flow'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+            self.validate_decimal_precision(value=oxygen_flow, field_name='oxygen_flow')
+        return oxygen_flow
+
+    def clean_mv(self):
+        mv = self.cleaned_data.get('mv')
+
+        if mv is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(mv, float, 'mv')
+
+            # Проверка на кол-во и наличие
+            if mv < 0 or mv > 20:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['mv'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+            self.validate_decimal_precision(value=mv, field_name='mv')
+        return mv
+
+    def clean_mvv(self):
+        mvv = self.cleaned_data.get('mvv')
+
+        if mvv is not None:
+
+            # Проверка на соответствие типу
+            self.validate_type(mvv, float, 'mvv')
+
+            # Проверка на кол-во и наличие
+            if mvv < 0 or mvv > 100:
+                raise forms.ValidationError(
+                    f"Значение {self.fields['mvv'].label} должно быть в пределах от 0 до 30.")
+                # Проверка на количество знаков после запятой (не более 3)
+            self.validate_decimal_precision(value=mvv, field_name='mvv')
+        return mvv
 
     def clean_ventilation_reserve(self):
         ventilation_reserve = self.cleaned_data.get('ventilation_reserve')

@@ -1,20 +1,17 @@
 var page = 1;
 var emptyPage = false;
 var blockRequest = false;
-
-let filters
+var last_page_number = document.getElementById('last_page_number').value;
 
 
 function updateTable(clear_url = false) {
 
     var m_url = page_url + '?table_only=1&'; // Формирование URL с учётом номера страницы
-
     if (clear_url === true) {
-
+        filters = '';  // Очищаем фильтры, если указан clear_url
     } else {
         m_url = m_url + 'page=' + page + '&' + filters;
     }
-
 
     console.log(m_url)
     fetch(m_url)
@@ -70,76 +67,4 @@ document.querySelectorAll('.pagination a').forEach(link => {
 
 });
 
-document.querySelectorAll('.sort-link').forEach(link => {
-    link.addEventListener('click', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное действие ссылки
 
-        const sortField = this.dataset.sort; // Получаем поле для сортировки из атрибута data-sort
-        const sortOrder = this.dataset.order; // Получаем порядок сортировки из атрибута data-order
-
-        // Формируем URL для асинхронного запроса с учетом параметров сортировки
-        const url = `${page_url}?sort=${sortField}&order=${sortOrder}&table_only=1`;
-
-        // Вызываем функцию обновления таблицы с новым URL
-        updateTable(url);
-    });
-});
-
-
-document.querySelectorAll('.btn-filter').forEach(link => {
-    link.addEventListener('click', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное действие кнопки
-        const filterCheckboxes = document.querySelectorAll('.filter-group input[type="checkbox"]:checked');
-        filters = Array.from(filterCheckboxes).map(checkbox => checkbox.name + '=1').join('&');
-        // Теперь у вас есть строка параметров с выбранными значениями чекбоксов
-        filters += '&' + 'search=' + document.getElementById('searchInput').value;
-        console.log(filters); // Пример вывода в консоль для проверки
-
-        updateTable()
-        // Здесь можете добавить код для использования переменной filters
-    });
-});
-
-const resetButton = document.getElementById('resetButton');
-
-resetButton.addEventListener('click', function (event) {
-    event.preventDefault(); // Предотвращаем стандартное действие кнопки
-    const checkboxes = document.querySelectorAll('.filter-group input[type="checkbox"]');
-    filters = ''
-    // Снимаем галки с каждого чекбокса
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = false;
-    });
-
-    updateTable(true)
-});
-
-
-const searchButton = document.getElementById('searchButton');
-searchButton.addEventListener('click', function (event) {
-    // Предотвращаем стандартное действие кнопки
-    event.preventDefault();
-
-    // Получаем значение из поля ввода
-    filters += '&' + 'search=' + document.getElementById('searchInput').value;
-
-    // Теперь у вас есть значение из поля ввода, которое можно использовать
-    updateTable()
-});
-
-const tableHeaders = document.querySelectorAll('.table th');
-document.querySelectorAll('.table th a').forEach(link => {
-    link.onclick = function (event) {
-        event.preventDefault(); // Предотвращаем стандартное действие ссылки
-        const href = this.getAttribute('href'); // Получаем URL-адрес из атрибута href
-        const urlParams = new URLSearchParams(href.split('?')[1]); // Получаем параметры из URL-адреса
-        const sortValue = urlParams.get('sort'); // Получаем значение параметра sort
-        const orderValue = urlParams.get('order'); // Получаем значение параметра order
-        const currentSortOrder = `sort=${sortValue}&order=${orderValue}`; // Формируем текущую сортировку и порядок
-        filters += '&' + currentSortOrder;
-        updateTable();
-
-        // Возвращаем false, чтобы предотвратить переход по ссылке
-        return false;
-    };
-});

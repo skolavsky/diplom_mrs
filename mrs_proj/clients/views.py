@@ -1,25 +1,59 @@
 # views.py
 import secrets
 
-import requests
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
 from django.views import View
 from django.views.decorators.http import require_POST, require_GET
 
-from .AI.serializers import ClientSerializer
 from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
+from django.utils.dateparse import parse_date
 
 LOGIN_URL = '/login/'
 
+
+class ClientGraphDataView(View, LoginRequiredMixin):
+    def get(self, request, id):
+        parameter = request.GET.get('parameter', 'spo2')
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+
+        client_data = get_object_or_404(ClientData, personal_info__id=id)
+        history_entries = client_data.history.all()
+
+        if start_date and end_date:
+            start_date = parse_date(start_date)
+            end_date = parse_date(end_date)
+            history_entries = history_entries.filter(history_date__range=(start_date, end_date))
+
+        parameter_values = []
+        change_dates = []
+
+        previous_value = None
+
+        for version in history_entries:
+            value = getattr(version, parameter, None)
+            if value is not None and value != previous_value:
+                parameter_values.append(value)
+                change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
+                previous_value = value
+
+        parameter_values.reverse()
+        change_dates.reverse()
+
+        data = {
+            'parameter_values': parameter_values,
+            'change_dates': change_dates
+        }
+
+        return JsonResponse(data)
 
 class ClientStatsView(View):
     def post(self, request):
@@ -92,6 +126,15 @@ class ClientListView(LoginRequiredMixin, View):
         else:
             clients_data = clients_data.order_by(f'-{sort_by}')
 
+        forecast_threshold = request.GET.get('forecast_threshold')
+        ready_in_week = ''
+        # Фильтрация по порогу прогноза и result = 0
+        if forecast_threshold:
+            forecast_threshold = int(forecast_threshold)
+            ready_in_week = clients_data.filter(result=0, forecast_for_week__gte=forecast_threshold).count()
+            clients_data = clients_data.filter(result=0, forecast_for_week__gte=forecast_threshold)
+            print(ready_in_week)
+
         if search_query:
             clients_data = clients_data.filter(
                 Q(personal_info__first_name__icontains=search_query) |
@@ -105,7 +148,7 @@ class ClientListView(LoginRequiredMixin, View):
 
         if 'table_only' in request.GET:
             # Если указан параметр 'table_only', возвращаем только HTML-таблицу
-            return render(request, self.table_template_name, {'clients_data': page})
+            return render(request, self.table_template_name, {'clients_data': page, 'ready_in_week': ready_in_week, })
 
         # В противном случае возвращаем полный HTML-шаблон страницы
         client_data_form = ClientDataForm()
@@ -118,16 +161,19 @@ class ClientListView(LoginRequiredMixin, View):
             'search_query': search_query,
             'personal_info_form': personal_info_form,
             'client_data_form': client_data_form,
+            'ready_in_week': ready_in_week,
         }
 
         return render(request, self.template_name, context)
 
     def post(self, request):
         action = request.POST.get('action', '')
-
         if action == 'save':
+
             personal_info_form = PersonalInfoForm(request.POST)
             client_data_form = ClientDataForm(request.POST)
+            print(personal_info_form)
+            print(client_data_form)
 
             if personal_info_form.is_valid() and client_data_form.is_valid():
                 # Создаем и сохраняем PersonalInfo
@@ -143,49 +189,97 @@ class ClientListView(LoginRequiredMixin, View):
                 new_personal_info.id_token = secrets.token_urlsafe(32)
                 new_personal_info.save()
 
-                # Редиректим на страницу с клиентами
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    messages.success(request, 'Запись успешно добавлена')
+                    return JsonResponse({'message': 'ok'})
+
+                # Для обычных запросов перенаправляем на список клиентов
                 messages.success(request, 'Запись успешно добавлена')
                 return redirect('clients:client_list')
 
-        messages.error(request, 'Ошибка при добавлении записи')
-        return redirect('clients:client_list')
+            messages.error(request, 'Ошибка при добавлении записи')
+            return redirect('clients:client_list')
 
 
 class ClientDetailView(View, LoginRequiredMixin):
     template_name = 'client_detail.html'
+    table_template_name = 'client_detail_history_table.html'
 
     def get(self, request, id):
-        client_data = get_object_or_404(ClientData, personal_info__id=id)
-        client_info = get_object_or_404(PersonalInfo, id=id)
-        form = ClientDataForm(instance=client_data)
-        form_info = PersonalInfoForm(instance=client_info)
-        client_serializer = ClientSerializer(client_data)
-        result_data = None
-        try:
-            response = requests.post(
-                self.request.build_absolute_uri(reverse('result')),
-                client_serializer.data,
-                headers={
-                    'X-CSRFToken': request.COOKIES.get('csrftoken', '')
-                },
-                cookies=request.COOKIES
-            )
-            response.raise_for_status()  # Поднимает исключение при неудачном запросе (например, 4xx или 5xx)
-            result_data = response.json().get('result', '')
+        entries_per_page = 15
 
-            # Дальнейшая обработка успешного запроса
-        except requests.RequestException as e:
-            print(f"Request failed: {e}")
+        client_data = get_object_or_404(ClientData, personal_info__id=id)
+        history_entries = client_data.history.all()
+        history_with_changes = []
+        client_info = get_object_or_404(PersonalInfo, id=id)
+        client_data_form = ClientDataForm(instance=client_data)
+        personal_info_form = PersonalInfoForm(instance=client_info)
+
+        fields = ['spo2', 'spo2_fio', 'rox', 'ch_d', 'oxygen_flow', 'ventilation_reserve', 'mvv', 'mv']
+
+        spo2_values = []
+        change_dates = []
+
+        previous_spo2_value = None
+
+        for i in range(len(history_entries)):
+            version = history_entries[i]
+            changes = {}
+            has_changes = False
+            if i > 0:  # Skip the first item
+                prev_version = history_entries[i - 1]
+                for field in fields:
+                    if getattr(version, field) != getattr(prev_version, field):
+                        changes[field] = True
+                        has_changes = True
+                    else:
+                        changes[field] = False
+            else:
+                changes = {field: False for field in fields}
+
+            if has_changes:  # Добавляем только если есть изменения
+                history_with_changes.append({
+                    'version': version,
+                    'changes': changes
+                })
+
+            # Add spo2 value and change date to the lists if spo2 is not None and different from the previous value
+            spo2_value = getattr(version, 'spo2', None)
+            if spo2_value is not None and spo2_value != previous_spo2_value:
+                spo2_values.append(spo2_value)
+                change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
+                previous_spo2_value = spo2_value
+
+        # Reverse the lists so that the latest data appears last
+        spo2_values.reverse()
+        change_dates.reverse()
+
+        # Пагинация после фильтрации
+        paginator = Paginator(history_with_changes, entries_per_page)  # Показывать по 15 записей на странице
+
+        page = request.GET.get('page')
+        try:
+            paginated_history_with_changes = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_history_with_changes = paginator.page(1)
+        except EmptyPage:
+            paginated_history_with_changes = paginator.page(paginator.num_pages)
+
+        if 'table_only' in request.GET:
+            # Если указан параметр 'table_only', возвращаем только HTML-таблицу
+            return render(request, self.table_template_name, {'history_with_changes': paginated_history_with_changes})
 
         context = {
+            'form': client_data_form,
+            'form_info': personal_info_form,
             'client_data': client_data,
-            'form': form,
-            'form_info': form_info,
-            'result': result_data,
-            'history_entries': client_data.history.all(),
+            'history_with_changes': paginated_history_with_changes,
+            'spo2_values': spo2_values,
+            'change_dates': change_dates,
         }
 
         return render(request, self.template_name, context)
+
 
     def post(self, request, id):
         action = request.POST.get('action', '')

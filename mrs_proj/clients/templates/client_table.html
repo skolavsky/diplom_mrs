@@ -1,4 +1,14 @@
 <div id="clientTableWrapper">
+    {% if ready_in_week %}
+
+        <div id="stats">
+
+            <ul>
+                <li>Пациентов готовых к выписке: {{ ready_in_week }}</li>
+            </ul>
+        </div>
+    {% endif %}
+
     <table>
         <thead>
         <tr class="table">
@@ -29,8 +39,10 @@
                         <a href="{{ client_data.personal_info.get_absolute_url }}">
                             {{ client_data.personal_info }}
                         </a>
+                        <br>
                         <button class="show-spoiler-button"
-                                data-client-url="client-data/{{ client_data.personal_info.id }}/">
+                                data-client-url="client-data/{{ client_data.personal_info.id }}/"><i
+                                class="fas fa-info-circle"></i>
                             Показать данные
                         </button>
                     </td>
@@ -71,23 +83,6 @@
         </tbody>
     </table>
 
-    <div class="pagination">
-        <span class="step-links">
-            {% if clients_data.has_previous %}
-                <a href="?{{ query_params }}&page=1" class="button btn-first">&laquo; Первая страница</a>
-            {% endif %}
-            {% if clients_data.has_previous %}
-                <a href="?{{ query_params }}&page={{ clients_data.previous_page_number }}" class="button btn-back">&#8592;</a>
-            {% endif %}
-            <p class="page-info">
-                Страница {{ clients_data.number }} / {{ clients_data.paginator.num_pages }}
-            </p>
-            {% if clients_data.has_next %}
-                <a href="?{{ query_params }}&page={{ clients_data.next_page_number }}" class="button btn-forward">&#8594;</a>
-            {% endif %}
-            {% if clients_data.has_next %}
-                <a href="?{{ query_params }}&page={{ clients_data.paginator.num_pages }}" class="button btn-last">Последняя страница &raquo;</a>
-            {% endif %}
-        </span>
-    </div>
+    {% include "pagination.html" with page_obj=clients_data %}
+
 </div>
