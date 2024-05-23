@@ -14,31 +14,37 @@ from django.views.decorators.http import require_POST, require_GET
 
 from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
+from django.utils.dateparse import parse_date
 
 LOGIN_URL = '/login/'
 
 
 class ClientGraphDataView(View, LoginRequiredMixin):
     def get(self, request, id):
-        parameter = request.GET.get('parameter', 'spo2')  # Получаем параметр из запроса, по умолчанию 'spo2'
+        parameter = request.GET.get('parameter', 'spo2')
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+
         client_data = get_object_or_404(ClientData, personal_info__id=id)
         history_entries = client_data.history.all()
+
+        if start_date and end_date:
+            start_date = parse_date(start_date)
+            end_date = parse_date(end_date)
+            history_entries = history_entries.filter(history_date__range=(start_date, end_date))
 
         parameter_values = []
         change_dates = []
 
         previous_value = None
 
-        for i in range(len(history_entries)):
-            version = history_entries[i]
-
+        for version in history_entries:
             value = getattr(version, parameter, None)
             if value is not None and value != previous_value:
                 parameter_values.append(value)
                 change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
                 previous_value = value
 
-        # Reverse the lists so that the latest data appears last
         parameter_values.reverse()
         change_dates.reverse()
 
@@ -48,7 +54,6 @@ class ClientGraphDataView(View, LoginRequiredMixin):
         }
 
         return JsonResponse(data)
-
 
 class ClientStatsView(View):
     def post(self, request):
