@@ -1,4 +1,4 @@
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
 from django import forms
 
 from .models import Post
@@ -9,7 +9,7 @@ class SearchForm(forms.Form):
 
 
 class PostAdminForm(forms.ModelForm):
-    body = forms.CharField(widget=CKEditorUploadingWidget())
+    body = forms.CharField(widget=CKEditor5Widget())
 
     class Meta:
         model = Post

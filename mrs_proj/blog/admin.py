@@ -1,4 +1,4 @@
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
 from django import forms
 from django.contrib import admin
 from unfold.admin import ModelAdmin
@@ -7,7 +7,7 @@ from .models import Post
 
 
 class PostAdminForm(forms.ModelForm):
-    body = forms.CharField(widget=CKEditorUploadingWidget())
+    body = forms.CharField(widget=CKEditor5Widget())
 
     class Meta:
         model = Post

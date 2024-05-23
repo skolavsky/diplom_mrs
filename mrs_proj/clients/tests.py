@@ -2,15 +2,19 @@ import secrets
 import string
 from datetime import date
 
-from .forms import PersonalInfoForm, ClientDataForm
-from .models import PersonalInfo, ClientData
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from faker import Faker
 
+from .forms import PersonalInfoForm, ClientDataForm
+from .models import PersonalInfo, ClientData
+
 LOGIN = '/login/'
+
+User = get_user_model()
 
 
 class PersonalInfoFormTest(TestCase):
@@ -1049,9 +1053,14 @@ class ClientModelTest(TestCase):
 
 class ClientListViewTests(TestCase):
     def setUp(self):
-        # Создаем пользователя и логинимся
+        self.factory = RequestFactory()
+
+        # Создаем пользователя
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.client.login(username='testuser', password='testpassword')
+
+        # Создаем запрос и логиним пользователя
+        self.request = self.factory.get('/')
+        self.client.force_login(self.user)
 
         # Инициализируем Faker
         fake = Faker('ru_RU')
@@ -1091,9 +1100,14 @@ class ClientDetailViewTests(TestCase):
     '''
 
     def setUp(self):
-        # Создаем пользователя и логинимся
+        self.factory = RequestFactory()
+
+        # Создаем пользователя
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.client.login(username='testuser', password='testpassword')
+
+        # Создаем запрос и логиним пользователя
+        self.request = self.factory.get('/')
+        self.client.force_login(self.user)
 
         # Инициализируем Faker
         self.faker = Faker('ru_RU')

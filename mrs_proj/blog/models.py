@@ -1,10 +1,10 @@
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from easy_thumbnails.fields import ThumbnailerImageField
 from taggit.managers import TaggableManager
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class PublishedManager(models.Manager):
@@ -23,7 +23,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     short_description = models.CharField(max_length=100, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
-    body = RichTextUploadingField()
+    body = CKEditor5Field('Text', config_name='extends')
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

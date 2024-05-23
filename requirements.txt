@@ -19,7 +19,10 @@ psycopg2
 xlrd
 Pillow
 easy-thumbnails
-django-ckeditor
+django-ckeditor-5
 django-unfold
 django-axes
 django-ratelimit
+django-ratelimit2
+django-two-factor-auth
+phonenumbers
