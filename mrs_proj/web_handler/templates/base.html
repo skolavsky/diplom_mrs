@@ -23,13 +23,13 @@
             <h1><a href="{% url 'web_handler:home' %}">MRS <i class="fa-solid fa-microscope"></i></a></h1>
             <h2>{% block header %}{% endblock %}</h2>
             <nav class="menu">
-                <a href="{% url 'web_handler:home' %}"><i class="fas fa-home"></i> Главная страница</a>
-                <a href="{% url 'clients:client_list' %}"><i class="fas fa-list"></i> Все записи</a>
-                <a href="{% url 'web_handler:contacts' %}"><i class="fas fa-address-book"></i> Контакты</a>
-                <a href="{% url 'blog:post_list' %}"><i class="fas fa-chart-bar"></i> Статьи и обновления</a>
+                <a href="{% url 'web_handler:home' %}" title="Перейти на главную"><i class="fas fa-home"></i> Главная страница</a>
+                <a href="{% url 'clients:client_list' %}" title="Показать список пациентов"><i class="fas fa-list"></i> Все записи</a>
+                <a href="{% url 'web_handler:contacts' %}" title="Страница контактов"><i class="fas fa-address-book"></i> Контакты</a>
+                <a href="{% url 'blog:post_list' %}" title="Перейти в блог"><i class="fas fa-chart-bar"></i> Статьи и обновления</a>
                 <!-- Объединяем аватар и надпись в один контейнер -->
                 <div class="avatar-container">
-                    <a href="{% url 'account_edit' %}" class="account-link">
+                    <a href="{% url 'account_edit' %}" title="Ваш профиль" class="account-link">
                         {% if request.user.profile.photo %}
                             {% thumbnail request.user.profile.photo "48x48" crop="smart" as im %}
                             <img src="{{ im.url }}" alt="Your Avatar" class="avatar">
@@ -42,7 +42,7 @@
 
                 <form action="{% url 'logout' %}" method="post" class="logout-form">
                     {% csrf_token %}
-                    <button type="submit" class="menu-button"><i class="fas fa-sign-out-alt"></i> Выход</button>
+                    <button type="submit" class="menu-button" title="Выйти из аккаунта"><i class="fas fa-sign-out-alt"></i> Выход</button>
                 </form>
             </nav>
         </div>

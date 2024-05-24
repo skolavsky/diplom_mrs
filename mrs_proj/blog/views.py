@@ -16,7 +16,7 @@ from .models import Post
 class PostListView(LoginRequiredMixin, View):
     @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request, tag_slug=None):
-        post_list = Post.published.all()
+        post_list = Post.published.annotate(comment_count=Count('comments'))
         posts_only = request.GET.get('posts_only')
 
         tag = None
