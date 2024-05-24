@@ -15,7 +15,7 @@
         <article>
             <h1>{{ post.title }}</h1>
             <p class="date">
-                Published {{ post.publish }} by {{ post.author }}
+                Опубликовано {{ post.publish }} by {{ post.author }}
             </p>
             {% if post.preview %}
                 {% thumbnail post.preview "300x300" crop="smart" as im %}
@@ -37,13 +37,13 @@
         <hr>
         {% unicorn 'comments' post_id=post.id %}
 
-        <h2>Similar posts</h2>
+        <h2>Похожие посты</h2>
         {% for post in similar_posts %}
             <p>
                 <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
             </p>
             {% empty %}
-            There are no similar posts yet.
+            Похожих постов нет.
         {% endfor %}
     </main>
 

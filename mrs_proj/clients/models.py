@@ -9,6 +9,7 @@ from django.db.models import BooleanField
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
+from encrypted_model_fields.fields import EncryptedCharField, EncryptedBooleanField
 from mrs_proj.settings_common import FORECAST_URL
 from simple_history.models import HistoricalRecords
 
@@ -19,10 +20,10 @@ class PersonalInfo(models.Model):
         (True, 'Мужской'),
     ]
 
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    patronymic = models.CharField(max_length=100, blank=True)
-    gender: BooleanField = models.BooleanField(default=True, choices=GENDER_CHOICES)
+    first_name = EncryptedCharField(max_length=100)
+    last_name = EncryptedCharField(max_length=100)
+    patronymic = EncryptedCharField(max_length=100, blank=True)
+    gender = EncryptedBooleanField(default=True, choices=GENDER_CHOICES)
     is_active: BooleanField = models.BooleanField(default=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
@@ -149,6 +150,7 @@ def calculate_ventilation_reserve(sender, instance, **kwargs):
         instance.ventilation_reserve = round(instance.mvv / instance.mv, 3)
     else:
         instance.ventilation_reserve = None  # Или другое значение, обозначающее отсутствие данных
+
 
 @receiver(pre_save, sender=ClientData)
 def update_forecast(sender, instance, **kwargs):
