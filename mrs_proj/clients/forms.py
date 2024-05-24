@@ -2,6 +2,8 @@
 import re
 from datetime import date
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Row, Column
 from django import forms
 from django.conf import settings
 from django.utils import timezone
@@ -32,6 +34,23 @@ class PersonalInfoForm(forms.ModelForm, ValidationMixin):
             'patronymic': 'Отчество',
             'gender': 'Пол',
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False  # Отключаем автоматическое создание тега <form>
+        self.helper.layout = Layout(
+            Row(
+                Column('first_name', css_class='form-group col-md-6 mb-0'),
+                Column('last_name', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('patronymic', css_class='form-group col-md-6 mb-0'),
+                Column('gender', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+        )
 
     widgets = {
         'first_name': forms.TextInput(attrs={'class': 'name_input'}),

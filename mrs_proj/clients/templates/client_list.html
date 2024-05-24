@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block style %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/clients_list_styles.css' %}">
 {% endblock %}
 {% block title %}Список записей{% endblock %}
@@ -214,6 +215,7 @@
 
     <script src="{% static 'scripts/clients_scripts.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {% endblock %}
 
 {% block domready %}

@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
     'django.contrib.admin',
     'django.contrib.auth',
+    'crispy_forms', # приложение для bootstrap4 форм
+    'crispy_bootstrap4',  # или 'crispy_bootstrap5' в зависимости от используемой версии
     'ratelimit',  # приложение для ограничивания слишком большого кол-ва запросов к представлению
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -82,6 +84,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',  # последнее приложение для двухфаторной аутентификации
 
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4' # пакет для рендеринга форм
+
 
 # настройки для axes
 AXES_FAILURE_LIMIT = 10  # кол-во неудачных попыток входа
