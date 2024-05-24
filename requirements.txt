@@ -26,3 +26,7 @@ django-ratelimit
 django-ratelimit2
 django-two-factor-auth
 phonenumbers
+django-crispy-forms
+crispy-bootstrap4
+django-unicorn
+django-robots
