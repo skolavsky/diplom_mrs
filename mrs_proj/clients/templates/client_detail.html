@@ -52,12 +52,12 @@
         <button id="client_edit" type="button" class="btn btn-primary mt-3" onclick="toggleForm()">Редактировать
             данные
         </button>
- <button id="client_edit" type="button" onclick="toggleForm()">Редактировать данные</button>
+        <button id="client_edit" type="button" onclick="toggleForm()">Редактировать данные</button>
         <div id="data-edit">
             <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
-            <button type="submit" class="btn btn-success mt-3" name="action" value="edit_client">Сохранить</button>
+                <button type="submit" class="btn btn-success mt-3" name="action" value="edit_client">Сохранить</button>
             </form>
         </div>
 

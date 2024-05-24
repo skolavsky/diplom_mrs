@@ -24,7 +24,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # получа
 # доступ к микросервису
 FORECAST_URL = os.environ.get('FORECAST_URL', 'http://localhost:8888/test/')
 
-SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
 
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
@@ -64,6 +63,7 @@ INSTALLED_APPS = [
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.staticfiles',  # последнее приложение для двухфаторной аутентификации
     'crispy_forms', # приложение для bootstrap4 форм
     'crispy_bootstrap4',  # или 'crispy_bootstrap5' в зависимости от используемой версии
     'ratelimit',  # приложение для ограничивания слишком большого кол-ва запросов к представлению
@@ -81,9 +81,12 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
     'two_factor',
-    'django.contrib.staticfiles',  # последнее приложение для двухфаторной аутентификации
+    'django.contrib.sites',
+    'robots', # приложение для создания файла с информацией для поисковых машин
 
 ]
+
+SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4' # пакет для рендеринга форм
 
