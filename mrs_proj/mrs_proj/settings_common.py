@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'two_factor',
     'django.contrib.sites',
     'robots', # приложение для создания файла с информацией для поисковых машин
+    "django_unicorn",  # required for Django to register urls and templatetags
 
 ]
 

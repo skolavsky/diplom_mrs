@@ -1,0 +1,27 @@
+{% load thumbnail %}
+{% load static %}
+
+
+<div class="comments">
+    <h3>Комментарии</h3>
+
+    <ul>
+        {% for comment in comments %}
+            <li>
+                {% if request.user.profile.photo %}
+                    {% thumbnail request.user.profile.photo "48x48" crop="smart" as im %}
+                    <img src="{{ im.url }}" alt="Your Avatar" class="avatar">
+                {% else %}
+                    <img src="{% static 'img/default_avatar.png' %}" alt="Default Avatar" class="avatar">
+                {% endif %}
+                <strong>{{ comment.user.username }}</strong>: {{ comment.text }} ({{ comment.created_at }})
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h4>Добавить комментарий</h4>
+    </article><textarea unicorn:model="new_comment" placeholder="Введите текст здесь"></textarea>
+    <button unicorn:click="add_comment">Отправить</button>
+</div>
+
+

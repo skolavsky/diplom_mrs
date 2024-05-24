@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django_ckeditor_5.fields import CKEditor5Field
 from easy_thumbnails.fields import ThumbnailerImageField
 from taggit.managers import TaggableManager
-from django_ckeditor_5.fields import CKEditor5Field
 
 
 class PublishedManager(models.Manager):
@@ -45,3 +46,13 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('blog:post_detail', args=[self.publish.year, self.publish.month, self.publish.day,
                                                  self.slug])
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.user.username} on {self.post.title}"

@@ -19,6 +19,7 @@ urlpatterns = [
     path('clients/', include('clients.urls')),
     path('account/', include('account.urls')),
     path('blog/', include('blog.urls', namespace='blog')),
+    path("unicorn/", include("django_unicorn.urls")),
     path('', include('web_handler.urls')),
     # API's pathes
     path('api/', include('clients.AI.urls')),

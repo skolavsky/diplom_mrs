@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% load thumbnail %}
-
+{% load unicorn %}
+{% load static %}
 
 {% load blog_tags %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/post_detail_styles.css' %}">
+{% endblock %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -30,6 +34,10 @@
 
             {{ post.body|markdown }}
         </article>
+
+        <hr>
+        {% unicorn 'comments' post_id=post.id %}
+
         <h2>Similar posts</h2>
         {% for post in similar_posts %}
             <p>
