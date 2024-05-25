@@ -1,19 +1,106 @@
 from datetime import timedelta
 
-from clients.models import ClientData
+from clients.models import PersonalInfo, ClientData
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.http import require_GET
 from django_ratelimit.decorators import ratelimit
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
 
 LOGIN_URL = '/login/'
+
+
+def is_admin(user):
+    return user.is_superuser
+
+
+@require_GET
+@user_passes_test(is_admin)
+def generate_pdf(request):
+    '''
+    Скачать отчёт можно на /report/
+    Скачать может только админ
+    Содержимое отчёта можно отредактировать тут
+    '''
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+    y = height - inch
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(inch, y, "Statistics Report")
+    y -= inch
+
+    # Статистика по PersonalInfo
+    total_personal_info = PersonalInfo.objects.count()
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(inch, y, f"Total Personal Info Records: {total_personal_info}")
+    y -= 14
+
+    # Статистика по ClientData
+    total_client_data = ClientData.objects.count()
+    p.drawString(inch, y, f"Total Client Data Records: {total_client_data}")
+    y -= 14
+
+    # Статистика по значениям result
+    results = [0, 1, 2, 3]
+    for result in results:
+        count = ClientData.objects.filter(result=result).count()
+        p.drawString(inch, y, f"Client Data with Result {result}: {count}")
+        y -= 14
+
+    # Статистика по пользователям
+    total_users = User.objects.count()
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(inch, y, f"Total Users: {total_users}")
+    y -= 14
+
+    active_users = User.objects.filter(is_active=True).count()
+    p.drawString(inch, y, f"Active Users: {active_users}")
+    y -= 14
+
+    # Дополнительная статистика по пользователям
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(inch, y, "User Activity Details")
+    y -= inch
+
+    users = User.objects.all()
+    for user in users:
+        p.setFont("Helvetica-Bold", 12)
+        p.drawString(inch, y, f"Username: {user.username}")
+        y -= 14
+        p.setFont("Helvetica", 10)
+        last_login = user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else "Never"
+        p.drawString(inch, y, f"Last Login: {last_login}")
+        y -= 14
+        date_joined = user.date_joined.strftime('%Y-%m-%d %H:%M:%S')
+        p.drawString(inch, y, f"Date Joined: {date_joined}")
+        y -= 14
+        y -= 10  # Дополнительный отступ между пользователями
+
+        if y <= inch:
+            p.showPage()
+            p.setFont("Helvetica", 10)
+            y = height - inch
+
+    p.showPage()
+    p.save()
+
+    return response
 
 
 class ContactsView(LoginRequiredMixin, View):

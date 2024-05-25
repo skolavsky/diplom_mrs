@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'auditlog',  # приложение для логов
     'django_ckeditor_5',  # приложение для редактирования текста
     'rest_framework',
     'easy_thumbnails',  # приложение для создания миниатюр изображений
@@ -84,7 +83,12 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'robots',  # приложение для создания файла с информацией для поисковых машин
     "django_unicorn",  # required for Django to register urls and templatetags
+    'auditlog',  # приложение для логов
     'django_cryptography',  # для шифрования полей модели
+    'health_check',                             # required
+    'health_check.db',                          # stock Django health checkers
+    'health_check.cache',  # Проверка кэша
+    'health_check.storage',  # Проверка файловой системы
 
 ]
 
@@ -198,7 +202,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'auditlog.middleware.AuditlogMiddleware'
+    'auditlog.middleware.AuditlogMiddleware',  # Убедитесь, что это написано правильно
     'django.middleware.csrf.CsrfViewMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

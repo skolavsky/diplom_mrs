@@ -33,3 +33,6 @@ django-robots
 django_cryptography
 django-encrypted-model-fields
 django-auditlog
+django-health-check
+django-utils-six
+reportlab

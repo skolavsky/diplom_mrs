@@ -1,11 +1,12 @@
 # project/urls.py
 from blog.sitemaps import PostSitemap, WebHandlerSitemap
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 
 sitemaps = {
     'posts': PostSitemap,
@@ -27,13 +28,13 @@ urlpatterns = [
     # Sitemap
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', include('robots.urls')),
+    path('health/', login_required(include('health_check.urls'))),
 
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
 urlpatterns += [
-    path("ckeditor5/", include('django_ckeditor_5.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                   path("ckeditor5/", include('django_ckeditor_5.urls')),
+               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
