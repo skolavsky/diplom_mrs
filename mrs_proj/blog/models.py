@@ -6,6 +6,8 @@ from django.utils import timezone
 from django_ckeditor_5.fields import CKEditor5Field
 from easy_thumbnails.fields import ThumbnailerImageField
 from taggit.managers import TaggableManager
+from auditlog.registry import auditlog
+from auditlog.models import AuditlogHistoryField
 
 
 class PublishedManager(models.Manager):
@@ -33,6 +35,7 @@ class Post(models.Model):
 
     objects = models.Manager()  # The default manager.
     published = PublishedManager()  # Our custom manager.
+    history = AuditlogHistoryField()
 
     class Meta:
         ordering = ['-publish']
@@ -53,6 +56,11 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    history = AuditlogHistoryField()
 
     def __str__(self):
         return f"Comment by {self.user.username} on {self.post.title}"
+
+
+auditlog.register(Comment)
+auditlog.register(Post)

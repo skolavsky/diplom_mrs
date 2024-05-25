@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'auditlog',  # приложение для логов
     'django_ckeditor_5',  # приложение для редактирования текста
     'rest_framework',
     'easy_thumbnails',  # приложение для создания миниатюр изображений
@@ -92,7 +93,6 @@ SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
 CRISPY_TEMPLATE_PACK = 'bootstrap4'  # пакет для рендеринга форм
 
 FIELD_ENCRYPTION_KEY = config('FIELD_ENCRYPTION_KEY')
-
 
 # настройки для axes
 AXES_FAILURE_LIMIT = 10  # кол-во неудачных попыток входа
@@ -198,6 +198,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'auditlog.middleware.AuditlogMiddleware'
     'django.middleware.csrf.CsrfViewMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

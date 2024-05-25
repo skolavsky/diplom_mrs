@@ -22,7 +22,7 @@ LOGIN_URL = '/login/'
 
 
 class ClientGraphDataView(View, LoginRequiredMixin):
-    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='GET', block=True))
     def get(self, request, id):
         parameter = request.GET.get('parameter', 'spo2')
         start_date = request.GET.get('start_date')
@@ -60,7 +60,7 @@ class ClientGraphDataView(View, LoginRequiredMixin):
 
 
 class ClientStatsView(View):
-    @method_decorator(ratelimit(key='ip', rate='30/m', method='POST', block=True))
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='POST', block=True))
     def post(self, request):
         # Проверяем, что метод запроса POST
         if request.method == 'POST':
@@ -94,7 +94,7 @@ class ClientListView(LoginRequiredMixin, View):
     template_name = 'client_list.html'
     table_template_name = 'client_table.html'
 
-    @method_decorator(ratelimit(key='ip', rate='5/m', method='GET', block=True))
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='GET', block=True))
     def get(self, request):
         clients_per_page = 10
         sort_by = request.GET.get('sort', 'personal_info__last_name')
@@ -172,7 +172,7 @@ class ClientListView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
-    @method_decorator(ratelimit(key='ip', rate='5/m', method='POST', block=True))
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='POST', block=True))
     def post(self, request):
         action = request.POST.get('action', '')
         if action == 'save':
@@ -212,7 +212,7 @@ class ClientDetailView(View, LoginRequiredMixin):
     template_name = 'client_detail.html'
     table_template_name = 'client_detail_history_table.html'
 
-    @method_decorator(ratelimit(key='ip', rate='5/m', method='GET', block=True))
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='GET', block=True))
     def get(self, request, id):
         entries_per_page = 15
 
@@ -288,7 +288,7 @@ class ClientDetailView(View, LoginRequiredMixin):
 
         return render(request, self.template_name, context)
 
-    @method_decorator(ratelimit(key='ip', rate='5/m', method='POST', block=True))
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='POST', block=True))
     def post(self, request, id):
         action = request.POST.get('action', '')
 

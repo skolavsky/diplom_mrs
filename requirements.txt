@@ -30,3 +30,6 @@ django-crispy-forms
 crispy-bootstrap4
 django-unicorn
 django-robots
+django_cryptography
+django-encrypted-model-fields
+django-auditlog
