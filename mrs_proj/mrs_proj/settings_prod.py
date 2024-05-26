@@ -1,17 +1,19 @@
-from .settings_common import *   #NOSONAR
 # SECURITY WARNING: don't run with debug turned on in production!
 import os
 
-DEBUG = False
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOST', '').split(', ')
+from .settings_common import *   #NOSONAR
+ALLOWED_HOSTS = ['*']
 
+
+# Чтение .env файла
+# Использование переменных окружения
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'myproject',
-        'USER': 'myprojectuser',
+        'USER': 'myuser',
         'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'db',  # Это имя сервиса из docker-compose.yml
+        'PORT': '5432',
     }
 }

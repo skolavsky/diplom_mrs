@@ -36,3 +36,5 @@ django-auditlog
 django-health-check
 django-utils-six
 reportlab
+uvicorn
+psycopg2-binary

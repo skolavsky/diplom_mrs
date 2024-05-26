@@ -1,42 +1,40 @@
-# Используйте официальный образ Python с конкретной версией
+# Dockerfile
+
+# Базовый образ Python
 FROM python:3.12
 
-# Устанавливаем переменную окружения для запуска в неинтерактивном режиме
-ENV DEBIAN_FRONTEND=noninteractive
+# Установка зависимостей
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev
 
-# Устанавливаем git и nginx
-RUN apt-get update && \
-    apt-get install -y git nginx && \
-    rm -rf /var/lib/apt/lists/*
-
-# Создаем и переходим в рабочую директорию
+# Создание рабочего каталога
 WORKDIR /app
 
-# Копируем файлы
+# Копирование файлов приложения
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+# Перейти на директорию выше для запуска Uvicorn
 
-# Клонируем ваш репозиторий из GitHub (если это необходимо)
+WORKDIR /app/mrs_proj
 
-# Устанавливаем Gunicorn
-RUN pip install gunicorn
+# Копируем скрипт ожидания
+COPY wait_for_db.py /wait_for_db.py
 
-# Копируем файл конфигурации Gunicorn
-COPY gunicorn.conf.py /app
+# Копируем скрипт создания суперпользователя
+COPY create_superuser.py /create_superuser.py
 
-# Копируем конфигурацию Nginx
-COPY nginx.conf /etc/nginx/sites-available/default
+# Собираем статические файлы
+RUN python manage.py collectstatic --noinput
 
-# Устанавливаем переменную окружения с путем к статическим файлам
-ENV DJANGO_SETTINGS_MODULE="mrs_proj.settings"
+# Установка переменной окружения DJANGO_SETTINGS_MODULE
+ENV DJANGO_SETTINGS_MODULE=mrs_proj.settings
 
-# Устанавливаем STATIC_ROOT
-RUN python mrs_proj/manage.py collectstatic --noinput
+# Выполняем миграции
+RUN python manage.py makemigrations
 
-# Открываем порт 80 для Nginx
-EXPOSE 80
 
-# Запускаем Gunicorn
-CMD ["gunicorn", "--config", "/app/gunicorn.conf.py", "mrs_proj.wsgi:application"]
+# Команда для запуска Uvicorn
+CMD ["uvicorn", "mrs_proj.asgi:application", "--host", "0.0.0.0", "--port", "8000"]

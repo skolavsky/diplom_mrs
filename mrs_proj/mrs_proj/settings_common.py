@@ -48,7 +48,8 @@ AUTHENTICATION_BACKENDS = [
     'web_handler.authentication.EmailAuthBackend',
 ]
 
-ALLOWED_HOSTS = []
+# settings_dev.py или settings_prod.py
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',  # own application
