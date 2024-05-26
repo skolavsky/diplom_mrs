@@ -21,7 +21,7 @@ showChartBtn.addEventListener('click', function () {
 
             Highcharts.chart('chart-content', {
                 title: {
-                    text: `${currentParameter.charAt(0).toUpperCase() + currentParameter.slice(1)} Levels Over Time`
+                    text: `${currentParameter.charAt(0).toUpperCase() + currentParameter.slice(1)} Уровень`
                 },
                 xAxis: {
                     title: {

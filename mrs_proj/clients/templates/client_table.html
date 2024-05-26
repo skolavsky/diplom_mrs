@@ -13,19 +13,22 @@
         <thead>
         <tr class="table">
             <th data-sort="personal_info__last_name" data-order="asc">
-                <a href="?sort=personal_info__last_name&order={{ next_order }}">ФИО</a>
+                <a href="?sort=personal_info__last_name&order={{ next_order }}" class="tooltip" title="Сортировать по ФИО">ФИО</a>
             </th>
             <th {% if sort_by == 'spo2_fio' %} class="active"{% endif %}>
-                <a href="?sort=spo2_fio&order={{ next_order }}">SPO2/FIO</a>
+                <a href="?sort=spo2_fio&order={{ next_order }}" class="tooltip" title="Сортировать по SPO2/FIO">SPO2/FIO</a>
             </th>
             <th {% if sort_by == 'rox' %} class="active"{% endif %}>
-                <a href="?sort=rox&order={{ next_order }}">ROX</a>
+                <a href="?sort=rox&order={{ next_order }}" class="tooltip" title="Сортировать по ROX">ROX</a>
             </th>
             <th {% if sort_by == 'ventilation_reserve' %} class="active"{% endif %}>
-                <a href="?sort=ventilation_reserve&order={{ next_order }}">Вентиляционный резерв</a>
+                <a href="?sort=ventilation_reserve&order={{ next_order }}" class="tooltip" title="Сортировать по вентиляционному резерву">Вентиляционный резерв</a>
             </th>
             <th {% if sort_by == 'result' %} class="active"{% endif %}>
-                <a href="?sort=result&order={{ next_order }}">Результат</a>
+                <a href="?sort=result&order={{ next_order }}" class="tooltip" title="Сортировать по результату">Результат</a>
+            </th>
+            <th {% if sort_by == 'date_last_modified' %} class="active"{% endif %}>
+                <a href="?sort=date_last_modified&order={{ next_order }}" class="tooltip" title="Сортировать по дате последнего изменения">Последнее изменение</a>
             </th>
             <th>Действия</th>
         </tr>
@@ -40,7 +43,7 @@
                             {{ client_data.personal_info }}
                         </a>
                         <br>
-                        <button class="show-spoiler-button"
+                        <button class="show-spoiler-button" title="Вывести данные пациента"
                                 data-client-url="client-data/{{ client_data.personal_info.id }}/"><i
                                 class="fas fa-info-circle"></i>
                             Показать данные
@@ -50,15 +53,25 @@
                     <td class="cell_rox">{{ client_data.rox|floatformat:3 }}</td>
                     <td class="cell_ventilation_reserve">{{ client_data.ventilation_reserve|floatformat:3 }}</td>
                     <td class="cell_res">
-                        {% if client_data.result == 0 %}
-                            без исхода (прогноз на выписку в течение недели ({{ client_data.forecast_for_week }}%))
-                        {% else %}
-                            {{ client_data.get_result_display }}
-                        {% endif %}
-                        {% if client_data.group %}
-                            группа: ({{ client_data.group }})
-                        {% endif %}
+                        <div class="result-container">
+                            <p data-tooltip="">
+                                <i class="fas fa-info-circle" title="D - смертельный исход&#013;H - выздоровление&#013;R - реанимация"></i>
+                            </p>
+                            <span>
+                                {% if client_data.result == 0 %}
+                                    без исхода (прогноз на выписку в течение недели ({{ client_data.forecast_for_week }}
+                                    %))
+                                {% else %}
+                                    {{ client_data.get_result_display }}
+                                {% endif %}
+                                {% if client_data.group %}
+                                    группа: ({{ client_data.group }})
+                                {% endif %}
+                        </span>
+                        </div>
                     </td>
+
+                    <td class="date_last_modified">{{ client_data.date_last_modified }}</td>
                     <td class="cell_button">
                         <button class="button button-delete"
                                 onclick="window.location.href='{{ client_data.personal_info.get_absolute_url }}'">

@@ -5,8 +5,6 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from .models import Article
-
 LOGIN = 'web_handler:login'
 
 class WebHandlerViewsTest(TestCase):

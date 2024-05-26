@@ -525,3 +525,41 @@ td.cell_name a:hover,
     flex-grow: 1; /* Растягиваем поле поиска, чтобы занять оставшееся пространство */
     max-width: 400px; /* Максимальная ширина для поля поиска */
 }
+
+.result-container {
+    display: flex;
+    align-items: center; /* Выравнивание элементов по вертикали */
+}
+
+.result-container p {
+    margin: 0;
+    padding-right: 8px; /* Отступ между иконкой и текстом */
+}
+
+.result-container i {
+    cursor: pointer;
+}
+
+/* Стили для подсказки */
+.result-container [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%; /* Позиционирование над элементом */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+    z-index: 1;
+}
+
+.result-container [data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}

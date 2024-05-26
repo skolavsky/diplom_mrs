@@ -9,8 +9,11 @@ from django.db.models import BooleanField
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
+from encrypted_model_fields.fields import EncryptedCharField, EncryptedBooleanField
 from mrs_proj.settings_common import FORECAST_URL
 from simple_history.models import HistoricalRecords
+from auditlog.registry import auditlog
+from auditlog.models import AuditlogHistoryField
 
 
 class PersonalInfo(models.Model):
@@ -19,12 +22,13 @@ class PersonalInfo(models.Model):
         (True, 'Мужской'),
     ]
 
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    patronymic = models.CharField(max_length=100, blank=True)
-    gender: BooleanField = models.BooleanField(default=True, choices=GENDER_CHOICES)
+    first_name = EncryptedCharField(max_length=100)
+    last_name = EncryptedCharField(max_length=100)
+    patronymic = EncryptedCharField(max_length=100, blank=True)
+    gender = EncryptedBooleanField(default=True, choices=GENDER_CHOICES)
     is_active: BooleanField = models.BooleanField(default=True)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    history = AuditlogHistoryField()
 
     def get_absolute_url(self):
         return reverse('clients:client_detail', args=[str(self.id)])
@@ -96,6 +100,8 @@ class ClientData(models.Model):
                                         related_name='clients_noted',
                                         blank=True)
 
+
+
     history = HistoricalRecords(inherit=True)
 
     def spo2_fio_changed(self):
@@ -150,6 +156,7 @@ def calculate_ventilation_reserve(sender, instance, **kwargs):
     else:
         instance.ventilation_reserve = None  # Или другое значение, обозначающее отсутствие данных
 
+
 @receiver(pre_save, sender=ClientData)
 def update_forecast(sender, instance, **kwargs):
     try:
@@ -203,3 +210,8 @@ def create_personal_info(sender, instance, created, **kwargs):
 def save_personal_info(sender, instance, **kwargs):
     if instance.has_personal_info:
         instance.personal_info.save()
+
+
+# регистрация для модели логирования
+auditlog.register(ClientData)
+auditlog.register(PersonalInfo)

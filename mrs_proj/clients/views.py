@@ -9,17 +9,20 @@ from django.db.models import Q
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.dateparse import parse_date
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_POST, require_GET
+from django_ratelimit.decorators import ratelimit
 
 from .forms import PersonalInfoForm, ClientDataForm
 from .models import ClientData, PersonalInfo
-from django.utils.dateparse import parse_date
 
 LOGIN_URL = '/login/'
 
 
 class ClientGraphDataView(View, LoginRequiredMixin):
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='GET', block=True))
     def get(self, request, id):
         parameter = request.GET.get('parameter', 'spo2')
         start_date = request.GET.get('start_date')
@@ -55,7 +58,9 @@ class ClientGraphDataView(View, LoginRequiredMixin):
 
         return JsonResponse(data)
 
+
 class ClientStatsView(View):
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='POST', block=True))
     def post(self, request):
         # Проверяем, что метод запроса POST
         if request.method == 'POST':
@@ -89,6 +94,7 @@ class ClientListView(LoginRequiredMixin, View):
     template_name = 'client_list.html'
     table_template_name = 'client_table.html'
 
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='GET', block=True))
     def get(self, request):
         clients_per_page = 10
         sort_by = request.GET.get('sort', 'personal_info__last_name')
@@ -166,6 +172,7 @@ class ClientListView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='POST', block=True))
     def post(self, request):
         action = request.POST.get('action', '')
         if action == 'save':
@@ -205,6 +212,7 @@ class ClientDetailView(View, LoginRequiredMixin):
     template_name = 'client_detail.html'
     table_template_name = 'client_detail_history_table.html'
 
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='GET', block=True))
     def get(self, request, id):
         entries_per_page = 15
 
@@ -280,7 +288,7 @@ class ClientDetailView(View, LoginRequiredMixin):
 
         return render(request, self.template_name, context)
 
-
+    @method_decorator(ratelimit(key='ip', rate='100/m', method='POST', block=True))
     def post(self, request, id):
         action = request.POST.get('action', '')
 
@@ -337,6 +345,7 @@ def client_noted(request):
     return JsonResponse({'status': 'error'})
 
 
+@ratelimit(key='ip', rate='30/h', block=True)
 @login_required
 @require_GET
 def client_data(request, id):
@@ -350,6 +359,7 @@ def client_data(request, id):
     return JsonResponse({'status': 'error'})
 
 
+@ratelimit(key='ip', rate='30/h', block=True)
 @login_required
 @require_POST
 def client_data_update(request, id):

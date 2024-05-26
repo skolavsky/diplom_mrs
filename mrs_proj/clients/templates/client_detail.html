@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block title %}
     {{ client_data.personal_info }}
 {% endblock %}
 
 {% block style %}
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
 
     <link rel="stylesheet" href="{% static 'css/clients_details_styles.css' %}">
 {% endblock %}
@@ -18,7 +20,9 @@
     <h1>Подробные данные</h1>
 
     <main>
-        <a href="{% url 'clients:client_list' %}">Назад к списку пациентов</a>
+        <a href="{% url 'clients:client_list' %}">
+            <i class="fas fa-arrow-left"></i> Назад к списку пациентов
+        </a>
 
         <h2>Действия</h2>
 
@@ -31,7 +35,7 @@
             {% csrf_token %}
             <input type="hidden" name="action" value="edit_client">
             <div id="confirmEditDiv" style="display: none;">
-                {{ form_info.as_p }}
+                {% crispy form_info %} <!-- Используем crispy для рендеринга формы -->
                 <p>Вы уверены, что хотите редактировать персональные данные {{ client_data.personal_info }}?</p>
                 <button type="submit" name="action" value="edit_client_info">Сохранить</button>
                 <button type="button" onclick="cancelEdit()">Нет</button>
@@ -43,17 +47,26 @@
             <button type="submit" name="action" value="delete_client">Удалить пациента</button>
         </form>
 
+        {% load crispy_forms_tags %}
+
+        <button id="client_edit" type="button" class="btn btn-primary mt-3" onclick="toggleForm()">Редактировать
+            данные
+        </button>
         <button id="client_edit" type="button" onclick="toggleForm()">Редактировать данные</button>
         <div id="data-edit">
             <form method="post" action="{% url 'clients:client_detail' id=client_data.personal_info.id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" name="action" value="edit_client">Сохранить</button>
+                <button type="submit" class="btn btn-success mt-3" name="action" value="edit_client">Сохранить</button>
             </form>
         </div>
 
+        <hr>
+
+        <h2>Информация о показателях в графиках</h2>
+
         <form id="parameter-form">
-            <label for="parameter-select">Choose a parameter:</label>
+            <label for="parameter-select">Выберите параметр:</label>
             <select id="parameter-select" name="parameter">
                 <option value="spo2">SPO2</option>
                 <option value="spo2_fio">Доля вдыхаемого кислорода</option>
@@ -65,16 +78,17 @@
                 <option value="mv">МОД</option>
                 <!-- Добавьте другие параметры здесь -->
             </select>
-        <label for="start-date">Start Date:</label>
-        <input type="date" id="start-date" name="start_date" />
-        <label for="end-date">End Date:</label>
-        <input type="date" id="end-date" name="end_date" />
-            <button type="button" id="show-chart-btn">Show Chart</button>
+            <label for="start-date">Начальная дата:</label>
+            <input type="date" id="start-date" name="start_date"/>
+            <label for="end-date">Конечная дата:</label>
+            <input type="date" id="end-date" name="end_date"/>
+            <button type="button" id="show-chart-btn">Показать график</button>
         </form>
+
 
         <!-- Контейнер для графика -->
         <div id="parameter-chart-container" style="display:none;">
-            <button type="button" id="hide-chart-btn">Hide Chart</button>
+            <button type="button" id="hide-chart-btn">Убрать график</button>
             <div id="chart-content"></div>
         </div>
         <h1>{{ client_data.personal_info.first_name }} {{ client_data.personal_info.last_name }}</h1>
@@ -88,6 +102,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
     <script src="{% static 'scripts/clients_detail_scripts.js' %}"></script>
 

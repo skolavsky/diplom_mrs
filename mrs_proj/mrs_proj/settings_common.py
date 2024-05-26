@@ -24,8 +24,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # получа
 # доступ к микросервису
 FORECAST_URL = os.environ.get('FORECAST_URL', 'http://localhost:8888/test/')
 
-SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
-
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
@@ -44,11 +42,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTHENTICATION_BACKENDS = [
+
+    'axes.backends.AxesStandaloneBackend',  # Для axes чтобы отслеживать неправильные входы
     'django.contrib.auth.backends.ModelBackend',
     'web_handler.authentication.EmailAuthBackend',
 ]
 
-ALLOWED_HOSTS = []
+# settings_dev.py или settings_prod.py
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',  # own application
@@ -56,26 +57,144 @@ INSTALLED_APPS = [
     'clients.apps.ClientsConfig',  # own application
     'blog.apps.BlogConfig',  # own application
     "unfold",  # before django.contrib.admin
+    'axes',  # приложение для отслеживания неудачных попыток взлома
     "unfold.contrib.filters",  # optional, if special filters are needed
     "unfold.contrib.forms",  # optional, if special form elements are needed
     "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.staticfiles',  # последнее приложение для двухфаторной аутентификации
+    'crispy_forms',  # приложение для bootstrap4 форм
+    'crispy_bootstrap4',  # или 'crispy_bootstrap5' в зависимости от используемой версии
+    'ratelimit',  # приложение для ограничивания слишком большого кол-ва запросов к представлению
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'ckeditor',  # приложение для редактирования текста
-    'ckeditor_uploader',
+    'django_ckeditor_5',  # приложение для редактирования текста
     'rest_framework',
     'easy_thumbnails',  # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт
     'django.contrib.postgres',  # приложение для работы с базой postgresql
     'simple_history',  # приложение для истории(Clients)
     'taggit',  # приложение для тегов(используется в блоге)
+    'django_otp',  # приложения для двухфаторной аутентификации
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
+    'two_factor',
+    'django.contrib.sites',
+    'robots',  # приложение для создания файла с информацией для поисковых машин
+    "django_unicorn",  # required for Django to register urls and templatetags
+    'auditlog',  # приложение для логов
+    'django_cryptography',  # для шифрования полей модели
+    'health_check',                             # required
+    'health_check.db',                          # stock Django health checkers
+    'health_check.cache',  # Проверка кэша
+    'health_check.storage',  # Проверка файловой системы
 
 ]
 
+SITE_ID = 1  # нужно для карты сайтов. admin/sites/site
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'  # пакет для рендеринга форм
+
+FIELD_ENCRYPTION_KEY = config('FIELD_ENCRYPTION_KEY')
+
+# настройки для axes
+AXES_FAILURE_LIMIT = 10  # кол-во неудачных попыток входа
+AXES_COOLOFF_TIME = 1  # Cool-off period in hours
+AXES_LOCK_OUT_AT_FAILURE = True  # Блокировать после неудачных попыток
+
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+
+customColorPalette = [
+    {
+        'color': 'hsl(4, 90%, 58%)',
+        'label': 'Red'
+    },
+    {
+        'color': 'hsl(340, 82%, 52%)',
+        'label': 'Pink'
+    },
+    {
+        'color': 'hsl(291, 64%, 42%)',
+        'label': 'Purple'
+    },
+    {
+        'color': 'hsl(262, 52%, 47%)',
+        'label': 'Deep Purple'
+    },
+    {
+        'color': 'hsl(231, 48%, 48%)',
+        'label': 'Indigo'
+    },
+    {
+        'color': 'hsl(207, 90%, 54%)',
+        'label': 'Blue'
+    },
+]
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link',
+                    'bulletedList', 'numberedList', 'blockQuote', 'imageUpload', ],
+        'language': 'ru',
+
+    },
+    'extends': {
+        'blockToolbar': [
+            'paragraph', 'heading1', 'heading2', 'heading3',
+            '|',
+            'bulletedList', 'numberedList',
+            '|',
+            'blockQuote',
+        ],
+        'toolbar': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
+                    'code', 'subscript', 'superscript', 'highlight', '|', 'codeBlock', 'sourceEditing', 'insertImage',
+                    'bulletedList', 'numberedList', 'todoList', '|', 'blockQuote', 'imageUpload', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'mediaEmbed', 'removeFormat',
+                    'insertTable', ],
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
+                        'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side', '|'],
+            'styles': [
+                'full',
+                'side',
+                'alignLeft',
+                'alignRight',
+                'alignCenter',
+            ]
+
+        },
+        'table': {
+            'contentToolbar': ['tableColumn', 'tableRow', 'mergeTableCells',
+                               'tableProperties', 'tableCellProperties'],
+            'tableProperties': {
+                'borderColors': customColorPalette,
+                'backgroundColors': customColorPalette
+            },
+            'tableCellProperties': {
+                'borderColors': customColorPalette,
+                'backgroundColors': customColorPalette
+            }
+        },
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'}
+            ]
+        }
+    },
+    'list': {
+        'properties': {
+            'styles': 'true',
+            'startIndex': 'true',
+            'reversed': 'true',
+        }
+    }
+}
 
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
@@ -84,11 +203,13 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',  # Убедитесь, что это написано правильно
     'django.middleware.csrf.CsrfViewMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',  # для axes
 ]
 
 ROOT_URLCONF = 'mrs_proj.urls'

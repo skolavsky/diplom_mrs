@@ -4,7 +4,9 @@ from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import View
+from django_ratelimit.decorators import ratelimit
 
 from .forms import UserEditForm, ProfileEditForm
 
@@ -18,11 +20,13 @@ class CustomPasswordChangeView(PasswordChangeView, LoginRequiredMixin):
 class EditProfileView(LoginRequiredMixin, View):
     login_url = '/login/'  # URL для перенаправления, если пользователь не аутентифицирован
 
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
         return render(request, 'account/edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
+    @method_decorator(ratelimit(key='ip', rate='30/m', method='POST', block=True))
     def post(self, request):
         user_form = UserEditForm(instance=request.user, data=request.POST)
         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)

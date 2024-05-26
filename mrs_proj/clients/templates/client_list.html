@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block style %}
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/clients_list_styles.css' %}">
 {% endblock %}
 {% block title %}Список записей{% endblock %}
@@ -58,10 +59,10 @@
                     </div>
                 </div>
                 <div class="stats-container">
-                    <button id="statsToggleBtn" class="button">Показать статистику</button>
+                    <button id="statsToggleBtn" class="button" title="Показать статистику по пациентам">Показать статистику</button>
                     <div id="statsSpoiler" class="spoiler" style="display: none;">
                         <input type="number" id="percentInput" placeholder="Введите процент">
-                        <button id="submitPercentBtn" class="button">Отправить процент</button>
+                        <button id="submitPercentBtn" class="button" title="Установить порог для шанса выздоровленя в течении недели, выведет всех пациентов, чей шанс прогноза равен или выше порога">Отправить процент</button>
                     </div>
                 </div>
                 {% include 'client_table.html' %}
@@ -214,6 +215,7 @@
 
     <script src="{% static 'scripts/clients_scripts.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {% endblock %}
 
 {% block domready %}

@@ -6,6 +6,8 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 from easy_thumbnails.fields import ThumbnailerImageField
+from auditlog.registry import auditlog
+from auditlog.models import AuditlogHistoryField
 
 
 class Profile(models.Model):
@@ -14,6 +16,7 @@ class Profile(models.Model):
     date_of_birth = models.DateField(blank=True, null=True)
     photo = ThumbnailerImageField(upload_to='users/%Y/%m/%d/', blank=True)
     password_changed_at = models.DateTimeField(auto_now_add=True)
+    history = AuditlogHistoryField()
 
     def __str__(self):
         return f'Profile of {self.user.username}'
@@ -33,3 +36,6 @@ class Profile(models.Model):
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+
+
+auditlog.register(Profile)
