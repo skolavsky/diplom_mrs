@@ -23,11 +23,9 @@ WORKDIR /app/mrs_proj
 # Копируем скрипт ожидания
 COPY wait_for_db.py /wait_for_db.py
 
-# Копируем скрипт создания суперпользователя
-COPY create_superuser.py /create_superuser.py
-
 # Собираем статические файлы
 RUN python manage.py collectstatic --noinput
+
 
 # Установка переменной окружения DJANGO_SETTINGS_MODULE
 ENV DJANGO_SETTINGS_MODULE=mrs_proj.settings

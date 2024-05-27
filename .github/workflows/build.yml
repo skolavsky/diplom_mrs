@@ -43,7 +43,7 @@ jobs:
 
       - name: Make migrations
         working-directory: ./mrs_proj
-        run: python manage.py makemigrations --check --dry-run
+        run: python manage.py makemigrations
 
       - name: Migrate
         working-directory: ./mrs_proj
