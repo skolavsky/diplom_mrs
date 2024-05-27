@@ -1,4 +1,6 @@
 # views.py
+import json
+import os
 import secrets
 
 from django.contrib import messages
@@ -27,6 +29,7 @@ class ClientGraphDataView(View, LoginRequiredMixin):
         parameter = request.GET.get('parameter', 'spo2')
         start_date = request.GET.get('start_date')
         end_date = request.GET.get('end_date')
+        show_norm_values = request.GET.get('show_norm_values') == '1'
 
         client_data = get_object_or_404(ClientData, personal_info__id=id)
         history_entries = client_data.history.all()
@@ -38,8 +41,32 @@ class ClientGraphDataView(View, LoginRequiredMixin):
 
         parameter_values = []
         change_dates = []
+        upper_limit = []
+        lower_limit = []
 
         previous_value = None
+
+        # Фиксированные значения для верхней и нижней границ
+        upper_value = 90
+        lower_value = 80
+
+        try:
+            # Обновите путь к вашему JSON-файлу
+            json_file_path = os.path.join(os.path.dirname(__file__), 'normal_ranges.json')
+            with open(json_file_path, 'r') as f:
+                normal_ranges = json.load(f)
+
+            if show_norm_values:
+                norm_values = normal_ranges.get(parameter, {})
+                upper_value = norm_values.get('upper_limit')
+                lower_value = norm_values.get('lower_limit')
+
+        except FileNotFoundError:
+            return JsonResponse({'error': 'JSON file not found'}, status=500)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Error decoding JSON'}, status=500)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
         for version in history_entries:
             value = getattr(version, parameter, None)
@@ -48,13 +75,23 @@ class ClientGraphDataView(View, LoginRequiredMixin):
                 change_dates.append(version.history_date.strftime('%Y-%m-%d %H:%M:%S'))
                 previous_value = value
 
+                if show_norm_values:
+                    upper_limit.append(upper_value)
+                    lower_limit.append(lower_value)
+
         parameter_values.reverse()
         change_dates.reverse()
+        upper_limit.reverse()
+        lower_limit.reverse()
 
         data = {
             'parameter_values': parameter_values,
             'change_dates': change_dates
         }
+
+        if show_norm_values:
+            data['upper_limit'] = upper_limit
+            data['lower_limit'] = lower_limit
 
         return JsonResponse(data)
 

@@ -4,19 +4,42 @@ const chartContainer = document.getElementById('parameter-chart-container');
 const parameterSelect = document.getElementById('parameter-select');
 const startDatePicker = document.getElementById('start-date');
 const endDatePicker = document.getElementById('end-date');
-
+const showNormValuesCheckbox = document.getElementById('show-norm-values');
 
 showChartBtn.addEventListener('click', function () {
     const currentParameter = parameterSelect.value;
     const startDate = startDatePicker.value;
     const endDate = endDatePicker.value;
-    const graph_url_param = `${graph_url}?parameter=${currentParameter}&start_date=${startDate}&end_date=${endDate}`;
+    const showNormValues = showNormValuesCheckbox.checked ? '1' : '0';
+    const graph_url_param = `${graph_url}?parameter=${currentParameter}&start_date=${startDate}&end_date=${endDate}&show_norm_values=${showNormValues}`;
 
     fetch(graph_url_param)
         .then(response => response.json())
         .then(data => {
             if (chartContainer.style.display === 'none') {
                 chartContainer.style.display = 'block';
+            }
+
+            const seriesData = [{
+                name: currentParameter.charAt(0).toUpperCase() + currentParameter.slice(1),
+                data: data.parameter_values
+            }];
+
+            if (showNormValuesCheckbox.checked) {
+                seriesData.push(
+                    {
+                        name: 'Верхний порог нормы',
+                        data: data.upper_limit,
+                        dashStyle: 'ShortDash',
+                        color: 'red'
+                    },
+                    {
+                        name: 'Нижний порог нормы',
+                        data: data.lower_limit,
+                        dashStyle: 'ShortDash',
+                        color: 'blue'
+                    }
+                );
             }
 
             Highcharts.chart('chart-content', {
@@ -34,10 +57,7 @@ showChartBtn.addEventListener('click', function () {
                         text: currentParameter.charAt(0).toUpperCase() + currentParameter.slice(1)
                     }
                 },
-                series: [{
-                    name: currentParameter.charAt(0).toUpperCase() + currentParameter.slice(1),
-                    data: data.parameter_values
-                }]
+                series: seriesData
             });
         });
 });
