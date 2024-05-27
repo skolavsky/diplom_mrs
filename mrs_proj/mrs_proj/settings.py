@@ -1,7 +1,7 @@
 # settings.py
 from decouple import config
 
-DJANGO_ENV = config('DJANGO_ENV', 'production')
+DJANGO_ENV = config('DJANGO_ENV', 'dev')
 
 # settings_dev.py или settings_prod.py
 ALLOWED_HOSTS = ['*']
