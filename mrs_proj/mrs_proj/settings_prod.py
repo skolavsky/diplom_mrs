@@ -13,7 +13,7 @@ DATABASES = {
         'NAME': 'myproject',
         'USER': 'myuser',
         'PASSWORD': 'password',
-        'HOST': 'postgresql-db',  # Это имя сервиса из docker-compose.yml
+        'HOST': '172.18.0.2',  # Это имя сервиса из docker-compose.yml
         'PORT': '5432',
     }
 }
