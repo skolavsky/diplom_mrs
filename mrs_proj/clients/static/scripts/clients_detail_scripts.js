@@ -1,6 +1,27 @@
 function toggleForm() {
-    let form = document.getElementById('editForm');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    var formDiv = document.getElementById('data-edit');
+    var editButton = document.getElementById('client_edit');
+
+    if (formDiv.style.display === 'none' || formDiv.style.display === '') {
+        formDiv.style.display = 'block';
+        editButton.textContent = 'Отменить редактирование';
+    } else {
+        formDiv.style.display = 'none';
+        editButton.textContent = 'Редактировать данные';
+    }
+}
+
+function toggleEditForm() {
+    var formDiv = document.getElementById('confirmEditDiv');
+    var editButton = document.getElementById('edit');
+
+    if (formDiv.style.display === 'none' || formDiv.style.display === '') {
+        formDiv.style.display = 'block';
+        editButton.textContent = 'Отменить редактирование персональных данных';
+    } else {
+        formDiv.style.display = 'none';
+        editButton.textContent = 'Редактировать персональные данные';
+    }
 }
 
 function highlightChangedValues() {
@@ -29,15 +50,6 @@ function highlightChangedValues() {
 
 function showConfirmation() {
     document.getElementById('confirmEditDiv').style.display = 'block';
-}
-
-function confirmEdit() {
-    document.getElementById('client_personal_edit').submit();
-}
-
-function cancelEdit() {
-    document.getElementById('confirmEditDiv').style.display = 'none';
-    document.getElementById('client_personal_edit').reset();
 }
 
 

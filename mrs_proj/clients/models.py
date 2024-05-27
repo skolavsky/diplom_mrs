@@ -2,6 +2,8 @@ import uuid
 from datetime import date
 
 import requests
+from auditlog.models import AuditlogHistoryField
+from auditlog.registry import auditlog
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -12,8 +14,6 @@ from django.urls import reverse
 from encrypted_model_fields.fields import EncryptedCharField, EncryptedBooleanField
 from mrs_proj.settings_common import FORECAST_URL
 from simple_history.models import HistoricalRecords
-from auditlog.registry import auditlog
-from auditlog.models import AuditlogHistoryField
 
 
 class PersonalInfo(models.Model):
@@ -99,8 +99,6 @@ class ClientData(models.Model):
     users_note = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                         related_name='clients_noted',
                                         blank=True)
-
-
 
     history = HistoricalRecords(inherit=True)
 

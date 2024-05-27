@@ -313,3 +313,11 @@ a i {
     margin-right: 8px; /* Отступ справа от иконки */
 }
 
+.button-container {
+    display: flex;
+    gap: 10px; /* Расстояние между кнопками, можно регулировать по желанию */
+}
+
+.button-container form, .button-container > * {
+    margin: 0;
+}

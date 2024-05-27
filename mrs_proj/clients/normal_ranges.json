@@ -1,0 +1,22 @@
+{
+  "spo2": {
+    "upper_limit": 100,
+    "lower_limit": 80
+  },
+  "rox": {
+    "upper_limit": 70,
+    "lower_limit": 50
+  },
+  "spo2_fio": {
+    "upper_limit": 120,
+    "lower_limit": 110
+  },
+  "ch_d": {
+    "upper_limit": 20,
+    "lower_limit": 12
+  },
+  "ventilation_reserve": {
+    "upper_limit": 20,
+    "lower_limit": 12
+  }
+}
