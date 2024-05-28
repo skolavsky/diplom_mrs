@@ -6,3 +6,5 @@ python-dotenv
 alembic
 argon2-cffi
 pycryptodome
+PyJWT
+pydantic[email]
