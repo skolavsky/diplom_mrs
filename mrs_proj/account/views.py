@@ -33,8 +33,8 @@ class EditProfileView(LoginRequiredMixin, View):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Profile updated successfully')
-            return redirect('account:edit')  # Перенаправление на эту же страницу после успешного обновления профиля
+            messages.success(request, 'Профиль успешно обновлён')
+            return redirect('account_edit')  # Перенаправление на эту же страницу после успешного обновления профиля
         else:
-            messages.error(request, 'Error updating your profile')
+            messages.error(request, 'Ошибка при обновлении профиля')
             return render(request, 'account/edit.html', {'user_form': user_form, 'profile_form': profile_form})
