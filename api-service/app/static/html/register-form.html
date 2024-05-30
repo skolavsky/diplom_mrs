@@ -1,0 +1,51 @@
+<h1>Register for api-service</h1>
+<form action="" id="registerForm" style="display: block;">
+    <label for="email">
+            Email:
+    </label>
+    <input type="email" 
+            id="email"
+            name="email" 
+            placeholder="Enter your Email" required/>
+
+    <label for="password">
+        Password:
+    </label>
+    <input type="password"
+            id="password"
+            name="password"
+            minlength="8"
+            placeholder="Enter your Password" required/>
+
+    <label for="confirmPassword">
+        Confirm password:
+    </label>
+    <input type="password"
+            id="confirm-password"
+            name="confPassword"
+            minlength="8"
+            placeholder="Confirm your Password" required/>
+    
+    <div style="display: inline;">
+        <input type="checkbox" name="info" id="info" style="display: inline; width: unset;"/>
+        <label for="info" style="display: inline;"> I agree to the</label>
+        <a href="#" target="_blank" style="text-decoration: none; display: inline;">Privacy Policy</a>
+    </div>
+    <div class="wrap">
+        <button type="submit" id="register-button" disabled>
+            Register
+        </button>
+    </div>
+</form>
+
+
+<div id="registration-status" hidden>
+</div>
+
+<p>Return to 
+    <a href="/"
+        style="text-decoration: none;">
+        Login page
+    </a>
+</p>
+</div>

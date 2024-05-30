@@ -4,7 +4,7 @@ const userUrl = '/html/user-page.html';
 const publicKeyUrl = "/user/publickey/";
 const logoutUrl = '/user/logout/';
 const changePasswordUrl = '/user/change-password/';
-const loginScriptUrl = 'js/login.js';
+const loginScriptUrl = '/js/login.js';
 
 
 function showError(error = null) {
@@ -202,4 +202,12 @@ async function getPublicKey() {
         return {'key': null};
     });
     return publicKey['key'];
+}
+
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isStrongPassword(password) {
+    return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/.test(password);
 }

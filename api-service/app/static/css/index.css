@@ -4,7 +4,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: sans-serif;
-    line-height: 1.5;
+    line-height: 2;
     min-height: 100vh;
     background: #8f8f8f;
     flex-direction: column;
@@ -17,7 +17,7 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 10px 20px;
     transition: transform 0.2s;
-    width: 500px;
+    width: 600px;
     text-align: center;
 }
 
@@ -56,6 +56,10 @@ button {
     background-color: #4CAF50;
     width: 100%;
     font-size: 16px;
+}
+
+button[disabled] {
+    opacity: 0.5;
 }
 
 .wrap {

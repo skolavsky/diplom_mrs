@@ -13,15 +13,23 @@ async def get_user_by_email(db: Session, email: str):
 async def create_user(db: AsyncSession, user: schema.UserCreate):
     hashed_password = password_handler.hash(user.password)
     db_user = User(email=user.email, hashed_password=hashed_password)
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
+    try:
+        db.add(db_user)
+        await db.commit()
+        await db.refresh(db_user)
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 async def change_password(db: AsyncSession, db_user: User, new_password: str):
     hashed_password = password_handler.hash(new_password)
     db_user.hashed_password = hashed_password
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
+    try:
+        db.add(db_user)
+        await db.commit()
+        await db.refresh(db_user)
+        return True
+    except Exception as e:
+        print(e)
+        return False

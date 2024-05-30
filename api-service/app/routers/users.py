@@ -38,13 +38,26 @@ async def get_db_user_by_token(db, token):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-# redo
-@router.post("/signup/", response_model=schema.User)
+@router.post("/signup/")
 async def create_user(user: schema.UserCreate, db: AsyncSession = Depends(get_db)):
-    db_user = await crud.get_user_by_email(db, email=user.email)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    return await crud.create_user(db=db, user=user)
+    user.email = await decrypt(user.email)
+    if not user.email:
+        raise HTTPException(status_code=400, detail="Wrong encryption")
+    
+    if not schema.validate_email(user.email):
+        raise HTTPException(status_code=400, detail="Wrong email")
+    
+    if await crud.get_user_by_email(db, email=user.email):
+        raise HTTPException(status_code=400, detail="User already exists")
+    
+    user.password = await decrypt(user.password)
+    if not user.password:
+        raise HTTPException(status_code=400, detail="Wrong encryption")
+
+    if not await crud.create_user(db, user):
+        raise HTTPException(status_code=500, detail="Failed to create user")
+    
+    return JSONResponse(status_code=201, content={})
 
 @router.get("/login/", response_model=schema.UserInfo)
 async def login(request: Request, db: AsyncSession = Depends(get_db)):
@@ -57,7 +70,6 @@ async def login(request: Request, db: AsyncSession = Depends(get_db)):
 #User logins and gets token
 @router.post("/token/")
 async def get_token(user: schema.UserCreate, db: AsyncSession = Depends(get_db)):
-
     user.email = await decrypt(user.email)
     if not user.email:
         raise HTTPException(status_code=400, detail="Wrong encryption")
@@ -119,5 +131,7 @@ async def change_password(user: schema.ChangePassword, request: Request, db: Asy
     if not schema.validate_password(user.new_password):
         raise HTTPException(status_code=400, detail="Wrong new password")
     
-    await crud.change_password(db, db_user, user.new_password)
+    if not await crud.change_password(db, db_user, user.new_password):
+        raise HTTPException(status_code=500, detail="Failed to change password")
+    
     return JSONResponse(status_code=200, content={})

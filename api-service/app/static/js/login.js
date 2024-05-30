@@ -1,7 +1,9 @@
 const loginForm = document.getElementById('loginForm');
 const tokenUrl = "/user/token/";
+const registerFormUrl = "/html/register-form.html";
+const registerScriptUrl = "/js/register.js";
 
-async function getEPvalues(event){
+async function getLoginValues(event){
     let { email, password } = event.target.elements;
     return { email: email.value, password: password.value };
 }
@@ -38,7 +40,7 @@ async function getRefreshToken(email, password) {
 loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
     showError();
-    let { email, password } = await getEPvalues(event);
+    let { email, password } = await getLoginValues(event);
 
     if (!email.trim()) {
         showError('Email is required');
@@ -75,10 +77,27 @@ loginForm.addEventListener('submit', async function (event) {
         loadUserPage();
 });
 
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+document.getElementById('link').addEventListener('click', async function (event) {
+    showError();
+    event.preventDefault();
+    let html = await fetch(registerFormUrl, {method: 'GET'})
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        } else {
+            showError('Failed to load register form');
+            return null;
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        return null;
+    });
 
-function isStrongPassword(password) {
-    return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/.test(password);
-}
+    if (html) {
+        showMain(html);
+        const script = document.createElement('script');
+        script.src = registerScriptUrl;
+        document.body.appendChild(script);
+    }
+});
