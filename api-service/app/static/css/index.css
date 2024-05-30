@@ -35,7 +35,6 @@ label {
     font-weight: bold;
 }
 
-
 input {
     display: block;
     width: 100%;
@@ -67,4 +66,9 @@ button {
 
 form input:invalid:not(:placeholder-shown) {
     color: red;
+}
+
+.error{
+    background-color: rgb(128, 0, 0);
+    color: #ffe595;
 }

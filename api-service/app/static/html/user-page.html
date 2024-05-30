@@ -1,0 +1,29 @@
+<h1 id="title">Welcome</h1>
+<p id="created-at"></p>
+
+<form action="" id="change-password-form">
+    <label for="current-password">Current Password</label>
+    <input  type="password"
+            id="current-password"
+            minlength="8"
+            placeholder="Enter your current Password">
+
+    <label for="new-password">New Password</label>
+    <input  type="password"
+            id="new-password"
+            minlength="8"
+            placeholder="Enter your new Password">
+
+    <label for="confirm-new-password">Confirm New Password</label>
+    <input  type="password"
+            id="confirm-new-password"
+            minlength="8"
+            placeholder="Confirm your new Password">
+
+    <button id="change-password" type="submit">Change Password</button>
+</form>
+
+<div id="change-password-status" hidden>
+</div>
+
+<button id="logout-button" onclick="logout()">Logout</button>

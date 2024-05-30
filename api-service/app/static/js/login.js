@@ -1,57 +1,13 @@
 const loginForm = document.getElementById('loginForm');
-const loginUrl = "/users/login/"
-const publicKeyUrl = "/users/publickey/"
+const tokenUrl = "/user/token/";
 
-loginForm.addEventListener('submit', async function (event) {
-    event.preventDefault();
+async function getEPvalues(event){
     let { email, password } = event.target.elements;
+    return { email: email.value, password: password.value };
+}
 
-    email = email.value;
-    password = password.value;
-
-    if (!email.trim()) {
-        alert('Email is required');
-        return;
-    }
-
-    if (!isValidEmail(email)){
-        alert('Please enter a valid email address');
-        return;
-    }
-
-    if (!password.trim()) {
-        alert('Password is required');
-        return;
-    }
-
-    if (password.length < 8) {
-        alert('Password must be at least 8 characters long');
-        return;
-    }
-    
-    let publicKey = await fetch(publicKeyUrl, {method: 'GET'})
-    .then(response => {
-        if (response.ok) {
-            return response.text();
-        } else {
-            throw new Error('Failed to fetch public key');
-        }
-    })
-    .then(publicKey => {
-        if (!publicKey) {
-            throw new Error('No public key found');
-        }
-        return JSON.parse(publicKey)['key'];
-    })
-    .catch(error => {
-        alert(error.message);
-    });
-
-    publicKey = await importPublicKey(publicKey);
-    email = await Encrypt(email, publicKey);
-    password = await Encrypt(password, publicKey);
-
-    fetch(loginUrl, {
+async function getRefreshToken(email, password) {
+    return await fetch(tokenUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -63,18 +19,60 @@ loginForm.addEventListener('submit', async function (event) {
     })
     .then(response => {
         if (response.ok) {
-            alert('Login successful');
-            return response.json();
-        } else if (response.status === 404) {
-            return response.text().then(text => { throw new Error(text) });
-        }
-        else {
-            return response.text().then(text => { throw new Error(text) });
+            return true;
+        } else {
+            response.json().then(data => {
+                if (data && data['detail']) {
+                    showError(data['detail']);
+                }
+                return null;
+            })
         }
     })
     .catch(error => {
-        alert(JSON.parse(error.message)['detail']);
+        console.error(error);
+        return null;
     });
+}
+
+loginForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    showError();
+    let { email, password } = await getEPvalues(event);
+
+    if (!email.trim()) {
+        showError('Email is required');
+        return;
+    }
+
+    if (!isValidEmail(email)){
+        showError('Please enter a valid email address');
+        return;
+    }
+
+    if (!password.trim()) {
+        showError('Password is required');
+        return;
+    }
+
+    if (password.length < 8) {
+        showError('Password must be at least 8 characters long');
+        return;
+    }
+    
+    document.getElementById('error-container').hidden = true;
+
+    let publicKey = await getPublicKey();
+    if (!publicKey)
+        return;
+
+    publicKey = await importPublicKey(publicKey);
+    email = await Encrypt(email, publicKey);
+    password = await Encrypt(password, publicKey);
+
+    let got = await getRefreshToken(email, password);
+    if (got)
+        loadUserPage();
 });
 
 function isValidEmail(email) {

@@ -10,9 +10,12 @@
 </head>
 
 <body>
-    <div class="main">
+    <div class="error main" id="error-container" hidden>
+        <p id="error-detail"></p>
     </div>
-    <div class="loader-container">
+    <div class="main" id="main-container" hidden>
+    </div>
+    <div class="main" id="loader-container">
         <h1>Page is loading, please wait...</h1>
         <div class="wrap">    
             <div class="loader"></div>
@@ -20,6 +23,7 @@
     </div>
 
     <script src="js/index.js"></script>
+    <script src="js/rsa.js"></script>
 </body>
 
 </html>

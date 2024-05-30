@@ -17,3 +17,11 @@ async def create_user(db: AsyncSession, user: schema.UserCreate):
     await db.commit()
     await db.refresh(db_user)
     return db_user
+
+async def change_password(db: AsyncSession, db_user: User, new_password: str):
+    hashed_password = password_handler.hash(new_password)
+    db_user.hashed_password = hashed_password
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+    return db_user
