@@ -1,0 +1,165 @@
+
+
+.help-section, .support-form, .support-tickets, .appeal {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.help-section h2, .help-section h3, .appeal h4 {
+    color: #2a92c0;
+}
+
+.faq-list, .resource-list, .appeal-list, .submitted-messages, .submitted-tickets {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.faq-list .list_item, .resource-list .list_item, .appeal-item, .submitted-messages li, .submitted-tickets li {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #c2c5c8;
+    transition: background-color 0.3s;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    color: #5a5a5a;
+}
+
+.faq-list .list_item p, .resource-list .list_item a, .submitted-messages li strong, .submitted-tickets li strong, .appeal-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #2a92c0;
+}
+
+.faq-list .list_item:hover, .resource-list .list_item:hover, .appeal-item:hover, .submitted-messages li:hover, .submitted-tickets li:hover {
+    background-color: #e8f4f9;
+}
+
+.resource-list .list_item a {
+    text-decoration: none;
+    color: #2a92c0;
+}
+
+.resource-list .list_item a:hover {
+    text-decoration: underline;
+}
+
+.resource-list .list_item .fa {
+    margin-right: 10px;
+    color: #2a92c0;
+}
+
+.support-form .form-group, .support-tickets .form-group {
+    margin-bottom: 15px;
+}
+
+.support-form .form-group label, .support-tickets .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.support-form .form-group input, .support-form .form-group textarea, .support-tickets .form-group input, .support-tickets .form-group textarea, .appeal-input, .appeal-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #5a5a5a;
+}
+
+.support-form .form-group input:focus, .support-form .form-group textarea:focus, .support-tickets .form-group input:focus, .support-tickets .form-group textarea:focus, .appeal-input:focus, .appeal-textarea:focus {
+    outline: none;
+    border-color: #2a92c0;
+}
+
+.support-form .btn, .support-tickets .btn, .appeal-button {
+    background-color: #2a92c0;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+}
+
+.support-form .btn:hover, .support-tickets .btn:hover, .appeal-button:hover {
+    background-color: #1a6c9e;
+}
+
+.appeal-textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.appeal-item {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.appeal {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.appeal h4 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.appeal-input, .appeal-textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.appeal-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.appeal-button:hover {
+    background-color: #0056b3;
+}
+
+.appeal-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.appeal-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.appeal-item strong {
+    color: #007BFF;
+}
+
+/* Новые стили для улучшения адаптивности */
+@media (max-width: 768px) {
+    .appeal {
+        max-width: 100%;
+        padding: 10px;
+    }
+}

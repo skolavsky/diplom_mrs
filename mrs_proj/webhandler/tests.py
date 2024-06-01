@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 
-LOGIN = 'web_handler:login'
+LOGIN = 'webhandler:login'
 
 class WebHandlerViewsTest(TestCase):
     """
@@ -25,7 +25,7 @@ class WebHandlerViewsTest(TestCase):
         """
 
         # Получение URL-пути для входа
-        login_url = reverse('web_handler:login')
+        login_url = reverse('webhandler:login')
 
         # Проверка POST-запроса с некорректными учетными данными
         response = self.client.post(login_url,
@@ -49,7 +49,7 @@ class LoginViewTests(TestCase):
         Проверка на включение функции js кода на показ пароля
         :return:
         '''
-        response = self.client.get(reverse('web_handler:login'))
+        response = self.client.get(reverse('webhandler:login'))
 
         # Проверяем, что страница возвращает успешный статус
         self.assertEqual(response.status_code, 200)
@@ -62,7 +62,7 @@ class LoginViewTests(TestCase):
         Проверка на страницу логина
         :return:
         '''
-        response = self.client.get(reverse('web_handler:login'))
+        response = self.client.get(reverse('webhandler:login'))
         # Проверяем, что страница возвращает успешный статус
         self.assertEqual(response.status_code, 200)
 
@@ -71,7 +71,7 @@ class LoginViewTests(TestCase):
         Проверка на вход без пароля
         :return:
         '''
-        response = self.client.post(reverse('web_handler:login'), {'username': 'testuser', 'password': ''})
+        response = self.client.post(reverse('webhandler:login'), {'username': 'testuser', 'password': ''})
         self.assertEqual(response.status_code, 400)
 
     def test_login_with_empty_login(self):
@@ -79,7 +79,7 @@ class LoginViewTests(TestCase):
         Проверка на вход без логина
         :return:
         '''
-        response = self.client.post(reverse('web_handler:login'), {'username': '', 'password': 'testpassword'})
+        response = self.client.post(reverse('webhandler:login'), {'username': '', 'password': 'testpassword'})
         self.assertEqual(response.status_code, 400)
 
     def test_login_with_empty_fields(self):
@@ -87,7 +87,7 @@ class LoginViewTests(TestCase):
         Проверка на вход без заполнения полей
         :return:
         '''
-        response = self.client.post(reverse('web_handler:login'), {'username': '', 'password': ''})
+        response = self.client.post(reverse('webhandler:login'), {'username': '', 'password': ''})
         self.assertEqual(response.status_code, 400)
 
     def test_failed_login(self):
@@ -95,7 +95,7 @@ class LoginViewTests(TestCase):
         Тест на вход с неверными данными
         :return:
         '''
-        response = self.client.post(reverse('web_handler:login'),
+        response = self.client.post(reverse('webhandler:login'),
                                     {'username': 'invalid_user', 'password': 'invalid_password'})
         self.assertEqual(response.status_code, 400)
 
@@ -104,7 +104,7 @@ class LoginViewTests(TestCase):
         Проверка на наличие кнопки с текстом "Войти" в ответе
         :return:
         '''
-        response = self.client.get(reverse('web_handler:login'))
+        response = self.client.get(reverse('webhandler:login'))
         self.assertContains(response, '<button type="submit">Войти</button>')
 
     def test_failed_login_header(self):
@@ -112,7 +112,7 @@ class LoginViewTests(TestCase):
         Проверка наличия кнопки с текстом "ВХОД" и классом "button_open" в ответе
         :return:
         '''
-        response = self.client.get(reverse('web_handler:login'))
+        response = self.client.get(reverse('webhandler:login'))
         self.assertContains(response, '<h1>MRS</h1>')
 
     def test_login_title(self):
@@ -120,7 +120,7 @@ class LoginViewTests(TestCase):
         Проверка соответствия заголовка страницы
         :return:
         '''
-        response = self.client.get(reverse('web_handler:login'))
+        response = self.client.get(reverse('webhandler:login'))
         self.assertContains(response, '<title>Вход</title>')
 
     def test_failed_login_password_wrong_type(self):
@@ -128,7 +128,7 @@ class LoginViewTests(TestCase):
         Проверка на вход с неверным типом пароля
         :return:
         '''
-        response = self.client.post(reverse('web_handler:login'), {'username': 'testuser', 'password': 123123})
+        response = self.client.post(reverse('webhandler:login'), {'username': 'testuser', 'password': 123123})
         self.assertEqual(response.status_code, 400)
 
     def test_failed_login_password_wrong_symbols(self):
@@ -136,5 +136,5 @@ class LoginViewTests(TestCase):
         Проверка на вход с неверным типом пароля(float)
         :return:
         '''
-        response = self.client.post(reverse('web_handler:login'), {'username': 'testuser', 'password': 12312.123121})
+        response = self.client.post(reverse('webhandler:login'), {'username': 'testuser', 'password': 12312.123121})
         self.assertEqual(response.status_code, 400)
