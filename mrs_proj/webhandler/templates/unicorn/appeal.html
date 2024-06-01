@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <div class="appeal">
     <h4>Добавить обращение</h4>
     <input type="email" unicorn:model="email" placeholder="Введите ваш email" class="appeal-input">
@@ -18,6 +17,20 @@
             </li>
             {% empty %}
             <li class="appeal-item">Нет открытых обращений.</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Закрытые обращения</h4>
+    <ul class="appeal-list">
+        {% for ticket in closed_tickets %}
+            <li class="appeal-item">
+                {{ ticket.created_at }} - {{ ticket.message }}
+                {% if ticket.admin_response %}
+                    <br><strong>Ответ администратора:</strong> {{ ticket.admin_response }}
+                {% endif %}
+            </li>
+            {% empty %}
+            <li class="appeal-item">Нет закрытых обращений.</li>
         {% endfor %}
     </ul>
 </div>
