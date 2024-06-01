@@ -1,0 +1,48 @@
+.help-section {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.help-section h2, .help-section h3 {
+    color: #2a92c0;
+}
+
+.faq-list, .resource-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.faq-list .list_item, .resource-list .list_item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.faq-list .list_item p, .resource-list .list_item a {
+    margin-left: 10px;
+}
+
+.faq-list .list_item:hover, .resource-list .list_item:hover {
+    background-color: #e8f4f9;
+}
+
+.resource-list .list_item a {
+    text-decoration: none;
+    color: #2a92c0;
+}
+
+.resource-list .list_item a:hover {
+    text-decoration: underline;
+}
+
+.resource-list .list_item .fa {
+    margin-right: 10px;
+    color: #2a92c0;
+}

@@ -75,6 +75,10 @@ INSTALLED_APPS = [
     'easy_thumbnails',  # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт
     'django.contrib.postgres',  # приложение для работы с базой postgresql
+    'health_check',                             # required
+    'health_check.db',                          # stock Django health checkers
+    'health_check.cache',  # Проверка кэша
+    'health_check.storage',  # Проверка файловой системы
     'simple_history',  # приложение для истории(Clients)
     'taggit',  # приложение для тегов(используется в блоге)
     'django_otp',  # приложения для двухфаторной аутентификации
@@ -86,10 +90,6 @@ INSTALLED_APPS = [
     "django_unicorn",  # required for Django to register urls and templatetags
     'auditlog',  # приложение для логов
     'django_cryptography',  # для шифрования полей модели
-    'health_check',                             # required
-    'health_check.db',                          # stock Django health checkers
-    'health_check.cache',  # Проверка кэша
-    'health_check.storage',  # Проверка файловой системы
 
 ]
 
