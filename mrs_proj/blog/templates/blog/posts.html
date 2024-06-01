@@ -3,7 +3,7 @@
 {% for post in posts %}
     <article>
         <h2>
-            <a href="{{ post.get_absolute_url }}">
+            <a href="{% url 'blog:post_detail' identifier=post.slug %}">
                 {{ post.title }}
             </a>
             {% if post.preview %}
@@ -21,22 +21,16 @@
             {% endfor %}
         </p>
         <p class="date">
-            Опубликован {{ post.publish }}  {{ post.author }}
+            Опубликован {{ post.publish }} {{ post.author.username }}
         </p>
-      <p>
-        <strong>Комментариев: {{ post.comment_count }} </strong>
-      </p>
-
+        <p>
+            <strong>Комментариев: {{ post.comment_count }} </strong>
+        </p>
         {% if post.short_description %}
-
             {{ post.short_description|markdown }}
-
         {% else %}
-
             Краткое описание отсутствует,
-
         {% endif %}
-
-        <a href="{{ post.get_absolute_url }}">читать далее...</a>
+        <a href="{% url 'blog:post_detail' identifier=post.slug %}">читать далее...</a>
     </article>
 {% endfor %}

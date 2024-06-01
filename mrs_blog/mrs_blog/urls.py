@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from blog.views import PostViewSet
+from blog.views import PostViewSet, PostDetailView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -27,7 +27,7 @@ router.register(r'posts', PostViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', PostViewSet.as_view({'get': 'list'}), name='post-list'),
-    path('posts/by_tag/<slug:tag_slug>/', PostViewSet.as_view({'get': 'by_tag'}), name='post-by-tag'),
+    path('posts/<slug:slug>/', PostDetailView.as_view(), name='post_detail'),
 
 ]
 

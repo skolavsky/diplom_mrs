@@ -2,8 +2,8 @@
 {% load thumbnail %}
 {% load unicorn %}
 {% load static %}
-
 {% load blog_tags %}
+
 {% block style %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/post_detail_styles.css' %}">
 {% endblock %}
@@ -15,18 +15,16 @@
         <article>
             <h1>{{ post.title }}</h1>
             <p class="date">
-                Опубликовано {{ post.publish }} by {{ post.author }}
+                Опубликовано {{ post.publish }} by {{ post.author.username }}
             </p>
             {% if post.preview %}
                 {% thumbnail post.preview "300x300" crop="smart" as im %}
-                <img src="{{ im.url }}" alt="preview" class="preview">
+                    <img src="{{ im.url }}" alt="preview" class="preview">
             {% endif %}
 
             {% if post.short_description %}
-
                 <h3>Краткое описание</h3>
                 {{ post.short_description|markdown }}
-
             {% endif %}
 
             <hr>
@@ -38,13 +36,12 @@
         {% unicorn 'comments' post_id=post.id %}
 
         <h2>Похожие посты</h2>
-        {% for post in similar_posts %}
+        {% for similar_post in similar_posts %}
             <p>
-                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                <a href="{% url 'blog:post_detail' identifier=similar_post.slug %}">{{ similar_post.title }}</a>
             </p>
-            {% empty %}
-            Похожих постов нет.
+        {% empty %}
+            <p>Похожих постов нет.</p>
         {% endfor %}
     </main>
-
 {% endblock %}
