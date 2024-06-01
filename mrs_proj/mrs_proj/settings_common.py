@@ -31,7 +31,7 @@ LOGOUT_URL = 'logout'
 SECRET_KEY = config('SECRET_KEY')
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'web_handler' / 'static',
+    BASE_DIR / 'webhandler' / 'static',
     BASE_DIR / 'clients' / 'static',
 ]
 
@@ -45,7 +45,7 @@ AUTHENTICATION_BACKENDS = [
 
     'axes.backends.AxesStandaloneBackend',  # Для axes чтобы отслеживать неправильные входы
     'django.contrib.auth.backends.ModelBackend',
-    'web_handler.authentication.EmailAuthBackend',
+    'webhandler.authentication.EmailAuthBackend',
 ]
 
 # settings_dev.py или settings_prod.py
@@ -53,7 +53,6 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',  # own application
-    'web_handler.apps.WebHandlerConfig',  # own application
     'clients.apps.ClientsConfig',  # own application
     'blog.apps.BlogConfig',  # own application
     "unfold",  # before django.contrib.admin
@@ -71,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django_ckeditor_5',  # приложение для редактирования текста
+    'webhandler.apps.WebHandlerConfig',  # own application
     'rest_framework',
     'easy_thumbnails',  # приложение для создания миниатюр изображений
     'django.contrib.sitemaps',  # приложение для карты сайт

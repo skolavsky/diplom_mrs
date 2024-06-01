@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load unicorn %}
+{% unicorn_scripts %}
+{% load static %}
+{% block style %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/help_styles.css' %}">
+{% endblock %}
+
+{% block title %}Помощь{% endblock title %}
+{% block header %}Помощь{% endblock header %}
+{% block content %}
+    <div class="help-section">
+        <h2>Добро пожаловать на страницу помощи!</h2>
+        <p>Мы создали эту страницу, чтобы помочь вам разобраться с основными вопросами и проблемами, которые могут
+            возникнуть при использовании нашего приложения. Если у вас есть дополнительные вопросы, не стесняйтесь
+            обращаться к нам напрямую.</p>
+
+        <h3>Часто задаваемые вопросы</h3>
+        <ul class="faq-list list">
+            <li class="list_item"><i class="fa fa-question-circle"></i> <strong>Как зарегистрироваться?</strong>
+                <p>Регистрирует новых пользователь администратор.</p>
+            </li>
+            <li class="list_item"><i class="fa fa-question-circle"></i> <strong>Как восстановить забытый
+                пароль?</strong>
+                <p>Если вы забыли свой пароль, перейдите на страницу восстановления пароля и следуйте инструкциям.</p>
+            </li>
+            <li class="list_item"><i class="fa fa-question-circle"></i> <strong>Как связаться с поддержкой?</strong>
+                <p>Вы можете связаться с нашей поддержкой через форму обратной связи на этой странице.</p>
+            </li>
+        </ul>
+
+        <h3>Ресурсы</h3>
+        <p>Ниже приведены некоторые полезные ресурсы, которые могут помочь вам лучше понять наше приложение:</p>
+        <ul class="resource-list list">
+            <li class="list_item"><i class="fa fa-book"></i> <a href="#">Руководство пользователя</a></li>
+            <li class="list_item"><i class="fa fa-video"></i> <a href="#">Уроки</a></li>
+            <li class="list_item"><i class="fa fa-comments"></i> <a href="#">Cтатьи с гайдами</a></li>
+        </ul>
+
+        <!-- Включение формы обращения в техподдержку -->
+        <h3>Свяжитесь с нами</h3>
+
+        {% unicorn 'appeal' %}
+
+    </div>
+{% endblock content %}

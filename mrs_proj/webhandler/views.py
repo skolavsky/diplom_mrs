@@ -19,6 +19,9 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 
+from .forms import SupportTicketForm
+from .models import SupportTicket
+
 LOGIN_URL = '/login/'
 
 
@@ -26,9 +29,22 @@ def is_admin(user):
     return user.is_superuser
 
 
-class HelpView(View):
-    def get(self, request):
-        return render(request, 'help.html')
+def help_view(request):
+    if request.method == 'POST':
+        form = SupportTicketForm(request.POST)
+        if form.is_valid():
+            support_request = form.save(commit=False)
+            support_request.user = request.user
+            support_request.save()
+            return redirect('webhandler:help')
+    else:
+        form = SupportTicketForm()
+
+    open_requests = SupportTicket.objects.filter(status='open')
+    return render(request, 'help.html', {
+        'form': form,
+        'support_ticket': open_requests,
+    })
 
 
 @require_GET
@@ -196,7 +212,7 @@ class LoginView(View):
 
                 # Authentication successful, log in the user
                 login(request, user)
-                return redirect('web_handler:home')  # Redirect to the home page
+                return redirect('webhandler:home')  # Redirect to the home page
             else:
                 # Authentication failed
                 return render(request, 'login.html', {'error': 'Неправильные логин или пароль.'})
