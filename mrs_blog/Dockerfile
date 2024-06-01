@@ -18,24 +18,17 @@ COPY . /app/
 
 # Перейти на директорию выше для запуска Uvicorn
 
-WORKDIR /app/mrs_proj
+WORKDIR /app/
 
-EXPOSE 8000
-
-
-# Копируем скрипт ожидания
-COPY wait_for_db.py /wait_for_db.py
 
 # Собираем статические файлы
 RUN python manage.py collectstatic --noinput
 
 
-# Установка переменной окружения DJANGO_SETTINGS_MODULE
-ENV DJANGO_SETTINGS_MODULE=mrs_proj.settings
-
 # Выполняем миграции
 RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 
 # Команда для запуска Uvicorn
-CMD ["uvicorn", "mrs_proj.asgi:application", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "mrs_blog.asgi:application", "--host", "localhost", "--port", "8001"]
