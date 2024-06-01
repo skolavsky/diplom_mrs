@@ -18,10 +18,9 @@
                 Опубликовано {{ post.publish }} by {{ post.author.username }}
             </p>
             {% if post.preview %}
-                {% thumbnail post.preview "300x300" crop="smart" as im %}
-                    <img src="{{ im.url }}" alt="preview" class="preview">
+                {% thumbnail post.preview "450x300" crop="smart" as im %}
+                <img src="{{ post.preview }}" alt="preview" class="preview" width="100" height="111">
             {% endif %}
-
             {% if post.short_description %}
                 <h3>Краткое описание</h3>
                 {{ post.short_description|markdown }}

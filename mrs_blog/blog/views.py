@@ -1,13 +1,15 @@
 from django.db.models import Count
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from taggit.models import Tag
 from rest_framework.views import APIView
-from rest_framework import status
+from taggit.models import Tag
 
+from .models import Comment
 from .models import Post
 from .serializers import PostSerializer
 
@@ -54,3 +56,7 @@ class PostDetailView(APIView):
             "similar_posts": similar_posts_serializer.data
         }, status=status.HTTP_200_OK)
 
+
+def comment_count(request, post_id):
+    count = Comment.objects.filter(post_id=post_id).count()
+    return JsonResponse({'count': count})
