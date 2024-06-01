@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -7,7 +8,6 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django_ratelimit.decorators import ratelimit
-from taggit.models import Tag
 
 from .forms import SearchForm
 from .models import Post
@@ -16,13 +16,21 @@ from .models import Post
 class PostListView(LoginRequiredMixin, View):
     @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
     def get(self, request, tag_slug=None):
-        post_list = Post.published.annotate(comment_count=Count('comments'))
         posts_only = request.GET.get('posts_only')
 
-        tag = None
         if tag_slug:
-            tag = get_object_or_404(Tag, slug=tag_slug)
-            post_list = post_list.filter(tags__in=[tag])
+            url = f'http://127.0.0.1:8001/posts/by_tag/{tag_slug}/'
+        else:
+            url = 'http://127.0.0.1:8001/posts/'
+
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            return HttpResponse(f"Error fetching posts: {e}", status=500)
+
+        data = response.json()
+        post_list = data.get('results', [])
         paginator = Paginator(post_list, 5)
         page_number = request.GET.get('page', 1)
         try:
@@ -33,12 +41,11 @@ class PostListView(LoginRequiredMixin, View):
             if posts_only:
                 return HttpResponse('')
             posts = paginator.page(paginator.num_pages)
+
+        context = {'posts': posts, 'tag': tag_slug, 'total_posts': data.get('count', 0)}
         if posts_only:
-            return render(request,
-                          'blog/posts.html', {'posts': posts, 'tag': tag})
-        return render(request,
-                      'blog/post/list.html',
-                      {'posts': posts, 'tag': tag})
+            return render(request, 'blog/posts.html', context)
+        return render(request, 'blog/post/list.html', context)
 
 
 class PostSearchView(LoginRequiredMixin, View):
@@ -65,17 +72,18 @@ class PostSearchView(LoginRequiredMixin, View):
 
 class PostDetailView(LoginRequiredMixin, View):
     @method_decorator(ratelimit(key='ip', rate='30/m', method='GET', block=True))
-    def get(self, request, year, month, day, post):
-        post = get_object_or_404(Post,
-                                 status=Post.Status.PUBLISHED,
-                                 slug=post,
-                                 publish__year=year,
-                                 publish__month=month,
-                                 publish__day=day)
+    def get(self, request, identifier):
+        url = f'http://127.0.0.1:8001/posts/{identifier}/'
 
-        post_tags_ids = post.tags.values_list('id', flat=True)
-        similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
-        similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            return HttpResponse(f"Error fetching post: {e}", status=500)
+
+        data = response.json()
+        post = data.get('post')
+        similar_posts = data.get('similar_posts', [])
 
         return render(request,
                       'blog/post/detail.html',
