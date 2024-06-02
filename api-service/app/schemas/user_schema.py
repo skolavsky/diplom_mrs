@@ -13,8 +13,11 @@ class ChangePassword(BaseModel):
 class UserBase(BaseModel):
     email: EmailStr | str
 
-class UserCreate(UserBase):
+class UserDelete(BaseModel):
     password: str
+
+class UserCreate(UserBase, UserDelete):
+    pass
 
 class User(UserBase):
     model_config = ConfigDict(from_attributes=True)

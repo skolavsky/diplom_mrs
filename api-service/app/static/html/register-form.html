@@ -1,5 +1,6 @@
 <h1>Register for api-service</h1>
-<form action="" id="registerForm" style="display: block;">
+<form action="" id="registerForm" style="display: block;" aria-label="Register Form">
+    <h3>Enter your registration credentials</h3>
     <label for="email">
             Email:
     </label>
@@ -26,10 +27,10 @@
             minlength="8"
             placeholder="Confirm your Password" required/>
     
-    <div style="display: inline;">
+    <div style="display: inline;" aria-label="I agree to the Privacy Policy">
         <input type="checkbox" name="info" id="info" style="display: inline; width: unset;"/>
-        <label for="info" style="display: inline;"> I agree to the</label>
-        <a href="#" target="_blank" style="text-decoration: none; display: inline;">Privacy Policy</a>
+        <label for="info" style="display: inline;">I agree to the</label>
+        <a href="#" target="_blank" style="text-decoration: none; display: inline;" aria-label="Privacy Policy link">Privacy Policy</a>
     </div>
     <div class="wrap">
         <button type="submit" id="register-button" disabled>
@@ -39,12 +40,13 @@
 </form>
 
 
-<div id="registration-status" hidden>
+<div id="registration-status" hidden aria-label="Registration status">
 </div>
 
-<p>Return to 
+<p aria-label="Return to login page">Return to 
     <a href="/"
-        style="text-decoration: none;">
+        style="text-decoration: none;"
+        aria-label="Link to login page">
         Login page
     </a>
 </p>

@@ -21,3 +21,11 @@ async def decrypt(encrypted):
         return (cipher_rsa.decrypt(base64.b64decode(encrypted))).decode('utf-8')
     except:
         return None
+
+async def encrypt(plaintext):
+    try:
+        public_key = RSA.import_key(os.environ['RSA_PUBLIC_KEY'])
+        cipher_rsa = PKCS1_OAEP.new(public_key, hashAlgo=SHA256)
+        return base64.b64encode(cipher_rsa.encrypt(plaintext.encode('utf-8'))).decode('utf-8')
+    except:
+        return None

@@ -34,3 +34,6 @@ LICENSE
 README.md
 sources.txt
 README.Docker.md
+**/test*
+**/.pytest_cache
+**/.coverage

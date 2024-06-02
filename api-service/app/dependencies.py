@@ -11,5 +11,5 @@ async def get_db():
 
 
 async def get_cookie(cookie: str, key: str):
-    cookies = dict(token.split('=') for token in cookie.split(';') if token.strip())
+    cookies = dict(token.split('=') for token in cookie.split('; ') if token.strip())
     return cookies.get(key)

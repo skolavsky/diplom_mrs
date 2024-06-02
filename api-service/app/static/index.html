@@ -7,13 +7,19 @@
           href="css/index.css">
     <link rel="stylesheet" 
         href="css/loader.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-    <div class="error main" id="error-container" hidden>
+    <div style="position: fixed; top: 10px; right: 10px;" aria-label="Help">
+        <a href="/docs" aria-label="Help link">
+            <i class="far fa-question-circle" style="color: #8ad78d; font-size: 60px;" aria-label="Help icon"></i>
+        </a>
+    </div>
+    <div class="error main" id="error-container" hidden aria-label="Error">
         <p id="error-detail"></p>
     </div>
-    <div class="main" id="main-container" hidden>
+    <div class="main" id="main-container" hidden aria-label="Main page">
     </div>
     <div class="main" id="loader-container">
         <h1>Page is loading, please wait...</h1>

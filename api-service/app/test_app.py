@@ -1,0 +1,469 @@
+# to run coverage
+# pytest --cov-report term-missing --cov=. from /app dir
+import asyncio
+import requests
+from fastapi.testclient import TestClient
+from main import app
+
+client = TestClient(app)
+
+#test main
+def test_test():
+    response = client.get("/test/0.5")
+    assert response.status_code == 200
+    assert response.json() == {"result": 0.09999999999999998}
+
+#test static
+def test_static():
+    response = client.get("/")
+    assert response.status_code == 200
+
+    response = client.get("/css/index.css")
+    assert response.status_code == 200
+
+    response = client.get("/css/loader.css")
+    assert response.status_code == 200
+
+    response = client.get("/html/login-form.html")
+    assert response.status_code == 200
+
+    response = client.get("/html/register-form.html")
+    assert response.status_code == 200
+
+    response = client.get("/html/user-page.html")
+    assert response.status_code == 200
+
+    response = client.get("/js/index.js")
+    assert response.status_code == 200
+
+    response = client.get("/js/login.js")
+    assert response.status_code == 200
+
+    response = client.get("/js/register.js")
+    assert response.status_code == 200
+
+    response = client.get("/js/rsa.js")
+    assert response.status_code == 200
+
+    response = client.get("/favicon.ico")
+    assert response.status_code == 200
+    
+    response = requests.get("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+    assert response.status_code == 200
+
+from dependencies import get_db, get_cookie
+
+#test dependencies
+def test_get_cookie():
+    assert asyncio.run(
+        get_cookie("cookies=abc; def=123", "cookies")
+    ) == "abc"
+    assert asyncio.run(
+        get_cookie("cookies=abc; def=123", "def")
+    ) == "123"
+    assert asyncio.run(
+        get_cookie("cookies=abc; def=123", "not")
+    ) is None
+
+def test_get_db():
+    assert get_db()
+
+#test crud
+from sqlalchemy.pool import StaticPool
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from fastapi import Depends
+from database import Base
+from dependencies import get_db
+
+SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite://"
+
+engine = create_async_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
+TestingSessionLocal = async_sessionmaker(
+    class_= AsyncSession,
+    expire_on_commit=False,
+    bind=engine
+)
+
+async def init_models():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
+asyncio.run(init_models())
+
+async def override_get_db():
+    try:
+        db = TestingSessionLocal()
+        yield db
+    finally:
+        await db.close()
+
+app.dependency_overrides[get_db] = override_get_db
+
+from cruds import user_crud
+from schemas import user_schema as schema
+from crypto.argon2 import check_user_password
+
+async def crud_testing():
+    try:
+        db = TestingSessionLocal()
+        assert await user_crud.create_user(db, schema.UserCreate(email="test", password="test"))
+        
+        user = await user_crud.get_user_by_email(db, "test")
+        assert user is not None
+        assert await check_user_password(user, "test")
+        assert await check_user_password(user, "not_test") == False
+
+        assert await user_crud.change_password(db, user, "new_test")
+        assert await check_user_password(user, "new_test")
+        assert await user_crud.delete_user(db, user)
+
+        user = await user_crud.get_user_by_email(db, "test")
+        assert user is None
+    finally:
+        await db.close()
+
+def test_user_crud():
+    asyncio.run(crud_testing())
+
+#test crypto
+import crypto
+
+def test_argon2():
+    password = "test"
+    hashed_password = crypto.argon2.password_handler.hash(password)
+    assert crypto.argon2.password_handler.verify(hashed_password, password)
+
+def test_rsa():
+    plaintext = "test"
+    encrypted = asyncio.run(crypto.rsa.encrypt(plaintext))
+    assert asyncio.run(crypto.rsa.decrypt(encrypted)) == plaintext
+    assert asyncio.run(crypto.rsa.get_rsa_public_key())
+    assert asyncio.run(crypto.rsa.get_rsa_private_key())
+
+def test_jwt():
+    user = {"email": "test"}
+    token = asyncio.run(crypto.jwt.generate_access_token(user))
+    assert asyncio.run(crypto.jwt.decrypt_token("not.token")) is None
+    assert asyncio.run(crypto.jwt.decrypt_token("is.wrong.token")) is None
+    payload = asyncio.run(crypto.jwt.decrypt_token(token))
+    assert payload is not None
+    assert payload['email'] == user['email']
+
+#test schema
+from schemas import user_schema as schema
+
+def test_email_validation():
+    assert schema.validate_email("test") == False
+    assert schema.validate_email("test@") == False
+    assert schema.validate_email("test@.com") == False
+    assert schema.validate_email("test@.com.") == False
+    assert schema.validate_email("test@.com.com") == True
+    assert schema.validate_email("test@com") == False
+
+def test_password_validation():
+    assert schema.validate_password("test") == False
+    assert schema.validate_password("test1234") == True
+    #assert schema.validate_password("test1") == False
+    #assert schema.validate_password("test1$") == False
+    #assert schema.validate_password("Test1$") == True
+    #assert schema.validate_password("Test") == False
+
+#test /urers/ url
+from routers import user
+
+cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "test@test.test"}))}
+
+async def encrypt(plaintext):
+    return await crypto.rsa.encrypt(plaintext)
+
+def test_get_public_key():
+    response = client.get("/user/public-key/")
+    assert response.status_code == 200
+    assert response.json().get("key")
+
+def test_signup():
+    password = "toshort"
+    email = "wrongemail"
+    response = client.post(
+        "/user/signup/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid email encryption"
+
+    email = asyncio.run(encrypt("wrongemail"))
+    response = client.post(
+        "/user/signup/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid email"
+
+    email = asyncio.run(encrypt("test@test.test"))
+    response = client.post(
+        "/user/signup/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid password encryption"
+
+    password = asyncio.run(encrypt("toshort"))
+    response = client.post(
+        "/user/signup/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid password"
+
+    password = asyncio.run(encrypt("test1234"))
+    response = client.post(
+        "/user/signup/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 201
+
+    response = client.post(
+        "/user/signup/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "User already exists"
+
+def test_login():
+    client.cookies = {}
+    response = client.get(
+        "/user/login/",
+        headers={"X-Token": "coneofsilence"},
+        )
+    assert response.status_code == 401
+
+    client.cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "notuser"}))}
+    response = client.get(
+        "/user/login/",
+        headers={"X-Token": "coneofsilence"},
+        )
+    assert response.status_code == 404
+    assert response.json().get("detail") == "User not found"
+
+    client.cookies = cookies
+    response = client.get(
+        "/user/login/",
+        headers={"X-Token": "coneofsilence"},
+        )
+    assert response.status_code == 200
+    assert response.json().get("email")
+    assert response.json().get("created_at")
+
+def test_change_password():
+    current_password = ""
+    new_password = ""
+
+    client.cookies = {}
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password,
+            "new_password": new_password}
+        )
+    assert response.status_code == 401
+
+    client.cookies = cookies
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password,
+            "new_password": new_password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong encryption"
+
+    current_password = asyncio.run(encrypt("toshort"))
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password, "new_password": new_password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong password"
+
+    current_password = asyncio.run(encrypt("notpassword"))
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password, "new_password": new_password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong password"
+
+    current_password = asyncio.run(encrypt("test1234"))
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password, "new_password": new_password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong encryption"
+
+    new_password = asyncio.run(encrypt("toshort"))
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password, "new_password": new_password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid new password"
+
+    new_password = asyncio.run(encrypt("test12345"))
+    response = client.post(
+        "/user/change-password/",
+        headers={"X-Token": "coneofsilence"},
+        json={"current_password": current_password, "new_password": new_password}
+        )
+    assert response.status_code == 200
+
+def test_token():
+    password = "toshort"
+    email = "wrongemail"
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid email encryption"
+
+    email = asyncio.run(encrypt("wrongemail"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid email"
+
+    email = asyncio.run(encrypt("really@not.email"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 404
+    assert response.json().get("detail") == "User not found"
+
+    email = asyncio.run(encrypt("test@test.test"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid password encryption"
+
+    password = asyncio.run(encrypt("toshort"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid password"
+
+    password = asyncio.run(encrypt("wring_password"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Invalid password"
+
+    password = asyncio.run(encrypt("test12345"))
+
+    client.cookies = {}
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password},
+    )
+    assert response.status_code == 200
+
+def test_logout():
+    client.cookies = cookies
+    response = client.get(
+        "/user/logout/",
+        headers={"X-Token": "coneofsilence"},
+        )
+    assert response.status_code == 200
+
+def test_delete_user():
+    password = ""
+
+    client.cookies = {}
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 401
+
+    client.cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "not@test.email"}))}
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 404
+
+    client.cookies = cookies
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong encryption"
+
+    password = asyncio.run(encrypt("toshort"))
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong password"
+
+    password = asyncio.run(encrypt("notpassword"))
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == "Wrong password"
+
+    password = asyncio.run(encrypt("test12345"))
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 200
+
+    response = client.post(
+        "/user/delete/",
+        headers={"X-Token": "coneofsilence"},
+        json={"password": password}
+        )
+    assert response.status_code == 404
+    assert response.json().get("detail") == "User not found"

@@ -1,20 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-from routers import users
-import schemas.user_schema as schema
+import routers.user as user
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 
-from cruds import user_crud as crud
-
-from dependencies import get_db
-
 app = FastAPI()
 
-app.include_router(users.router)
-
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app.include_router(user.router)
 
 @app.get("/test/{data}")
 async def test(data: float):
@@ -24,3 +17,5 @@ async def test(data: float):
     elif result > 0.9:
         result = 0.9
     return {"result": 1 - result}
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

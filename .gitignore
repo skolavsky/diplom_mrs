@@ -60,3 +60,6 @@ node_modules/
 bower_components/
 jspm_packages/
 node_modules/
+
+# pytest cache
+.pytest_cache
