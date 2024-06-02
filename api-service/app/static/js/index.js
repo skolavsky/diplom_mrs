@@ -145,7 +145,7 @@ async function loadUserPage() {
         newPassword = await Encrypt(newPassword, publicKey);
     
         fetch(changePasswordUrl, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },

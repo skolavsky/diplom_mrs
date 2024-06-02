@@ -196,7 +196,7 @@ async def logout(request: Request):
     response.delete_cookie(key=ACCESS_TOCKER_NAME)
     return response
 
-@router.post("/change-password/")
+@router.put("/change-password/")
 async def change_password(user_data: schema.ChangePassword, request: Request, db: AsyncSession = Depends(get_db)):
     """
     Asynchronously handles the change password request.
@@ -253,4 +253,27 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
     if not await crud.delete_user(db, user):
         raise HTTPException(status_code=500, detail="Failed to change password")
 
-    return JSONResponse(status_code=200, content={})
+    response = JSONResponse(status_code=200, content={})
+    response.delete_cookie(key=ACCESS_TOCKER_NAME)
+
+    return response
+
+@router.delete("/delete/")
+async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncSession = Depends(get_db)):
+    token = await validate_access_token(request.cookies)
+    user = await get_user_by_token(db, token)
+
+    password = await decrypt(user_data.password)
+    if not password:
+        raise HTTPException(status_code=400, detail="Wrong encryption")
+
+    if not schema.validate_password(password) or not await check_user_password(user, password):
+        raise HTTPException(status_code=400, detail="Wrong password")
+
+    if not await crud.delete_user(db, user):
+        raise HTTPException(status_code=500, detail="Failed to change password")
+
+    response = JSONResponse(status_code=200, content={})
+    response.delete_cookie(key=ACCESS_TOCKER_NAME)
+
+    return response

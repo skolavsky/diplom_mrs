@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Delete account</title>
+    <link rel="stylesheet" 
+          href="../css/index.css">
+</head>
+
+<body>
+    <div class="error main" id="error-container" hidden aria-label="Error">
+        <p id="error-detail"></p>
+    </div>
+    <div class="main">
+        <h1>Delete account from api-service</h1>
+        <form action="" id="deleteForm" style="display: block;" aria-label="Register Form">
+            <h3>Enter your password</h3>
+
+            <input type="password"
+                    id="password"
+                    name="password"
+                    minlength="8"
+                    placeholder="Enter your password" required/>
+
+            <div style="display: inline;" aria-label="I want to delete my account">
+                <input type="checkbox" name="info" id="info" style="display: inline; width: unset;"/>
+                <label for="info" style="display: inline;">I want to delete my account</label>
+            </div>
+            <div class="wrap">
+                <button type="submit" id="delete-button" style="background-color: red;"  disabled>
+                    Delete account
+                </button>
+            </div>
+        </form>
+        
+        <p aria-label="Return to page">Return to 
+            <a href="/"
+                style="text-decoration: none;"
+                aria-label="Link to page">
+                page
+            </a>
+        </p>
+        </div>
+    </div>
+
+    <script src="../js/delete.js"></script>
+    <script src="../js/rsa.js"></script>
+</body>
+
+</html>

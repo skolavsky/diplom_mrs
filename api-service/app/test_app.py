@@ -270,7 +270,7 @@ def test_change_password():
     new_password = ""
 
     client.cookies = {}
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password,
@@ -279,7 +279,7 @@ def test_change_password():
     assert response.status_code == 401
 
     client.cookies = cookies
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password,
@@ -289,7 +289,7 @@ def test_change_password():
     assert response.json().get("detail") == "Wrong encryption"
 
     current_password = asyncio.run(encrypt("toshort"))
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password, "new_password": new_password}
@@ -298,7 +298,7 @@ def test_change_password():
     assert response.json().get("detail") == "Wrong password"
 
     current_password = asyncio.run(encrypt("notpassword"))
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password, "new_password": new_password}
@@ -307,7 +307,7 @@ def test_change_password():
     assert response.json().get("detail") == "Wrong password"
 
     current_password = asyncio.run(encrypt("test1234"))
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password, "new_password": new_password}
@@ -316,7 +316,7 @@ def test_change_password():
     assert response.json().get("detail") == "Wrong encryption"
 
     new_password = asyncio.run(encrypt("toshort"))
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password, "new_password": new_password}
@@ -325,7 +325,7 @@ def test_change_password():
     assert response.json().get("detail") == "Invalid new password"
 
     new_password = asyncio.run(encrypt("test12345"))
-    response = client.post(
+    response = client.put(
         "/user/change-password/",
         headers={"X-Token": "coneofsilence"},
         json={"current_password": current_password, "new_password": new_password}
