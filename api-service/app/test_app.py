@@ -51,7 +51,7 @@ def test_static():
     response = requests.get("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
     assert response.status_code == 200
 
-from dependencies import get_db, get_cookie
+from dependencies import get_db, get_cookie, get_preferred_language
 
 #test dependencies
 def test_get_cookie():
@@ -67,6 +67,12 @@ def test_get_cookie():
 
 def test_get_db():
     assert get_db()
+
+def test_preffered_language():
+    assert get_preferred_language('en-US,en;q=0.5') == 'en'
+    assert get_preferred_language('ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3') == 'ru'
+    assert get_preferred_language('') == 'en'
+    assert get_preferred_language(None) == 'en'
 
 #test crud
 from sqlalchemy.pool import StaticPool
@@ -186,43 +192,49 @@ def test_get_public_key():
     assert response.status_code == 200
     assert response.json().get("key")
 
+from routers.user import get_error_detail, ru_error_detail, en_error_detail
+
 def test_signup():
     password = "toshort"
     email = "wrongemail"
     response = client.post(
         "/user/signup/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid email encryption"
+    assert response.json().get("detail") == en_error_detail["invalid encryption"]
 
     email = asyncio.run(encrypt("wrongemail"))
     response = client.post(
         "/user/signup/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid email"
+    assert response.json().get("detail") == en_error_detail["invalid email"]
 
     email = asyncio.run(encrypt("test@test.test"))
     response = client.post(
         "/user/signup/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid password encryption"
+    assert response.json().get("detail") == en_error_detail["invalid encryption"]
 
     password = asyncio.run(encrypt("toshort"))
     response = client.post(
         "/user/signup/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid password"
+    assert response.json().get("detail") == en_error_detail["invalid password validation"]
 
     password = asyncio.run(encrypt("test1234"))
     response = client.post(
@@ -234,11 +246,12 @@ def test_signup():
 
     response = client.post(
         "/user/signup/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "User already exists"
+    assert response.json().get("detail") == en_error_detail["user already exists"]
 
 def test_login():
     client.cookies = {}
@@ -251,10 +264,11 @@ def test_login():
     client.cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "notuser"}))}
     response = client.get(
         "/user/login/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         )
     assert response.status_code == 404
-    assert response.json().get("detail") == "User not found"
+    assert response.json().get("detail") == ru_error_detail["user not found"]
 
     client.cookies = cookies
     response = client.get(
@@ -281,53 +295,59 @@ def test_change_password():
     client.cookies = cookies
     response = client.put(
         "/user/change-password/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"current_password": current_password,
             "new_password": new_password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong encryption"
+    assert response.json().get("detail") == ru_error_detail["invalid encryption"]
 
     current_password = asyncio.run(encrypt("toshort"))
     response = client.put(
         "/user/change-password/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"current_password": current_password, "new_password": new_password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong password"
+    assert response.json().get("detail") == ru_error_detail["invalid password validation"]
 
     current_password = asyncio.run(encrypt("notpassword"))
     response = client.put(
         "/user/change-password/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"current_password": current_password, "new_password": new_password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong password"
+    assert response.json().get("detail") == ru_error_detail["invalid password"]
 
     current_password = asyncio.run(encrypt("test1234"))
     response = client.put(
         "/user/change-password/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"current_password": current_password, "new_password": new_password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong encryption"
+    assert response.json().get("detail") == ru_error_detail["invalid encryption"]
 
     new_password = asyncio.run(encrypt("toshort"))
     response = client.put(
         "/user/change-password/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"current_password": current_password, "new_password": new_password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid new password"
+    assert response.json().get("detail") == ru_error_detail["invalid password validation"]
 
     new_password = asyncio.run(encrypt("test12345"))
     response = client.put(
         "/user/change-password/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"current_password": current_password, "new_password": new_password}
         )
     assert response.status_code == 200
@@ -337,56 +357,62 @@ def test_token():
     email = "wrongemail"
     response = client.post(
         "/user/token/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid email encryption"
+    assert response.json().get("detail") == ru_error_detail["invalid encryption"]
 
     email = asyncio.run(encrypt("wrongemail"))
     response = client.post(
         "/user/token/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid email"
+    assert response.json().get("detail") == ru_error_detail["invalid email"]
 
     email = asyncio.run(encrypt("really@not.email"))
     response = client.post(
         "/user/token/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 404
-    assert response.json().get("detail") == "User not found"
+    assert response.json().get("detail") == ru_error_detail["user not found"]
 
     email = asyncio.run(encrypt("test@test.test"))
     response = client.post(
         "/user/token/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid password encryption"
+    assert response.json().get("detail") == ru_error_detail["invalid encryption"]
 
     password = asyncio.run(encrypt("toshort"))
     response = client.post(
         "/user/token/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid password"
+    assert response.json().get("detail") == ru_error_detail["invalid password validation"]
 
-    password = asyncio.run(encrypt("wring_password"))
+    password = asyncio.run(encrypt("wrong_password"))
     response = client.post(
         "/user/token/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "ru"},
         json={"email": email, "password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Invalid password"
+    assert response.json().get("detail") == ru_error_detail["invalid password"]
 
     password = asyncio.run(encrypt("test12345"))
 
@@ -420,37 +446,42 @@ def test_delete_user():
     client.cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "not@test.email"}))}
     response = client.post(
         "/user/delete/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"password": password}
         )
     assert response.status_code == 404
+    assert response.json().get("detail") == en_error_detail["user not found"]
 
     client.cookies = cookies
     response = client.post(
         "/user/delete/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong encryption"
+    assert response.json().get("detail") == en_error_detail["invalid encryption"]
 
     password = asyncio.run(encrypt("toshort"))
     response = client.post(
         "/user/delete/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong password"
+    assert response.json().get("detail") == en_error_detail["invalid password validation"]
 
     password = asyncio.run(encrypt("notpassword"))
     response = client.post(
         "/user/delete/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"password": password}
         )
     assert response.status_code == 400
-    assert response.json().get("detail") == "Wrong password"
+    assert response.json().get("detail") == en_error_detail["invalid password"]
 
     password = asyncio.run(encrypt("test12345"))
     response = client.post(
@@ -462,8 +493,9 @@ def test_delete_user():
 
     response = client.post(
         "/user/delete/",
-        headers={"X-Token": "coneofsilence"},
+        headers={"X-Token": "coneofsilence",
+                 "Accept-Language": "en"},
         json={"password": password}
         )
     assert response.status_code == 404
-    assert response.json().get("detail") == "User not found"
+    assert response.json().get("detail") == en_error_detail["user not found"]
