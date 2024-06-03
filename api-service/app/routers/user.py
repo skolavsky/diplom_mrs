@@ -1,8 +1,9 @@
 import cruds.user_crud as crud
 from crypto.argon2 import check_user_password
-from crypto.rsa import get_rsa_public_key, decrypt
-from dependencies import get_db, get_preferred_language
-from fastapi import APIRouter, Depends, HTTPException, Request, Cookie, Header
+from crypto.rsa import get_rsa_public_key
+from dependencies import (get_db, ACCESS_TOCKEN_NAME, get_error_detail,
+    validate_access_token, validate_email, validate_password, get_user_by_token)
+from fastapi import APIRouter, Depends, HTTPException, Request
 import schemas.user_schema as schema
 from schemas.key import Key
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,163 +12,11 @@ from fastapi.responses import JSONResponse
 from email_sender.send_email import send_registration_email, send_changed_password_email, send_deleted_email
 import asyncio
 
-ru_error_detail = {
-    "user not found": "Пользователь не найден",
-    "user already exists": "Полььзователь уже существует",
-    "invalid password": "Неверный пароль",
-    "invalid encryption": "Неверное шифрование",
-    "invalid email": "Неверная почта",
-    "invalid password validation": "Неподходящий пароль",
-    "failed to create user": "Не удалось создать пользователя",
-    "faled to change password": "Не удалось изменить пароль",
-    "failed to delete user": "Не удалось удалить пользователя",
-}
-
-en_error_detail = {
-    "user not found": "User not found",
-    "user already exists": "User already exists",
-    "invalid password": "Invalid password",
-    "invalid encryption": "Invalid encryption",
-    "invalid email": "Invalid email",
-    "invalid password validation": "Invalid password validation",
-    "failed to create user": "Failed to create user",
-    "faled to change password": "Failed to change password",
-    "failed to delete user": "Failed to delete user",
-}
-
-ACCESS_TOCKER_NAME = 'api-heart'
 
 router = APIRouter(
     prefix="/user",
-    tags=["user"]
+    tags=["auth"]
 )
-
-async def get_error_detail(locale, detail):
-    lang = get_preferred_language(locale)
-    if lang == 'ru':
-        return ru_error_detail[detail]
-    else:
-        return en_error_detail[detail]
-
-async def validate_access_token(cookies):
-    """
-    Asynchronously validates the access token in the cookies.
-
-    Args:
-        cookies (dict): Dictionary containing the cookies.
-
-    Raises:
-        HTTPException: If the cookies are empty or the access token is invalid.
-
-    Returns:
-        dict: Payload of the access token.
-    """
-    if not cookies:
-        raise HTTPException(status_code=401)
-
-    access_token = cookies.get(ACCESS_TOCKER_NAME)
-    if not access_token:
-        raise HTTPException(status_code=401)
-
-    token_payload = await jwt.decrypt_token(access_token)
-    if not token_payload:
-        raise HTTPException(status_code=401)
-
-    return token_payload
-
-async def validate_email(locale: str, email: str):
-    """
-    Validates an email address by decrypting it and checking if it is a valid email format.
-
-    Args:
-        email (str): The email address to be validated.
-
-    Raises:
-        HTTPException: If the email address is invalid or the decryption fails.
-
-    Returns:
-        None
-    """
-    email = await decrypt(email)
-    if not email:
-        raise HTTPException(
-            status_code=400,
-            detail=await get_error_detail(
-                locale=locale,
-                detail='invalid encryption'
-                )
-            )
-    
-    if not schema.validate_email(email):
-        raise HTTPException(
-            status_code=400,
-            detail=await get_error_detail(
-                locale=locale,
-                detail='invalid email'
-                )
-            )
-    
-    return email
-
-async def validate_password(locale: str, password: str):
-    """
-    Validates a password by decrypting it and checking if it meets certain criteria.
-
-    Args:
-        password (str): The password to be validated.
-
-    Raises:
-        HTTPException: If the password is invalid or if there is an error during decryption.
-
-    Returns:
-        None
-    """
-    password = await decrypt(password)
-    if not password:
-        raise HTTPException(
-            status_code=400,
-            detail=await get_error_detail(
-                locale=locale,
-                detail='invalid encryption'
-                )
-            )
-    
-    if not schema.validate_password(password):
-        raise HTTPException(
-            status_code=400,
-            detail=await get_error_detail(
-                locale=locale,
-                detail='invalid password validation'
-                )
-            )
-    
-    return password
-
-async def get_user_by_token(locale: str, db: AsyncSession, token: dict):
-    """
-    Retrieves a user from the database based on the provided token.
-
-    Args:
-        db (AsyncSession): An asynchronous session object for interacting with the database.
-        token (dict): A dictionary containing the token information. It is expected to have a key 'sub' which represents the email of the user.
-
-    Returns:
-        User: The user associated with the token.
-
-    Raises:
-        HTTPException: If the user is not found in the database.
-    """
-    email = token['sub']
-    user = await crud.get_user_by_email(db, email=email)
-    if user is None:
-        raise HTTPException(
-            status_code=404,
-            detail=await get_error_detail(
-                locale=locale,
-                detail='user not found'
-                )
-            )
-    return user
 
 @router.post("/signup/")
 async def signup(request: Request, user_create: schema.UserCreate, db: AsyncSession = Depends(get_db)):
@@ -192,8 +41,8 @@ async def signup(request: Request, user_create: schema.UserCreate, db: AsyncSess
         raise HTTPException(
             status_code=400,
             detail=await get_error_detail(
+                'user already exists',
                 request.headers.get('accept-language'),
-                'user already exists'
                 )
             )
     
@@ -203,8 +52,8 @@ async def signup(request: Request, user_create: schema.UserCreate, db: AsyncSess
         raise HTTPException(
             status_code=500,
             detail=await get_error_detail(
+                'failed to create user',
                 request.headers.get('accept-language'),
-                'failed to create user'
                 )
             )
     
@@ -230,7 +79,7 @@ async def login(request: Request, db: AsyncSession = Depends(get_db)):
     """
 
     token = await validate_access_token(request.cookies)
-    user = await get_user_by_token(request.headers.get('accept-language'), db, token)
+    user = await get_user_by_token(db, token, request.headers.get('accept-language'))
     return user
 
 #User logins and gets token
@@ -262,8 +111,8 @@ async def get_token(request: Request, user_data: schema.UserCreate, db: AsyncSes
         raise HTTPException(
             status_code=404,
             detail=await get_error_detail(
+                'user not found',
                 request.headers.get('accept-language'),
-                'user not found'
                 )
             )
 
@@ -273,14 +122,14 @@ async def get_token(request: Request, user_data: schema.UserCreate, db: AsyncSes
         raise HTTPException(
             status_code=400,
             detail=await get_error_detail(
+                'invalid password',
                 request.headers.get('accept-language'),
-                'invalid password'
                 )
             )
 
     response = JSONResponse(status_code=200, content={})
     response.set_cookie(
-        key=ACCESS_TOCKER_NAME,
+        key=ACCESS_TOCKEN_NAME,
         value=await jwt.generate_access_token({"sub": email}),
         httponly=True,
         secure=True,
@@ -310,28 +159,25 @@ async def get_token(user_data: schema.UserCreate, db: AsyncSession = Depends(get
         JSONResponse: The response containing the generated token as a cookie.
 
     """
-    locale = 'en'
 
-    email = await validate_email(locale, user_data.email)
+    email = await validate_email(None, user_data.email)
 
     db_user = await crud.get_user_by_email(db, email=email)
     if not db_user:
         raise HTTPException(
             status_code=404,
             detail=await get_error_detail(
-                locale,
-                'user not found'
+                'user not found',
                 )
             )
 
-    password = await validate_password(locale, user_data.password)
+    password = await validate_password(None, user_data.password)
 
     if not await check_user_password(db_user, password):
         raise HTTPException(
             status_code=400,
             detail=await get_error_detail(
-                locale,
-                'invalid password'
+                'invalid password',
                 )
             )
 
@@ -356,7 +202,7 @@ async def logout(request: Request):
         A JSON response with a status code of 200 and an empty content.
     """
     response = JSONResponse(status_code=200, content={})
-    response.delete_cookie(key=ACCESS_TOCKER_NAME)
+    response.delete_cookie(key=ACCESS_TOCKEN_NAME)
     return response
 
 @router.put("/change-password/")
@@ -380,7 +226,7 @@ async def change_password(request: Request, user_data: schema.ChangePassword, db
                     or if the password change operation fails.
     """
     token = await validate_access_token(request.cookies)
-    user = await get_user_by_token(request.headers.get('accept-language'), db, token)
+    user = await get_user_by_token(db, token, request.headers.get('accept-language'))
 
     current_password = await validate_password(request.headers.get('accept-language'), user_data.current_password)
 
@@ -388,8 +234,8 @@ async def change_password(request: Request, user_data: schema.ChangePassword, db
         raise HTTPException(
             status_code=400,
             detail=await get_error_detail(
+                'invalid password',
                 request.headers.get('accept-language'),
-                'invalid password'
                 )
             )
 
@@ -399,8 +245,8 @@ async def change_password(request: Request, user_data: schema.ChangePassword, db
         raise HTTPException(
             status_code=500,
             detail=await get_error_detail(
+                'failed to change password',
                 request.headers.get('accept-language'),
-                'failed to change password'
                 )
             )
 
@@ -412,7 +258,7 @@ async def change_password(request: Request, user_data: schema.ChangePassword, db
 @router.post("/delete/")
 async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncSession = Depends(get_db)):
     token = await validate_access_token(request.cookies)
-    user = await get_user_by_token(request.headers.get('accept-language'), db, token)
+    user = await get_user_by_token(db, token, request.headers.get('accept-language'))
 
     password = await validate_password(request.headers.get('accept-language'), user_data.password)
 
@@ -420,8 +266,8 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
         raise HTTPException(
             status_code=400,
             detail=await get_error_detail(
+                'invalid password',
                 request.headers.get('accept-language'),
-                'invalid password'
                 )
             )
 
@@ -429,22 +275,22 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
         raise HTTPException(
             status_code=500,
             detail=await get_error_detail(
+                'failed to delete user',
                 request.headers.get('accept-language'),
-                'failed to delete user'
                 )
             )
     
     asyncio.ensure_future(send_deleted_email(request.headers.get('accept-language'), user.email))
 
     response = JSONResponse(status_code=200, content={})
-    response.delete_cookie(key=ACCESS_TOCKER_NAME)
+    response.delete_cookie(key=ACCESS_TOCKEN_NAME)
 
     return response
 
 @router.delete("/delete/")
 async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncSession = Depends(get_db)):
     token = await validate_access_token(request.cookies)
-    user = await get_user_by_token(request.headers.get('accept-language'), db, token)
+    user = await get_user_by_token(db, token, request.headers.get('accept-language'))
 
     password = await validate_password(request.headers.get('accept-language'), user_data.password)
 
@@ -452,8 +298,8 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
         raise HTTPException(
             status_code=400,
             detail=await get_error_detail(
+                'invalid password',
                 request.headers.get('accept-language'),
-                'invalid password'
                 )
             )
 
@@ -461,14 +307,14 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
         raise HTTPException(
             status_code=500,
             detail=await get_error_detail(
+                'failed to delete user',
                 request.headers.get('accept-language'),
-                'failed to delete user'
                 )
             )
     
     asyncio.ensure_future(send_deleted_email(request.headers.get('accept-language'), user.email))
 
     response = JSONResponse(status_code=200, content={})
-    response.delete_cookie(key=ACCESS_TOCKER_NAME)
+    response.delete_cookie(key=ACCESS_TOCKEN_NAME)
 
     return response

@@ -5,13 +5,9 @@ import requests
 from fastapi.testclient import TestClient
 from main import app
 
+
 client = TestClient(app)
 
-#test main
-def test_test():
-    response = client.get("/test/0.5")
-    assert response.status_code == 200
-    assert response.json() == {"result": 0.09999999999999998}
 
 #test static
 def test_static():
@@ -58,7 +54,7 @@ def test_static():
     assert response.status_code == 200
 
 #test ru-static
-def test_static():
+def test_ru_static():
     response = client.get("/ru/")
     assert response.status_code == 200
 
@@ -213,8 +209,9 @@ def test_password_validation():
 
 #test /urers/ url
 from routers import user
+from dependencies import ACCESS_TOCKEN_NAME
 
-cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "test@test.test"}))}
+cookies = {ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "test@test.test"}))}
 
 async def encrypt(plaintext):
     return await crypto.rsa.encrypt(plaintext)
@@ -224,7 +221,7 @@ def test_get_public_key():
     assert response.status_code == 200
     assert response.json().get("key")
 
-from routers.user import get_error_detail, ru_error_detail, en_error_detail
+from dependencies import get_error_detail, ru_error_detail, en_error_detail, get_user_by_token
 
 def test_signup():
     password = "toshort"
@@ -285,6 +282,20 @@ def test_signup():
     assert response.status_code == 400
     assert response.json().get("detail") == en_error_detail["user already exists"]
 
+def test_get_user_by_token():
+    try:
+        db = TestingSessionLocal()
+        
+        payload = {"sub":"test@test.test"}
+        assert asyncio.run(get_user_by_token(db, payload))
+
+        payload = {"sub":"not@test.email"}
+        asyncio.run(get_user_by_token(db, payload))
+    except Exception as e:
+        assert e.status_code == 404
+    finally:
+        asyncio.run(db.close())
+
 def test_login():
     client.cookies = {}
     response = client.get(
@@ -293,7 +304,7 @@ def test_login():
         )
     assert response.status_code == 401
 
-    client.cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "notuser"}))}
+    client.cookies = {user.ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "notuser"}))}
     response = client.get(
         "/user/login/",
         headers={"X-Token": "coneofsilence",
@@ -542,7 +553,7 @@ def test_delete_user():
         )
     assert response.status_code == 401
 
-    client.cookies = {user.ACCESS_TOCKER_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "not@test.email"}))}
+    client.cookies = {user.ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "not@test.email"}))}
     response = client.post(
         "/user/delete/",
         headers={"X-Token": "coneofsilence",
@@ -598,3 +609,10 @@ def test_delete_user():
         )
     assert response.status_code == 404
     assert response.json().get("detail") == en_error_detail["user not found"]
+
+#test model
+def test_test():
+    client.cookies = cookies
+    response = client.get("/model/test/0.5")
+    assert response.status_code == 200
+    assert response.json() == {"result": 0.09999999999999998}
