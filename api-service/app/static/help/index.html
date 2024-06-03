@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Help: Using the API Service</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body style="background-color: bisque;">
+    <h1>Help: Using the API Service</h1>
+
+    <h2>1. Registering for an Account</h2>
+    <ol aria-label="Registration steps">
+        <li>Go to the registration page by clicking on the "Create an account" link.</li>
+        <li>Enter your email and password. Confirm your password.<br/>The password must be at least 8 characters long.</li>
+        <li>Check the box to agree to our <a href="#" target="_blank" aria-label="Privacy Policy link">Privacy Policy</a>.</li>
+        <li>Click the "Register" button to create your account.</li>
+        <li>You will be notified of your account creation in the email you provided.</li>
+        <li>You can now return to ligin page and log in to your account.</li>
+    </ol>
+
+    <h2>2. Changing Your Password</h2>
+    <ol aria-label="Changing password steps">
+        <li>Log in to your account.</li>
+        <li>Change your password in the user page.</li>
+        <li>Enter your current password, new password and confirm new password.</li>
+        <li>Click the "Change Password" button to change your password.</li>
+        <li>You will be notified of your password change in your email.</li>
+    </ol>
+
+    <h2>3. Deleting your Account</h2>
+    <ol aria-label="Deleting account steps">
+        <li>Log in to your account.</li>
+        <li>Click on the "Delete" button to open the account deletion form.</li>
+        <li>Enter your password to confirm your intention to delete your account.</li>
+        <li>Check the box to agree to the deletion of your account.</li>
+        <li>Click the "Delete" button to delete your account.</li>
+    </ol>
+
+    <p aria-label="Note: Deleting your account">Note: Deleting your account will permanently remove all your data from our system.<br/>Please make sure you want to delete your account before proceeding.</p>
+
+    <h2>4. Token management</h2>
+    <ol aria-label="Token management steps">
+        <li>You <b>must</b> be registred to make token.</li>
+        <li>Get public key from the <a href="/user/public-key/" target="_blank">public key api endpoint</a>.</li>
+        <li>Encrypt your password and email with the public key using RSA algorithm.</li>
+        <li>For web-js you can use our completed <a href="/js/rsa.js" target="_blank">RSA file</a> and fetch HttpOnly token from <a href="/user/web-token/" target="_blank">web-token api endpoint</a>.</li>
+        <li>For python you should use <a href="https://www.pycryptodome.org/" target="_blank">PyCryptodome</a> library and SHA256 algorithm<br/>and get not HttpOnly token from <a href="/user/token/" target="_blank">token api endpoint</a>.</li>
+        <li>Use POST method to send encrypted credentials to token api endpoint you choose.</li>
+        <li>If your token is in cookies use GET method.</li>
+        <li>If you include token in request body use POST method. Use "token" name in request body.</li>
+        <li>For more information look to <a href="/docs" target="_blank">api endpoints docs</a>.</li>
+        <li>Token is valid for 3 hours.</li>
+    </ol>
+</body>
+</html>
