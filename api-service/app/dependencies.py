@@ -101,6 +101,28 @@ async def validate_access_token(cookies):
 
     return token_payload
 
+async def validate_jwt_token(token):
+    """
+    Asynchronously validates the access token in the cookies.
+
+    Args:
+        cookies (dict): Dictionary containing the cookies.
+
+    Raises:
+        HTTPException: If the cookies are empty or the access token is invalid.
+
+    Returns:
+        dict: Payload of the access token.
+    """
+    if not token.token:
+        raise HTTPException(status_code=401)
+
+    token_payload = await jwt.decrypt_token(token.token)
+    if not token_payload:
+        raise HTTPException(status_code=401)
+
+    return token_payload
+
 async def validate_email(locale: str, email: str):
     """
     Validates an email address by decrypting it and checking if it is a valid email format.

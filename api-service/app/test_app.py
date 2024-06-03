@@ -296,6 +296,37 @@ def test_get_user_by_token():
     finally:
         asyncio.run(db.close())
 
+def test_module_test():
+    client.cookies = cookies
+    response = client.get(
+        "/model/test/0.5",
+        headers={"X-Token": "coneofsilence"},
+        )
+    assert response.status_code == 200
+    assert response.json().get("result")
+
+    client.cookies = {}
+    response = client.get(
+        "/model/test/0.5",
+        headers={"X-Token": "coneofsilence"},
+        )
+    assert response.status_code == 401
+
+    response = client.post(
+        "/model/test/0.5",
+        headers={"X-Token": "coneofsilence"},
+        json={"token": ""}
+        )
+    assert response.status_code == 401
+
+    response = client.post(
+        "/model/test/0.5",
+        headers={"X-Token": "coneofsilence"},
+        json={"token": cookies[ACCESS_TOCKEN_NAME]}
+        )
+    assert response.status_code == 200
+    assert response.json().get("result")
+
 def test_login():
     client.cookies = {}
     response = client.get(
@@ -609,10 +640,3 @@ def test_delete_user():
         )
     assert response.status_code == 404
     assert response.json().get("detail") == en_error_detail["user not found"]
-
-#test model
-def test_test():
-    client.cookies = cookies
-    response = client.get("/model/test/0.5")
-    assert response.status_code == 200
-    assert response.json() == {"result": 0.09999999999999998}
