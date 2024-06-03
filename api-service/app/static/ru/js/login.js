@@ -1,5 +1,5 @@
 const loginForm = document.getElementById('loginForm');
-const tokenUrl = "/user/token/";
+const tokenUrl = "/user/web-token/";
 const registerFormUrl = "/ru/html/register-form.html";
 const registerScriptUrl = "/ru/js/register.js";
 

@@ -26,11 +26,12 @@ services:
   app:
     container_name: app
     build: .
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8888"
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 443 --reload --ssl-keyfile=/etc/letsencrypt/live/service.bounceme.net/privkey.pem --ssl-certfile=/etc/letsencrypt/live/service.bounceme.net/cert.pem"
     env_file:
       - path: ./.env
     ports:
       - 8888:8888
+      - 465:465
     depends_on:
       - db
     volumes:

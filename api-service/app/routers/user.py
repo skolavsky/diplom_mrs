@@ -8,8 +8,8 @@ from schemas.key import Key
 from sqlalchemy.ext.asyncio import AsyncSession
 from crypto import jwt
 from fastapi.responses import JSONResponse
-from typing import Annotated
-
+from email_sender.send_email import send_registration_email, send_changed_password_email, send_deleted_email
+import asyncio
 
 ru_error_detail = {
     "user not found": "Пользователь не найден",
@@ -208,6 +208,8 @@ async def signup(request: Request, user_create: schema.UserCreate, db: AsyncSess
                 )
             )
     
+    asyncio.ensure_future(send_registration_email(request.headers.get('accept-language'), email))
+    
     return JSONResponse(status_code=201, content={})
 
 @router.get("/login/", response_model=schema.UserInfo)
@@ -232,7 +234,7 @@ async def login(request: Request, db: AsyncSession = Depends(get_db)):
     return user
 
 #User logins and gets token
-@router.post("/token/")
+@router.post("/web-token/")
 async def get_token(request: Request, user_data: schema.UserCreate, db: AsyncSession = Depends(get_db)):
     """
     Asynchronously generates a token for the given user credentials and sets it as a cookie in the response.
@@ -286,6 +288,54 @@ async def get_token(request: Request, user_data: schema.UserCreate, db: AsyncSes
     )
 
     return response
+
+@router.post("/token/")
+async def get_token(user_data: schema.UserCreate, db: AsyncSession = Depends(get_db)):
+    """
+    Asynchronously generates a token for the given user credentials and sets it as a cookie in the response.
+
+    Args:
+        user_data (schema.UserCreate): The user credentials to generate the token for.
+        db (AsyncSession, optional): The asynchronous session object for interacting with the database. Defaults to the result of the `get_db` function.
+
+    Raises:
+        HTTPException: If the email encryption is wrong,
+                        the email is wrong,
+                        the user is not found in the database,
+                        the password encryption is wrong,
+                        the password is wrong,
+                        or the password validation fails.
+
+    Returns:
+        JSONResponse: The response containing the generated token as a cookie.
+
+    """
+    locale = 'en'
+
+    email = await validate_email(locale, user_data.email)
+
+    db_user = await crud.get_user_by_email(db, email=email)
+    if not db_user:
+        raise HTTPException(
+            status_code=404,
+            detail=await get_error_detail(
+                locale,
+                'user not found'
+                )
+            )
+
+    password = await validate_password(locale, user_data.password)
+
+    if not await check_user_password(db_user, password):
+        raise HTTPException(
+            status_code=400,
+            detail=await get_error_detail(
+                locale,
+                'invalid password'
+                )
+            )
+
+    return {"token": await jwt.generate_access_token({"sub": email})}
 
 @router.get("/public-key/", response_model=Key)
 async def get_public_key():
@@ -354,6 +404,9 @@ async def change_password(request: Request, user_data: schema.ChangePassword, db
                 )
             )
 
+    # Run the email sending in parallel so the function can return without awaiting the result
+    asyncio.ensure_future(send_changed_password_email(request.headers.get('accept-language'), user.email))
+
     return JSONResponse(status_code=200, content={})
 
 @router.post("/delete/")
@@ -380,6 +433,8 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
                 'failed to delete user'
                 )
             )
+    
+    asyncio.ensure_future(send_deleted_email(request.headers.get('accept-language'), user.email))
 
     response = JSONResponse(status_code=200, content={})
     response.delete_cookie(key=ACCESS_TOCKER_NAME)
@@ -410,6 +465,8 @@ async def delete_user(request: Request, user_data: schema.UserDelete, db: AsyncS
                 'failed to delete user'
                 )
             )
+    
+    asyncio.ensure_future(send_deleted_email(request.headers.get('accept-language'), user.email))
 
     response = JSONResponse(status_code=200, content={})
     response.delete_cookie(key=ACCESS_TOCKER_NAME)

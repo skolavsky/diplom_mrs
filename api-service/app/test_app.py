@@ -384,11 +384,11 @@ def test_change_password():
         )
     assert response.status_code == 200
 
-def test_token():
+def test_web_token():
     password = "toshort"
     email = "wrongemail"
     response = client.post(
-        "/user/token/",
+        "/user/web-token/",
         headers={"X-Token": "coneofsilence",
                  "Accept-Language": "ru"},
         json={"email": email, "password": password}
@@ -398,7 +398,7 @@ def test_token():
 
     email = asyncio.run(encrypt("wrongemail"))
     response = client.post(
-        "/user/token/",
+        "/user/web-token/",
         headers={"X-Token": "coneofsilence",
                  "Accept-Language": "ru"},
         json={"email": email, "password": password}
@@ -408,7 +408,7 @@ def test_token():
 
     email = asyncio.run(encrypt("really@not.email"))
     response = client.post(
-        "/user/token/",
+        "/user/web-token/",
         headers={"X-Token": "coneofsilence",
                  "Accept-Language": "ru"},
         json={"email": email, "password": password}
@@ -418,7 +418,7 @@ def test_token():
 
     email = asyncio.run(encrypt("test@test.test"))
     response = client.post(
-        "/user/token/",
+        "/user/web-token/",
         headers={"X-Token": "coneofsilence",
                  "Accept-Language": "ru"},
         json={"email": email, "password": password}
@@ -428,7 +428,7 @@ def test_token():
 
     password = asyncio.run(encrypt("toshort"))
     response = client.post(
-        "/user/token/",
+        "/user/web-token/",
         headers={"X-Token": "coneofsilence",
                  "Accept-Language": "ru"},
         json={"email": email, "password": password}
@@ -438,7 +438,7 @@ def test_token():
 
     password = asyncio.run(encrypt("wrong_password"))
     response = client.post(
-        "/user/token/",
+        "/user/web-token/",
         headers={"X-Token": "coneofsilence",
                  "Accept-Language": "ru"},
         json={"email": email, "password": password}
@@ -450,11 +450,78 @@ def test_token():
 
     client.cookies = {}
     response = client.post(
+        "/user/web-token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password},
+    )
+    assert response.status_code == 200
+
+def test_token():
+    password = "toshort"
+    email = "wrongemail"
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == en_error_detail["invalid encryption"]
+
+    email = asyncio.run(encrypt("wrongemail"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == en_error_detail["invalid email"]
+
+    email = asyncio.run(encrypt("really@not.email"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 404
+    assert response.json().get("detail") == en_error_detail["user not found"]
+
+    email = asyncio.run(encrypt("test@test.test"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == en_error_detail["invalid encryption"]
+
+    password = asyncio.run(encrypt("toshort"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == en_error_detail["invalid password validation"]
+
+    password = asyncio.run(encrypt("wrong_password"))
+    response = client.post(
+        "/user/token/",
+        headers={"X-Token": "coneofsilence"},
+        json={"email": email, "password": password}
+        )
+    assert response.status_code == 400
+    assert response.json().get("detail") == en_error_detail["invalid password"]
+
+    password = asyncio.run(encrypt("test12345"))
+
+    client.cookies = {}
+    response = client.post(
         "/user/token/",
         headers={"X-Token": "coneofsilence"},
         json={"email": email, "password": password},
     )
     assert response.status_code == 200
+    assert response.json().get("token")
 
 def test_logout():
     client.cookies = cookies
