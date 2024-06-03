@@ -24,6 +24,9 @@ def test_static():
     response = client.get("/css/loader.css")
     assert response.status_code == 200
 
+    response = client.get("/delete/")
+    assert response.status_code == 200
+
     response = client.get("/html/login-form.html")
     assert response.status_code == 200
 
@@ -42,6 +45,9 @@ def test_static():
     response = client.get("/js/register.js")
     assert response.status_code == 200
 
+    response = client.get("/js/delete.js")
+    assert response.status_code == 200
+
     response = client.get("/js/rsa.js")
     assert response.status_code == 200
 
@@ -49,6 +55,32 @@ def test_static():
     assert response.status_code == 200
     
     response = requests.get("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css")
+    assert response.status_code == 200
+
+#test ru-static
+def test_static():
+    response = client.get("/ru/")
+    assert response.status_code == 200
+
+    response = client.get("/ru/html/login-form.html")
+    assert response.status_code == 200
+
+    response = client.get("/ru/html/register-form.html")
+    assert response.status_code == 200
+
+    response = client.get("/ru/html/user-page.html")
+    assert response.status_code == 200
+
+    response = client.get("/ru/js/index.js")
+    assert response.status_code == 200
+
+    response = client.get("/ru/js/login.js")
+    assert response.status_code == 200
+
+    response = client.get("/ru/js/register.js")
+    assert response.status_code == 200
+
+    response = client.get("/ru/js/delete.js")
     assert response.status_code == 200
 
 from dependencies import get_db, get_cookie, get_preferred_language

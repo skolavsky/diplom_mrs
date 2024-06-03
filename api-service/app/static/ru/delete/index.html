@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Удалить аккаунт</title>
+    <link rel="stylesheet" 
+          href="../../css/index.css">
+</head>
+
+<body>
+    <div class="error main" id="error-container" hidden aria-label="Error">
+        <p id="error-detail"></p>
+    </div>
+    <div class="main">
+        <h1>Удалить аккаунт из api-сервиса</h1>
+        <form action="" id="deleteForm" style="display: block;" aria-label="Register Form">
+            <h3>Введите ваш пароль</h3>
+
+            <input type="password"
+                    id="password"
+                    name="password"
+                    minlength="8"
+                    placeholder="Введите ваш пароль" required/>
+
+            <div style="display: inline;" aria-label="I want to delete my account">
+                <input type="checkbox" name="info" id="info" style="display: inline; width: unset;"/>
+                <label for="info" style="display: inline;">Я хочу удалить мой аккаунт</label>
+            </div>
+            <div class="wrap">
+                <button type="submit" id="delete-button" style="background-color: red;"  disabled>
+                    Удалить аккаунт
+                </button>
+            </div>
+        </form>
+        
+        <p aria-label="Return to page">Вернуться на
+            <a href="/ru/"
+                style="text-decoration: none;"
+                aria-label="Link to page">
+                страницу
+            </a>
+        </p>
+        </div>
+    </div>
+
+    <script src="../js/delete.js"></script>
+    <script src="../../js/rsa.js"></script>
+</body>
+
+</html>

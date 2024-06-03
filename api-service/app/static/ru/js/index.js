@@ -1,10 +1,10 @@
-const loginFormUrl = '/html/login-form.html';
+const loginFormUrl = '/ru/html/login-form.html';
 const loginUrl = '/user/login/';
-const userUrl = '/html/user-page.html';
+const userUrl = '/ru/html/user-page.html';
 const publicKeyUrl = "/user/public-key/";
 const logoutUrl = '/user/logout/';
 const changePasswordUrl = '/user/change-password/';
-const loginScriptUrl = '/js/login.js';
+const loginScriptUrl = '/ru/js/login.js';
 
 
 function showError(error = null) {
@@ -37,7 +37,7 @@ async function loadLoginForm() {
             return response.text();
         }
         else {
-            throw new Error('Failed to load login form');
+            throw new Error('Не удалось загрузить форму входа.');
         }
     })
     .then(html => {
@@ -88,7 +88,7 @@ async function loadUserPage() {
             if (response.ok) {
                 return response.text();
             } else {
-                throw new Error('Failed to load user page');
+                throw new Error('Не удалось загрузить страницу пользователя.');
             }
         })
         .catch(error => {
@@ -99,9 +99,9 @@ async function loadUserPage() {
             return null;
         }
         showMain(html);
-        document.getElementById('title').innerText = `Welcome ${user['email']}!`;
+        document.getElementById('title').innerText = `Добро пожаловать ${user['email']}!`;
         let date = (new Date(user['created_at'])).toLocaleDateString(navigator.language, {day: '2-digit', month: 'long', year: 'numeric'});
-        document.getElementById('created-at').innerText = `You have joined this api-service scince \n ${date}.`;
+        document.getElementById('created-at').innerText = `Вы создали этот аккаунт\n ${date}.`;
     }
     
     document.getElementById('change-password-form').addEventListener('submit', async function (event) {
@@ -112,27 +112,27 @@ async function loadUserPage() {
         const confirmPassword = document.getElementById('confirm-new-password').value;
         
         if (!currentPassword.trim()) {
-            showError('Current password is required');
+            showError('Введите ваш пароль.');
             return;
         }
     
         if (!newPassword.trim()) {
-            showError('New password is required');
+            showError('Введите новый пароль.');
             return;
         }
         
         if (currentPassword.length < 8) {
-            showError('Current password must be at least 8 characters long');
+            showError('Пароль должен содержать не менее 8 символов.');
             return;
         }
 
         if (newPassword.length < 8) {
-            showError('New password must be at least 8 characters long');
+            showError('Пароль должен содержать не менее 8 символов.');
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            showError('New passwords do not match');
+            showError('Новый пароль не совпадает.');
             return;
         }
     
@@ -172,11 +172,9 @@ async function loadUserPage() {
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-    console.log(navigator.language);
-    if (navigator.language.includes('ru')) {
-        window.location.href = "/ru/";
+    if (navigator.language.includes('en')) {
+        window.location.href = "/";
     }
-    console.log('after');
     await loadUserPage();
 })
 
@@ -198,7 +196,7 @@ async function getPublicKey() {
         if (response.ok) {
             return response.json();
         } else {
-            showError('Failed to load public key');
+            showError('Не удалось загрузить публичный ключ.');
             return {'key': null};
         }
     })

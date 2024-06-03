@@ -63,3 +63,5 @@ node_modules/
 
 # pytest cache
 .pytest_cache
+
+.pem

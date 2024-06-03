@@ -1,0 +1,36 @@
+<div style="position: fixed; top: 10px; left: 10px;" aria-label="Delete">
+    <a href="/ru/delete/" aria-label="Delete link" style="text-decoration: none; color: inherit">
+        <i class="fa fa-trash" style="color: #ca2800; font-size: 100px;" aria-label="Delete icon"></i>
+        <p><b>Удалить</b></p>
+    </a>
+</div>
+
+<h2 id="title">Добро пожаловать</h1>
+<p id="created-at"></p>
+
+<form action="" id="change-password-form">
+    <label for="current-password">Пароль</label>
+    <input  type="password"
+            id="current-password"
+            minlength="8"
+            placeholder="Введите ваш текущий пароль">
+
+    <label for="new-password">Новый пароль</label>
+    <input  type="password"
+            id="new-password"
+            minlength="8"
+            placeholder="Введите ваш новый пароль">
+
+    <label for="confirm-new-password">Подтвердите новый пароль</label>
+    <input  type="password"
+            id="confirm-new-password"
+            minlength="8"
+            placeholder="Подтвердите ваш новый пароль">
+
+    <button id="change-password" type="submit">Изменить пароль</button>
+</form>
+
+<div id="change-password-status" hidden>
+</div>
+
+<button id="logout-button" onclick="logout()">Выход</button>
