@@ -8,3 +8,8 @@ argon2-cffi
 pycryptodome
 PyJWT
 pydantic[email]
+pandas
+matplotlib
+scikit-learn
+#install torch manualy for cpu only
+#torch --index-url https://download.pytorch.org/whl/cpu
