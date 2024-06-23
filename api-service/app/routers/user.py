@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 import schemas.user_schema as schema
 from schemas.key import Key
 from sqlalchemy.ext.asyncio import AsyncSession
-from crypto import jwt
+from crypto import jwtoken
 from fastapi.responses import JSONResponse
 from email_sender.send_email import send_registration_email, send_changed_password_email, send_deleted_email
 import asyncio
@@ -130,10 +130,10 @@ async def get_token(request: Request, user_data: schema.UserCreate, db: AsyncSes
     response = JSONResponse(status_code=200, content={})
     response.set_cookie(
         key=ACCESS_TOCKEN_NAME,
-        value=await jwt.generate_access_token({"sub": email}),
+        value=await jwtoken.generate_access_token({"sub": email}),
         httponly=True,
         secure=True,
-        max_age=jwt.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        max_age=jwtoken.ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
 
     return response
@@ -181,7 +181,7 @@ async def get_token(user_data: schema.UserCreate, db: AsyncSession = Depends(get
                 )
             )
 
-    return {"token": await jwt.generate_access_token({"sub": email})}
+    return {"token": await jwtoken.generate_access_token({"sub": email})}
 
 @router.get("/public-key/", response_model=Key)
 async def get_public_key():

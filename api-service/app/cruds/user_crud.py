@@ -41,3 +41,14 @@ async def delete_user(db: AsyncSession, user: User):
     except Exception as e:
         print(e)
         return False
+
+async def set_user_allowed(db: AsyncSession, user: User, allowed: bool = True):
+    user.is_allowed = allowed
+    try:
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        return True
+    except Exception as e:
+        print(e)
+        return False

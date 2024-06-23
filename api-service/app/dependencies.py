@@ -4,7 +4,7 @@ from crypto.rsa import decrypt
 from schemas import user_schema as schema
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException
-from crypto import jwt
+from crypto import jwtoken
 import re
 
 ru_error_detail = {
@@ -95,13 +95,13 @@ async def validate_access_token(cookies):
     if not access_token:
         raise HTTPException(status_code=401)
 
-    token_payload = await jwt.decrypt_token(access_token)
+    token_payload = await jwtoken.decrypt_token(access_token)
     if not token_payload:
         raise HTTPException(status_code=401)
 
     return token_payload
 
-async def validate_jwt_token(token):
+async def validate_jwtoken_token(token):
     """
     Asynchronously validates the access token in the cookies.
 
@@ -117,7 +117,7 @@ async def validate_jwt_token(token):
     if not token.token:
         raise HTTPException(status_code=401)
 
-    token_payload = await jwt.decrypt_token(token.token)
+    token_payload = await jwtoken.decrypt_token(token.token)
     if not token_payload:
         raise HTTPException(status_code=401)
 

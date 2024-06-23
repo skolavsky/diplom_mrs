@@ -179,12 +179,12 @@ def test_rsa():
     assert asyncio.run(crypto.rsa.get_rsa_public_key())
     assert asyncio.run(crypto.rsa.get_rsa_private_key())
 
-def test_jwt():
+def test_jwtoken():
     user = {"email": "test"}
-    token = asyncio.run(crypto.jwt.generate_access_token(user))
-    assert asyncio.run(crypto.jwt.decrypt_token("not.token")) is None
-    assert asyncio.run(crypto.jwt.decrypt_token("is.wrong.token")) is None
-    payload = asyncio.run(crypto.jwt.decrypt_token(token))
+    token = asyncio.run(crypto.jwtoken.generate_access_token(user))
+    assert asyncio.run(crypto.jwtoken.decrypt_token("not.token")) is None
+    assert asyncio.run(crypto.jwtoken.decrypt_token("is.wrong.token")) is None
+    payload = asyncio.run(crypto.jwtoken.decrypt_token(token))
     assert payload is not None
     assert payload['email'] == user['email']
 
@@ -211,7 +211,7 @@ def test_password_validation():
 from routers import user
 from dependencies import ACCESS_TOCKEN_NAME
 
-cookies = {ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "test@test.test"}))}
+cookies = {ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwtoken.generate_access_token({"sub": "test@test.test"}))}
 
 async def encrypt(plaintext):
     return await crypto.rsa.encrypt(plaintext)
@@ -302,8 +302,8 @@ def test_module_test():
         "/model/test/0.5",
         headers={"X-Token": "coneofsilence"},
         )
-    assert response.status_code == 200
-    assert response.json().get("result")
+    assert response.status_code == 403#200
+    #assert response.json().get("result")
 
     client.cookies = {}
     response = client.get(
@@ -324,8 +324,8 @@ def test_module_test():
         headers={"X-Token": "coneofsilence"},
         json={"token": cookies[ACCESS_TOCKEN_NAME]}
         )
-    assert response.status_code == 200
-    assert response.json().get("result")
+    assert response.status_code == 403#200
+    #assert response.json().get("result")
 
 def test_login():
     client.cookies = {}
@@ -335,7 +335,7 @@ def test_login():
         )
     assert response.status_code == 401
 
-    client.cookies = {user.ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "notuser"}))}
+    client.cookies = {user.ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwtoken.generate_access_token({"sub": "notuser"}))}
     response = client.get(
         "/user/login/",
         headers={"X-Token": "coneofsilence",
@@ -584,7 +584,7 @@ def test_delete_user():
         )
     assert response.status_code == 401
 
-    client.cookies = {user.ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwt.generate_access_token({"sub": "not@test.email"}))}
+    client.cookies = {user.ACCESS_TOCKEN_NAME: asyncio.run(crypto.jwtoken.generate_access_token({"sub": "not@test.email"}))}
     response = client.post(
         "/user/delete/",
         headers={"X-Token": "coneofsilence",

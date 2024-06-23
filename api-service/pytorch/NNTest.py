@@ -263,7 +263,7 @@ def plot_losses(losses, losses1, title="Losses"):
 
 plot_losses(train_losses, test_losses, title="Losses")
 # %%
-model.load_state_dict(torch.load(SAVE_PATH))
+model.load_state_dict(torch.load("/home/sirg/Projects/diplom_mrs/api-service/pytorch/models/Release.pt"))
 with torch.no_grad():
     output = model(train_features_t)
 #output.squeeze_()
