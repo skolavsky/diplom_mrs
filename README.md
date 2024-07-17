@@ -400,7 +400,7 @@ clients_list_styles.css
 python manage.py test
 ```
 
-Запуск тестов с покрытием
+Запуск тестов с покрытием:
 
 ```cmd
 tox
