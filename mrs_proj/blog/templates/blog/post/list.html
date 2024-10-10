@@ -6,38 +6,38 @@
 {% endblock %}{% block title %}Записи{% endblock %}
 
 {% block content %}
-<main>
-    <h1>MRS Блог</h1>
-    Всего статей: {% total_posts %}.
+    <main>
+        <h1>MRS Блог</h1>
+        Всего статей: {% total_posts %}.
 
-    <p>
-        <a id="copyButton" href="{% url 'blog:post_feed' %}">
-            Подписка на RSS.
-        </a>
-    </p>
+        <p>
+            <a id="copyButton" href="{% url 'blog:post_feed' %}">
+                Подписка на RSS.
+            </a>
+        </p>
 
-    {% if tag %}
-        <h2>Посты с тегом "{{ tag.name }}"</h2>
-    {% endif %}
+        {% if tag %}
+            <h2>Посты с тегом "{{ tag.name }}"</h2>
+        {% endif %}
 
-    <div id="posts-list">
-        {% include "blog/posts.html" with posts=posts %}
-    </div>
-</main>
+        <div id="posts-list">
+            {% include "blog/posts.html" with posts=posts %}
+        </div>
+    </main>
 
-<script>
-    document.getElementById('copyButton').addEventListener('click', function (event) {
-        event.preventDefault(); // Отменяем стандартное действие перехода по ссылке
-        var link = this.getAttribute('href'); // Получаем ссылку из атрибута href
-        navigator.clipboard.writeText(link) // Копируем ссылку в буфер обмена
-            .then(function () {
-                alert('Ссылка скопирована в буфер обмена');
-            })
-            .catch(function (error) {
-                console.error('Не удалось скопировать ссылку: ', error);
-            });
-    });
-</script>
+    <script>
+        document.getElementById('copyButton').addEventListener('click', function (event) {
+            event.preventDefault(); // Отменяем стандартное действие перехода по ссылке
+            var link = this.getAttribute('href'); // Получаем ссылку из атрибута href
+            navigator.clipboard.writeText(link) // Копируем ссылку в буфер обмена
+                .then(function () {
+                    alert('Ссылка скопирована в буфер обмена');
+                })
+                .catch(function (error) {
+                    console.error('Не удалось скопировать ссылку: ', error);
+                });
+        });
+    </script>
 {% endblock %}
 
 {% block domready %}
